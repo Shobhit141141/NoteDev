@@ -186,7 +186,7 @@ function QuestionForm() {
               <div>
                 <label className="block">
                   Difficulty:
-                  <div className="flex space-x-4">
+                  <div className="flex space-x-4 bg-[#121212] h-[50px] border-[1px] border-white rounded-[6px] justify-evenly">
                     <label className="flex items-center space-x-2">
                       <input
                         type="radio"

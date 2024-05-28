@@ -1,12 +1,11 @@
 .dropdown-item{
-    cursor: pointer;
-    border-radius: 6px;
+    border-radius: 6px !important;
     
 }
 
 .dropdown-item:hover{
-    background-color: blueviolet; 
-    cursor: pointer;
+    background-color: blueviolet !important; 
+    cursor: pointer !important;
 }
 
 .dropdown-content{

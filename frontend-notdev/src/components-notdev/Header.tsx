@@ -37,7 +37,7 @@ function Header() {
             <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
               <Link to="/question">
                 <DropdownMenuRadioItem
-                  className="dropdown-item hover:bg-yellow-300 cursor-pointer"
+                  className="dropdown-item"
                   value="Question"
                 >
                   Question
@@ -45,7 +45,7 @@ function Header() {
               </Link>
               <Link to="/questions">
                 <DropdownMenuRadioItem
-                  className="dropdown-item  hover:bg-yellow-300 cursor-pointer"
+                  className="dropdown-item "
                   value="allQuestions"
                 >
                   All Questions
@@ -53,7 +53,7 @@ function Header() {
               </Link>
               <Link to="/temp">
                 <DropdownMenuRadioItem
-                  className="dropdown-item hover:bg-yellow-300 cursor-pointer"
+                  className="dropdown-item"
                   value="Team"
                 >
                   temp
@@ -61,7 +61,7 @@ function Header() {
               </Link>
               <Link to="/">
                 <DropdownMenuRadioItem
-                  className="dropdown-item hover:bg-yellow-300 cursor-pointer"
+                  className="dropdown-item"
                   value="Home"
                 >
                   Home
