@@ -1,0 +1,20 @@
+.dropdown-item{
+    cursor: pointer;
+    border-radius: 6px;
+    
+}
+
+.dropdown-item:hover{
+    background-color: blueviolet; 
+    cursor: pointer;
+}
+
+.dropdown-content{
+    background-color: rgb(15, 14, 14);
+}
+.dropdown-trigger{
+    border: none;
+}
+.dropdown-trigger{
+    border: none;
+}
