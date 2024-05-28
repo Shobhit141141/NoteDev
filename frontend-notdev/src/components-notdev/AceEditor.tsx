@@ -39,7 +39,7 @@ const MyTabs = () => {
           Notes
         </button>
       </div>
-      <div>
+      <div className='w-[100%] h-[85vh]'>
         {activeTab === 1 && <div><MonacoEditor/></div>}
         {activeTab === 2 && <div><ImagePreview/></div>}
         {activeTab === 3 && <div>Content for Tab 3</div>}

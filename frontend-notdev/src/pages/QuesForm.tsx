@@ -383,6 +383,13 @@ function QuestionForm() {
                   />
                 </label>
               </div>
+              <div className="grid grid-cols-3 gap-4 mt-4">
+                {formData.images.map((image, index) => (
+                  <div key={index} className="w-full h-32 flex justify-center items-center border border-gray-300 rounded overflow-hidden">
+                    <img src={image} alt={`preview ${index}`} className="object-cover w-full h-full" />
+                  </div>
+                ))}
+              </div>
               <button
                 type="submit"
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"

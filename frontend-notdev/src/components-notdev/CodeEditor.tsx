@@ -39,7 +39,7 @@ const MonacoEditor: React.FC = () => {
   const [code, setCode] = useState<string>('console.log("Hello, world!");');
   const [theme, setTheme] = useState<string>('vs-dark');
   const [language, setLanguage] = useState<string>('javascript');
-  const [fontSize, setFontSize] = useState<number>(14);
+  const [fontSize, setFontSize] = useState<number>(10);
 
   const themes = [
     'vs-dark', 'hc-black', 'monokai', 'dracula', 'nord', 
@@ -57,8 +57,8 @@ const MonacoEditor: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
-      <div className="flex items-center justify-between p-4 bg-gray-800 text-white">
+    <div className="flex flex-col h-[80vh] w-[90%] mx-auto">
+      <div className="flex items-center justify-between p-4 bg-gray-800 text-white rounded-xl">
         <div>
           <label htmlFor="theme" className="mr-2">Theme:</label>
           <select
@@ -103,7 +103,7 @@ const MonacoEditor: React.FC = () => {
           </select>
         </div>
       </div>
-      <div className="flex-grow">
+      <div className="flex-grow rounded-xl overflow-hidden">
         <Editor
           height="100%"
           defaultLanguage={language}
