@@ -67,6 +67,14 @@ function Header() {
                   Home
                 </DropdownMenuRadioItem>
               </Link>
+              <Link to="/editor">
+                <DropdownMenuRadioItem
+                  className="dropdown-item"
+                  value="Text"
+                >
+                  TextEditor
+                </DropdownMenuRadioItem>
+              </Link>
             </DropdownMenuRadioGroup>
           </DropdownMenuContent>
         </DropdownMenu>

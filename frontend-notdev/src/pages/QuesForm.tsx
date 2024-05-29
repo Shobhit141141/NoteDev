@@ -1,20 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { LuInfo } from "react-icons/lu";
-import "./QuestionForm.css";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { useLocation } from "react-router-dom";
+import QuillEditor from "@/components-notdev/TextEditor";
+// import {
+//   Tooltip,
+//   TooltipContent,
+//   TooltipProvider,
+//   TooltipTrigger,
+// } from "@/components/ui/tooltip";
+// import { LuInfo } from "react-icons/lu";
+// import "./QuestionForm.css";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
 
 type FormData = {
   title: string;
@@ -53,6 +55,18 @@ function QuestionForm() {
     youtubeLink: "",
     images: [],
   });
+  const location = useLocation();
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const topicId = queryParams.get("topicId");
+
+    if (topicId) {
+      setFormData((prevData) => ({
+        ...prevData,
+        topicId,
+      }));
+    }
+  }, [location.search]);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -119,12 +133,12 @@ function QuestionForm() {
       );
   };
 
-  const handleSelectChange = (value: string) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      difficulty: value,
-    }));
-  };
+  // const handleSelectChange = (value: string) => {
+  //   setFormData((prevData) => ({
+  //     ...prevData,
+  //     difficulty: value,
+  //   }));
+  // };
 
   return (
     <div className="max-w-lg mx-auto p-6">
@@ -133,7 +147,9 @@ function QuestionForm() {
         <div className="flex space-x-4 mb-4">
           <button
             className={`px-4 py-2 rounded ${
-              activeTab === 1 ? "bg-gray-200 text-gray-900" : "bg-gray-900 text-white"
+              activeTab === 1
+                ? "bg-gray-200 text-gray-900"
+                : "bg-gray-900 text-white"
             }`}
             onClick={() => setActiveTab(1)}
           >
@@ -141,7 +157,9 @@ function QuestionForm() {
           </button>
           <button
             className={`px-4 py-2 rounded ${
-              activeTab === 2 ? "bg-gray-200 text-gray-900" : "bg-gray-900 text-white"
+              activeTab === 2
+                ? "bg-gray-200 text-gray-900"
+                : "bg-gray-900 text-white"
             }`}
             onClick={() => setActiveTab(2)}
           >
@@ -149,7 +167,9 @@ function QuestionForm() {
           </button>
           <button
             className={`px-4 py-2 rounded ${
-              activeTab === 3 ? "bg-gray-200 text-gray-900" : "bg-gray-900 text-white"
+              activeTab === 3
+                ? "bg-gray-200 text-gray-900"
+                : "bg-gray-900 text-white"
             }`}
             onClick={() => setActiveTab(3)}
           >
@@ -214,7 +234,9 @@ function QuestionForm() {
                       />
                       <span
                         className={`w-4 h-4 rounded-full cursor-pointer border border-gray-300 ${
-                          formData.difficulty === "medium" ? "bg-orange-500" : ""
+                          formData.difficulty === "medium"
+                            ? "bg-orange-500"
+                            : ""
                         }`}
                       ></span>
                       <span className="text-orange-500">Medium</span>
@@ -327,7 +349,9 @@ function QuestionForm() {
             <div className="space-y-4">
               <div>
                 <label className="block">
+
                   Text:
+                  <QuillEditor/>
                   <textarea
                     name="text"
                     value={formData.text}
@@ -385,8 +409,15 @@ function QuestionForm() {
               </div>
               <div className="grid grid-cols-3 gap-4 mt-4">
                 {formData.images.map((image, index) => (
-                  <div key={index} className="w-full h-32 flex justify-center items-center border border-gray-300 rounded overflow-hidden">
-                    <img src={image} alt={`preview ${index}`} className="object-cover w-full h-full" />
+                  <div
+                    key={index}
+                    className="w-full h-32 flex justify-center items-center border border-gray-300 rounded overflow-hidden"
+                  >
+                    <img
+                      src={image}
+                      alt={`preview ${index}`}
+                      className="object-cover w-full h-full"
+                    />
                   </div>
                 ))}
               </div>

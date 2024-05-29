@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { MdDelete, MdOutlineCreateNewFolder } from "react-icons/md";
 import axios from "axios";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
@@ -112,7 +112,9 @@ function DsaFolder() {
           topics.map((topic, index) => (
             <div key={index} className="grid-item">
               <div className="img-container">
-                <img src={topic.image} alt={topic.title} />
+               <NavLink to={`/question?topicId=${topic._id}`}>
+               <img src={topic.image} alt={topic.title} />
+               </NavLink>
               </div>
 
               <div className="topic-details">
@@ -123,7 +125,7 @@ function DsaFolder() {
                 <div className="flex justify-between w-[60px] items-center">
                   <div className="no-of-ques text-[15px] w-[30px] h-[30px] flex justify-center items-center">
                     {/* <p>{topic.totalQuestions}</p> */}
-                    <div className="radial-progress text-green-400" style={{ "--value": 0 ,  "--size": "30px", "--thickness": "4px" } as any} role="progressbar">44</div>
+                    <div className="radial-progress text-green-400" style={{ "--value": 0 ,  "--size": "30px", "--thickness": "4px" } as any} role="progressbar">{topic.totalQuestions}</div>
                   </div>
                   <div className="text-[25px] hover:text-red-600 hover:rotate-6 transition-all cursor-pointer">
                     <AlertDialog>

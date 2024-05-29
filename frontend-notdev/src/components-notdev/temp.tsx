@@ -5,7 +5,6 @@ import {
 } from "@/components/ui/resizable";
 // import MonacoEditor from "./CodeEditor";
 import AceEditorComponent from "./CodeEditor";
-import ImagePreview from "./ImagePreview";
 
 export default function ResizableDemo() {
   return (

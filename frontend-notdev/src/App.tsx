@@ -8,6 +8,7 @@ import DsaForm from "./components-notdev/DsaFolderForm";
 import { Toaster } from "react-hot-toast";
 import  ResizableDemo from "./components-notdev/temp";
 import MyTabs from "./components-notdev/AceEditor";
+import QuillEditor from "./components-notdev/TextEditor";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/dsa-topic-form" element={<DsaForm />} />
             <Route path="/temp" element={<ResizableDemo />} />
             <Route path="/ace" element={<MyTabs />} />
+
 
           </Routes>
         </BrowserRouter>
