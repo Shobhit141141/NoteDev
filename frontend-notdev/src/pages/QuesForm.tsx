@@ -1,23 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
-import QuillEditor from "@/components-notdev/TextEditor";
-// import {
-//   Tooltip,
-//   TooltipContent,
-//   TooltipProvider,
-//   TooltipTrigger,
-// } from "@/components/ui/tooltip";
-// import { LuInfo } from "react-icons/lu";
-// import "./QuestionForm.css";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
-
+import MonacoEditor from "../components-notdev/CodeEditor";
+// src/QuillEditor.tsx
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+// import QuillEditor from "@/components-notdev/TextEditor";
 type FormData = {
   title: string;
   description: string;
@@ -36,6 +24,45 @@ type FormData = {
   images: string[];
 };
 
+
+const modules = {
+  toolbar: [
+    [{ font: [] }],
+    [{ size: [] }],
+    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+    ["bold", "italic", "underline", "strike"],
+    [{ color: [] }, { background: [] }],
+    [{ script: "sub" }, { script: "super" }],
+    ["link", "image"],
+    [{ align: [] }],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["blockquote", "code-block"],
+    ["clean"]
+  ]
+};
+
+const formats = [
+  "header",
+  "font",
+  "size",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "color",
+  "background",
+  "script",
+  "list",
+  "bullet",
+  "indent",
+  "direction",
+  "align",
+  "link",
+  "image",
+  "video",
+  "blockquote",
+  "code-block",
+];
 function QuestionForm() {
   const [activeTab, setActiveTab] = useState(1);
   const [formData, setFormData] = useState<FormData>({
@@ -68,7 +95,9 @@ function QuestionForm() {
     }
   }, [location.search]);
 
-  const handleChange = (e: any) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -76,7 +105,9 @@ function QuestionForm() {
     }));
   };
 
-  const handleLinkChange = (e: any) => {
+  const language = "cpp";
+
+  const handleLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -87,7 +118,7 @@ function QuestionForm() {
     }));
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log(formData);
     try {
@@ -132,13 +163,19 @@ function QuestionForm() {
         console.error("Error converting images to base64:", error)
       );
   };
+  const handleInputChange = (field: string, value: string) => {
+    setFormData({
+      ...formData,
+      [field]: value,
+    });
+  };
 
-  // const handleSelectChange = (value: string) => {
-  //   setFormData((prevData) => ({
-  //     ...prevData,
-  //     difficulty: value,
-  //   }));
-  // };
+  const handleCodeChange = (newCode: string) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      code: newCode,
+    }));
+  };
 
   return (
     <div className="max-w-lg mx-auto p-6">
@@ -289,12 +326,6 @@ function QuestionForm() {
                   />
                 </label>
               </div>
-              <button
-                type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-              >
-                Submit
-              </button>
             </div>
           )}
 
@@ -336,12 +367,6 @@ function QuestionForm() {
                   />
                 </label>
               </div>
-              <button
-                type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-              >
-                Submit
-              </button>
             </div>
           )}
 
@@ -349,26 +374,27 @@ function QuestionForm() {
             <div className="space-y-4">
               <div>
                 <label className="block">
-
                   Text:
-                  <QuillEditor/>
-                  <textarea
-                    name="text"
+                  <ReactQuill
                     value={formData.text}
-                    onChange={handleChange}
-                    className="border border-gray-300 rounded p-2 w-full"
-                  ></textarea>
+                    onChange={(value) => handleInputChange("text", value)}
+                    modules={modules}
+                    formats={formats}
+                    theme="snow"
+                    className="w-[400px]"
+                  />
                 </label>
               </div>
               <div>
                 <label className="block">
                   Code:
-                  <textarea
-                    name="code"
-                    value={formData.code}
-                    onChange={handleChange}
-                    className="border border-gray-300 rounded p-2 w-full"
-                  ></textarea>
+                  <div className="h-[400px]">
+                    <MonacoEditor
+                      language={language}
+                      value={formData.code}
+                      onChange={handleCodeChange}
+                    />
+                  </div>
                 </label>
               </div>
               <div>
@@ -431,6 +457,7 @@ function QuestionForm() {
           )}
         </form>
       </div>
+     
     </div>
   );
 }

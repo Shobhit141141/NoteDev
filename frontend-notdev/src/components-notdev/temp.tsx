@@ -4,7 +4,6 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 // import MonacoEditor from "./CodeEditor";
-import AceEditorComponent from "./CodeEditor";
 
 export default function ResizableDemo() {
   return (
@@ -33,7 +32,7 @@ export default function ResizableDemo() {
         <ResizablePanel defaultSize={100}>
           <div className="flex h-[100%] items-center justify-center p-6 bg-yellow-300">
             <div className="min-w-[40%] h-[100%]">
-              <AceEditorComponent />
+              {/* <AceEditorComponent /> */}
             </div>
           </div>
         </ResizablePanel>

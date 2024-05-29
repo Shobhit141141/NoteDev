@@ -43,7 +43,7 @@ const MyTabs = () => {
       <div className="w-[100%] h-[85vh]">
         {activeTab === 1 && (
           <div>
-            <MonacoEditor />
+            <MonacoEditor language="" value="" onChange={() => console.log(void 0)} />
           </div>
         )}
         {activeTab === 2 && (
@@ -51,7 +51,7 @@ const MyTabs = () => {
             <ImagePreview />
           </div>
         )}
-        {activeTab === 3 && <div><QuillEditor/></div>}
+        {activeTab === 3 && <div><QuillEditor value="" onChange={()=>console.log()}/></div>}
       </div>
     </div>
   );

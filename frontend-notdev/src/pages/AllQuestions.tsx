@@ -1,6 +1,5 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-// import "./QuestionList.css";
 
 type Question = {
   id: string;
@@ -29,7 +28,9 @@ function QuestionList() {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/questions/get-questions");
+        const response = await axios.get(
+          "http://localhost:5000/api/questions/get-questions"
+        );
         setQuestions(response.data);
       } catch (error) {
         setError("Failed to fetch questions");
@@ -41,30 +42,71 @@ function QuestionList() {
     fetchQuestions();
   }, []);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading) return <div className="text-center mt-8">Loading...</div>;
+  if (error)
+    return <div className="text-center mt-8 text-red-600">{error}</div>;
 
   return (
-    <div className="question-list">
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {questions.map((question) => (
-        <div key={question.id} className="question-item">
-          <h3 className="text-xl font-bold">{question.title}</h3>
-          <p>{question.description}</p>
-          <p>Difficulty: {question.difficulty}</p>
-          <p>Topic ID: {question.topicId}</p>
-          <p>Tags: {question.tag.join(", ")}</p>
-          <div>
-            <a href={question.links.leetcode}>Leetcode</a>
-            <a href={question.links.gfg}>GFG</a>
-            <a href={question.links.codeforces}>Codeforces</a>
+        <div
+          key={question.id}
+          className="bg-white rounded-lg shadow-md p-6 text-black"
+        >
+          <h3 className="text-lg font-semibold mb-2">{question.title}</h3>
+          <p className="text-gray-600 mb-4">{question.description}</p>
+          <p className="text-sm font-semibold">
+            Difficulty: {question.difficulty}
+          </p>
+          <p className="text-sm font-semibold">Topic ID: {question.topicId}</p>
+          <p className="text-sm font-semibold">
+            Tags: {question.tag.join(", ")}
+          </p>
+          <div className="flex space-x-2 mt-4">
+            <a
+              href={question.links.leetcode}
+              className="text-blue-600 hover:underline"
+            >
+              Leetcode
+            </a>
+            <a
+              href={question.links.gfg}
+              className="text-blue-600 hover:underline"
+            >
+              GFG
+            </a>
+            <a
+              href={question.links.codeforces}
+              className="text-blue-600 hover:underline"
+            >
+              Codeforces
+            </a>
           </div>
-          <p>Text: {question.text}</p>
-          <pre>{question.code}</pre>
-          <a href={question.solutionLink}>Solution Link</a>
-          <a href={question.youtubeLink}>YouTube Link</a>
-          <div className="images">
+          <div
+            dangerouslySetInnerHTML={{ __html: question.text }}
+            className="mt-4"
+          ></div>
+          <pre className="whitespace-pre-wrap mt-4">{question.code}</pre>
+          <a
+            href={question.solutionLink}
+            className="text-blue-600 hover:underline block mt-4"
+          >
+            Solution Link
+          </a>
+          <a
+            href={question.youtubeLink}
+            className="text-blue-600 hover:underline block"
+          >
+            YouTube Link
+          </a>
+          <div className="mt-4">
             {question.images.map((image, index) => (
-              <img key={index} src={image} alt={`Question ${index}`} className="question-image" />
+              <img
+                key={index}
+                src={image}
+                alt={`Question ${index}`}
+                className="w-full h-auto mb-2 rounded"
+              />
             ))}
           </div>
         </div>
