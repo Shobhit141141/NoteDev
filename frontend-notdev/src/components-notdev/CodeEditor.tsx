@@ -882,7 +882,7 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({value, onChange }) => {
         height="100%"
         defaultLanguage={"cpp"}
         value={code}
-        theme="lc"
+        theme="vs-dark"
         options={{
           fontSize: 14,
           minimap: { enabled: false },

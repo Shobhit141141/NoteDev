@@ -178,6 +178,7 @@ function QuestionForm() {
   };
 
   return (
+    <>
     <div className="max-w-lg mx-auto p-6">
       <h2 className="text-2xl font-bold mb-4">Question Form</h2>
       <div className="tabs">
@@ -459,6 +460,16 @@ function QuestionForm() {
       </div>
      
     </div>
+
+<ReactQuill
+value={formData.text}
+onChange={(value) => handleInputChange("text", value)}
+modules={modules}
+formats={formats}
+theme="snow"
+className="w-[400px]"
+/>
+</>
   );
 }
 
