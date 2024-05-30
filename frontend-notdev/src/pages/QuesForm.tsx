@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import MonacoEditor from "../components-notdev/CodeEditor";
 // src/QuillEditor.tsx
 import ReactQuill from "react-quill";
@@ -67,6 +67,7 @@ const formats = [
 ];
 function QuestionForm() {
   const [activeTab, setActiveTab] = useState(1);
+  const {topicId} = useParams();
   const [formData, setFormData] = useState<FormData>({
     title: "",
     description: "",
@@ -84,11 +85,9 @@ function QuestionForm() {
     youtubeLink: "",
     images: [],
   });
-  const location = useLocation();
   const navigate = useNavigate();
   useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const topicId = queryParams.get("topicId");
+    
 
     if (topicId) {
       setFormData((prevData) => ({

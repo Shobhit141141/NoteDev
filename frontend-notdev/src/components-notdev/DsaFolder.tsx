@@ -113,7 +113,7 @@ function DsaFolder() {
           topics.map((topic, index) => (
             <div key={index} className="grid-item">
               <div className="img-container">
-               <NavLink to={`/question?topicId=${topic._id}`}>
+               <NavLink to={`/questions?title=${topic.title}&topicId=${topic._id}`}>
                <img src={topic.image} alt={topic.title} />
                </NavLink>
               </div>
