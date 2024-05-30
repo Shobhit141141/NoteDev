@@ -258,3 +258,21 @@ export const filterQuestionsByDifficulty = async (
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
+export const getQuestionById = async (req: Request, res: Response) => {
+  const questionId = req.params.id;
+
+  try {
+    const question = await Question.findById(questionId).populate("topicId", "title");
+
+    if (!question) {
+      return res.status(404).json({ message: "Question not found" });
+    }
+
+    res.status(200).json(question);
+  } catch (error) {
+    console.error("Error fetching question by ID:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

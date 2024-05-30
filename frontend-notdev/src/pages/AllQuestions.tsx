@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { NavLink } from "react-router-dom";
 
 type Question = {
-  id: string;
+  _id:string;
   title: string;
   description: string;
   difficulty: string;
@@ -32,6 +33,7 @@ function QuestionList() {
           "http://localhost:5000/api/questions/get-questions"
         );
         setQuestions(response.data);
+        console.log(response.data)
       } catch (error) {
         setError("Failed to fetch questions");
       } finally {
@@ -49,8 +51,9 @@ function QuestionList() {
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {questions.map((question) => (
-        <div
-          key={question.id}
+        <NavLink to={`/question/${question._id}`}>
+          <div
+          key={question._id}
           className="bg-white rounded-lg shadow-md p-6 text-black"
         >
           <h3 className="text-lg font-semibold mb-2">{question.title}</h3>
@@ -110,6 +113,7 @@ function QuestionList() {
             ))}
           </div>
         </div>
+        </NavLink>
       ))}
     </div>
   );

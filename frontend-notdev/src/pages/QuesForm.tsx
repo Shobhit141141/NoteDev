@@ -5,6 +5,9 @@ import MonacoEditor from "../components-notdev/CodeEditor";
 // src/QuillEditor.tsx
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import toast from "react-hot-toast";
+
 // import QuillEditor from "@/components-notdev/TextEditor";
 type FormData = {
   title: string;
@@ -82,6 +85,7 @@ function QuestionForm() {
     images: [],
   });
   const location = useLocation();
+  const navigate = useNavigate();
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const topicId = queryParams.get("topicId");
@@ -125,8 +129,12 @@ function QuestionForm() {
         "http://localhost:5000/api/questions/upload-question",
         formData
       );
-      console.log(response.data); // handle response from the backend
+      toast.success("Form submitted successfully");
+      console.log(response.data);
+      navigate("/");
+
     } catch (error) {
+      toast.error("Failed to submit form");
       console.error("Error:", error);
     }
   };
@@ -181,7 +189,7 @@ function QuestionForm() {
       <div className="max-w-lg mx-auto p-6">
         <h2 className="text-2xl font-bold mb-4">Question Form</h2>
         <div className="tabs">
-          <div className="flex space-x-4 mb-4">
+          <div className="flex space-x-4 mb-4 w-max">
             <button
               className={`px-4 py-2 rounded ${
                 activeTab === 1
@@ -202,7 +210,7 @@ function QuestionForm() {
             >
               Links
             </button>
-            <button
+            {/* <button
               className={`px-4 py-2 rounded ${
                 activeTab === 3
                   ? "bg-gray-200 text-gray-900"
@@ -211,6 +219,23 @@ function QuestionForm() {
               onClick={() => setActiveTab(3)}
             >
               Content
+            </button> */}
+            <button
+              className={`px-4 py-2 rounded ${
+                activeTab === 4
+                  ? "bg-gray-200 text-gray-900"
+                  : "bg-gray-900 text-white"
+              }`}
+              onClick={() => setActiveTab(4)}
+            >
+              Text
+            </button>
+            <button
+              type="submit"
+              className="bg-gradient-to-br from-blue-500 to-blue-800 hover:from-green-500 hover:to-green-900 transition-all rounded px-4 py-2"
+              onClick={handleSubmit}
+            >
+              Submit
             </button>
           </div>
 
@@ -258,7 +283,9 @@ function QuestionForm() {
                             formData.difficulty === "easy" ? "bg-green-500" : ""
                           }`}
                         ></span>
-                        <span className="text-green-500">Easy</span>
+                        <span className="bg-green-700 px-2 py-1 rounded-[16px]">
+                          Easy
+                        </span>
                       </label>
                       <label className="flex items-center space-x-2">
                         <input
@@ -276,7 +303,9 @@ function QuestionForm() {
                               : ""
                           }`}
                         ></span>
-                        <span className="text-orange-500">Medium</span>
+                        <span className="bg-orange-500 px-2 py-1 rounded-[16px]">
+                          Medium
+                        </span>
                       </label>
                       <label className="flex items-center space-x-2">
                         <input
@@ -292,7 +321,9 @@ function QuestionForm() {
                             formData.difficulty === "hard" ? "bg-red-500" : ""
                           }`}
                         ></span>
-                        <span className="text-red-500">Hard</span>
+                        <span className="bg-red-500 px-2 py-1 rounded-[16px]">
+                          Hard
+                        </span>
                       </label>
                     </div>
                   </label>
@@ -372,18 +403,20 @@ function QuestionForm() {
               </div>
             )}
 
-            {activeTab === 3 && (
+            {/* {activeTab === 3 && (
               <div className="space-y-4">
                 <label className="block">
                   Text:
-                  <ReactQuill
-                    value={formData.text}
-                    onChange={(value) => handleInputChange("text", value)}
-                    modules={modules}
-                    formats={formats}
-                    theme="snow"
-                    className="w-[400px]"
-                  />
+                  <span>
+                    <ReactQuill
+                      value={formData.text}
+                      onChange={(value) => handleInputChange("text", value)}
+                      modules={modules}
+                      formats={formats}
+                      theme="snow"
+                      className="w-[400px]"
+                    />
+                  </span>
                 </label>
 
                 <div>
@@ -455,21 +488,65 @@ function QuestionForm() {
                   Submit
                 </button>
               </div>
-            )}
+            )} */}
           </form>
         </div>
       </div>
 
-      <span>
-      <ReactQuill
-        value={formData.text}
-        onChange={(value) => handleInputChange("text", value)}
-        modules={modules}
-        formats={formats}
-        theme="snow"
-        className="w-[400px] m-auto"
-      />
-      </span>
+      {activeTab === 4 && (
+        <>
+          <span>
+            <ReactQuill
+              value={formData.text}
+              onChange={(value) => handleInputChange("text", value)}
+              modules={modules}
+              formats={formats}
+              theme="snow"
+              className="w-[500px] m-auto bg-appbg"
+            />
+          </span>
+          <div className="w-[500px] m-auto h-[330px]  my-[10px]">
+            <label className="block">
+              Code:
+              <div className="w-[500px] h-[400px] m-auto">
+                <MonacoEditor
+                  language={language}
+                  value={formData.code}
+                  onChange={handleCodeChange}
+                />
+              </div>
+            </label>
+          </div>
+          <div className="w-[500px] mx-auto mt-[]">
+            <label className="block">
+              Images:
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleImageChange}
+                className="border border-gray-300 rounded p-2 w-full"
+              />
+            </label>
+          </div>
+          <div className="w-[500px] m-auto my-[20px]">
+            <div className="grid grid-cols-5 gap-4 mt-4">
+              {formData.images.map((image, index) => (
+                <div
+                  key={index}
+                  className="w-20 h-20 flex justify-center items-center border border-gray-300 rounded overflow-hidden"
+                >
+                  <img
+                    src={image}
+                    alt={`preview ${index}`}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 }

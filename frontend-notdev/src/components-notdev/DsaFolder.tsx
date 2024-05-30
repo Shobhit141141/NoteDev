@@ -3,6 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import { MdDelete, MdOutlineCreateNewFolder } from "react-icons/md";
 import axios from "axios";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import toast from "react-hot-toast";
 import "./DsaFolder.css";
 import {
@@ -80,8 +81,8 @@ function DsaFolder() {
           Array.from({ length: 12 }, (_, index) => (
             <div key={index}>
               <SkeletonTheme
-                baseColor="#202020"
-                highlightColor="#444"
+                baseColor="#ffffff10"
+                highlightColor="#fff"
                 duration={500}
                 direction="ltr"
                 enableAnimation={true}

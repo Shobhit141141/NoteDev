@@ -880,7 +880,7 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({value, onChange }) => {
     <div className="flex-grow rounded-xl h-[300px]">
       <Editor
         height="100%"
-        defaultLanguage={"cpp"}
+        defaultLanguage={"javascript"}
         value={code}
         theme="vs-dark"
         options={{

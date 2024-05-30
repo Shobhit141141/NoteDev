@@ -9,6 +9,7 @@ import { Toaster } from "react-hot-toast";
 import  ResizableDemo from "./components-notdev/temp";
 import MyTabs from "./components-notdev/AceEditor";
 import QuillEditor from "./components-notdev/TextEditor";
+import SingleQuestion from "./pages/SingleQuestion";
 
 function App() {
   return (
@@ -24,6 +25,9 @@ function App() {
             <Route path="/dsa-topic-form" element={<DsaForm />} />
             <Route path="/temp" element={<ResizableDemo />} />
             <Route path="/ace" element={<MyTabs />} />
+            <Route path="/question/:id" element={<SingleQuestion />} />
+
+
             <Route path="/editor" element={<QuillEditor value="" onChange={()=>console.log()}/>} />
 
 
