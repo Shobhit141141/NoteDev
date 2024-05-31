@@ -18,10 +18,14 @@ function Header() {
   return (
     <div className="flex justify-between w-[100vw] items-center header-container">
       <div className="logo flex flex-row justify-center items-center h-[100px]">
-        <img src={logo} alt="Notdev Logo" className="logo-image w-[50px]" />
-        <h1 className="header-title text-[35px] font-bold font-mono bg-gradient-to-r from-purple-800 via-pink-500 to-pink-300 bg-clip-text text-transparent">
-          NOTEDEV
-        </h1>
+        <Link to={"/"}>
+          <img src={logo} alt="Notdev Logo" className="logo-image w-[50px]" />
+        </Link>
+        <Link to={"/"}>
+          <h1 className="header-title text-[35px] font-bold bg-gradient-to-r from-purple-800 via-pink-500 to-pink-300 bg-clip-text text-transparent">
+            NOTEDEV
+          </h1>
+        </Link>
       </div>
 
       <div className="dropdown-menu-container m-6">
@@ -34,7 +38,10 @@ function Header() {
               Navbar
             </DropdownMenuLabel>
             <DropdownMenuSeparator className="dropdown-separator my-1 border-t" />
-            <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
+            <DropdownMenuRadioGroup
+              value={position}
+              onValueChange={setPosition}
+            >
               <Link to="/question">
                 <DropdownMenuRadioItem
                   className="dropdown-item"
@@ -52,26 +59,17 @@ function Header() {
                 </DropdownMenuRadioItem>
               </Link>
               <Link to="/temp">
-                <DropdownMenuRadioItem
-                  className="dropdown-item"
-                  value="Team"
-                >
+                <DropdownMenuRadioItem className="dropdown-item" value="Team">
                   temp
                 </DropdownMenuRadioItem>
               </Link>
               <Link to="/">
-                <DropdownMenuRadioItem
-                  className="dropdown-item"
-                  value="Home"
-                >
+                <DropdownMenuRadioItem className="dropdown-item" value="Home">
                   Home
                 </DropdownMenuRadioItem>
               </Link>
               <Link to="/editor">
-                <DropdownMenuRadioItem
-                  className="dropdown-item"
-                  value="Text"
-                >
+                <DropdownMenuRadioItem className="dropdown-item" value="Text">
                   TextEditor
                 </DropdownMenuRadioItem>
               </Link>

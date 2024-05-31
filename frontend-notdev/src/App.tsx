@@ -20,7 +20,7 @@ function App() {
           <Header />
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/question" element={<QuestionForm />} />
+            <Route path="/question-form/:topicId" element={<QuestionForm />} />
             <Route path="/questions" element={<QuestionList />} />
             <Route path="/dsa-topic-form" element={<DsaForm />} />
             <Route path="/temp" element={<ResizableDemo />} />

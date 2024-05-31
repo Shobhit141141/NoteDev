@@ -126,7 +126,7 @@ function DsaFolder() {
                 <div className="flex justify-between w-[60px] items-center">
                   <div className="no-of-ques text-[15px] w-[30px] h-[30px] flex justify-center items-center">
                     {/* <p>{topic.totalQuestions}</p> */}
-                    <div className="radial-progress text-green-400" style={{ "--value": 0 ,  "--size": "30px", "--thickness": "4px" } as any} role="progressbar">{topic.totalQuestions}</div>
+                    <div className="radial-progress bg-green-700" style={{ "--value": 0 ,  "--size": "30px", "--thickness": "4px" } as any} role="progressbar">{topic.totalQuestions}</div>
                   </div>
                   <div className="text-[25px] hover:text-red-600 hover:rotate-6 transition-all cursor-pointer">
                     <AlertDialog>

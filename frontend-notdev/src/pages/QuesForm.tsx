@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import MonacoEditor from "../components-notdev/CodeEditor";
 // src/QuillEditor.tsx
 import ReactQuill from "react-quill";
@@ -67,7 +67,8 @@ const formats = [
 ];
 function QuestionForm() {
   const [activeTab, setActiveTab] = useState(1);
-  const {topicId} = useParams();
+  const { topicId } = useParams();
+  console.log("topicId : ", topicId);
   const [formData, setFormData] = useState<FormData>({
     title: "",
     description: "",
@@ -87,8 +88,6 @@ function QuestionForm() {
   });
   const navigate = useNavigate();
   useEffect(() => {
-    
-
     if (topicId) {
       setFormData((prevData) => ({
         ...prevData,
@@ -122,7 +121,10 @@ function QuestionForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData);
+    if (formData.tag.length === 0) {
+      toast.error("Please add at least one tag");
+      return;
+    }
     try {
       const response = await axios.post(
         "http://localhost:5000/api/questions/upload-question",
@@ -131,7 +133,6 @@ function QuestionForm() {
       toast.success("Form submitted successfully");
       console.log(response.data);
       navigate("/");
-
     } catch (error) {
       toast.error("Failed to submit form");
       console.error("Error:", error);
@@ -183,27 +184,49 @@ function QuestionForm() {
     }));
   };
 
+  const handleTagChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && (e.target as HTMLInputElement).value.trim() !== "") {
+        e.preventDefault();  // Prevent form submission
+        const newTag = (e.target as HTMLInputElement).value.trim();
+        setFormData((prevData) => ({
+            ...prevData,
+            tag: [...prevData.tag, newTag],
+        }));
+        (e.target as HTMLInputElement).value = "";
+    }
+};
+
+
+  const handleTagDelete = (index: number) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      tag: prevData.tag.filter((_, i) => i !== index),
+    }));
+  };
+
+  console.log("formData : ", formData);
+
   return (
     <>
-      <div className="max-w-lg mx-auto p-6">
+      <div className="max-w-lg mx-auto p-6 ">
         <h2 className="text-2xl font-bold mb-4">Question Form</h2>
         <div className="tabs">
-          <div className="flex space-x-4 mb-4 w-max">
+          <div className="flex space-x-4 mb-4 w-[400px] sm:w-full bg-red">
             <button
-              className={`px-4 py-2 rounded ${
+              className={`px-2 py-1 rounded ${
                 activeTab === 1
-                  ? "bg-gray-200 text-gray-900"
-                  : "bg-gray-900 text-white"
+                  ? "bg-gray-200 text-gray-800"
+                  : "bg-gray-800 text-white"
               }`}
               onClick={() => setActiveTab(1)}
             >
               Basic Info
             </button>
             <button
-              className={`px-4 py-2 rounded ${
+              className={`px-2 py-1 rounded ${
                 activeTab === 2
-                  ? "bg-gray-200 text-gray-900"
-                  : "bg-gray-900 text-white"
+                  ? "bg-gray-200 text-gray-800"
+                  : "bg-gray-800 text-white"
               }`}
               onClick={() => setActiveTab(2)}
             >
@@ -220,10 +243,10 @@ function QuestionForm() {
               Content
             </button> */}
             <button
-              className={`px-4 py-2 rounded ${
+              className={`px-2 py-1 rounded ${
                 activeTab === 4
-                  ? "bg-gray-200 text-gray-900"
-                  : "bg-gray-900 text-white"
+                  ? "bg-gray-200 text-gray-800"
+                  : "bg-gray-800 text-white"
               }`}
               onClick={() => setActiveTab(4)}
             >
@@ -231,7 +254,7 @@ function QuestionForm() {
             </button>
             <button
               type="submit"
-              className="bg-gradient-to-br from-blue-500 to-blue-800 hover:from-green-500 hover:to-green-900 transition-all rounded px-4 py-2"
+              className="bg-gradient-to-br from-blue-500 to-blue-800 hover:from-blue-800 hover:to-blue-500 transition-all rounded px-2 py-1"
               onClick={handleSubmit}
             >
               Submit
@@ -242,32 +265,32 @@ function QuestionForm() {
             {activeTab === 1 && (
               <div className="space-y-4">
                 <div>
-                  <label className="block">
+                  <label className="flex flex-col md:block">
                     Title:
                     <input
                       type="text"
                       name="title"
                       value={formData.title}
                       onChange={handleChange}
-                      className="border border-gray-300 rounded p-2 w-full"
+                      className="border border-gray-300 rounded p-2 w-[350px] sm:w-full"
                     />
                   </label>
                 </div>
                 <div>
-                  <label className="block">
+                  <label className="flex flex-col md:block">
                     Description:
                     <textarea
                       name="description"
                       value={formData.description}
                       onChange={handleChange}
-                      className="border border-gray-300 rounded p-2 w-full"
+                      className="border border-gray-300 rounded p-2 w-[350px] sm:w-full"
                     ></textarea>
                   </label>
                 </div>
                 <div>
-                  <label className="block">
+                  <label className="flex flex-col md:block">
                     Difficulty:
-                    <div className="flex space-x-4 bg-[#121212] h-[50px] border-[1px] border-white rounded-[6px] justify-evenly">
+                    <div className="flex space-x-4 bg-[#121212] h-[50px] border-[1px] border-white rounded-[6px] justify-evenly w-[350px] sm:w-full">
                       <label className="flex items-center space-x-2">
                         <input
                           type="radio"
@@ -327,36 +350,44 @@ function QuestionForm() {
                     </div>
                   </label>
                 </div>
-                <div>
+                {/* <div>
                   <label className="block">
                     Topic ID:
                     <input
                       type="text"
                       name="topicId"
                       value={formData.topicId}
-                      onChange={handleChange}
                       className="border border-gray-300 rounded p-2 w-full"
                     />
                   </label>
-                </div>
+                </div> */}
                 <div>
-                  <label className="block">
+                  <label className="flex flex-col md:block">
                     Tags:
                     <input
                       type="text"
                       name="tag"
-                      value={formData.tag.join(", ")}
-                      onChange={(e) =>
-                        setFormData((prevData) => ({
-                          ...prevData,
-                          tag: e.target.value
-                            .split(",")
-                            .map((tag) => tag.trim()),
-                        }))
-                      }
-                      className="border border-gray-300 rounded p-2 w-full"
+                      onKeyDown={handleTagChange}
+                      className="border border-gray-300 rounded p-2 w-[350px] sm:w-full"
                     />
                   </label>
+                  <div className="mt-2 flex flex-wrap">
+                    {formData.tag.map((tag, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center bg-[#00000050] text-[#ffffff70] rounded-full px-3 py-1 mr-2 mb-2"
+                      >
+                        <p className="">{tag}</p>
+                        <button
+                          type="button"
+                          className="ml-2"
+                          onClick={() => handleTagDelete(index)}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
@@ -364,38 +395,38 @@ function QuestionForm() {
             {activeTab === 2 && (
               <div className="space-y-4">
                 <div>
-                  <label className="block">
+                  <label className="flex flex-col md:block">
                     Leetcode Link:
                     <input
                       type="text"
                       name="leetcode"
                       value={formData.links.leetcode}
                       onChange={handleLinkChange}
-                      className="border border-gray-300 rounded p-2 w-full"
+                      className="border border-gray-300 rounded p-2 w-[350px] sm:w-full"
                     />
                   </label>
                 </div>
                 <div>
-                  <label className="block">
+                  <label className="flex flex-col md:block">
                     GFG Link:
                     <input
                       type="text"
                       name="gfg"
                       value={formData.links.gfg}
                       onChange={handleLinkChange}
-                      className="border border-gray-300 rounded p-2 w-full"
+                      className="border border-gray-300 rounded p-2 w-[350px] sm:w-full"
                     />
                   </label>
                 </div>
                 <div>
-                  <label className="block">
+                  <label className="flex flex-col md:block">
                     Codeforces Link:
                     <input
                       type="text"
                       name="codeforces"
                       value={formData.links.codeforces}
                       onChange={handleLinkChange}
-                      className="border border-gray-300 rounded p-2 w-full"
+                      className="border border-gray-300 rounded p-2 w-[350px] sm:w-full"
                     />
                   </label>
                 </div>
@@ -501,13 +532,13 @@ function QuestionForm() {
               modules={modules}
               formats={formats}
               theme="snow"
-              className="w-[500px] m-auto bg-appbg"
+              className="w-[350px] md:w-[464px] m-auto bg-appbg"
             />
           </span>
-          <div className="w-[500px] m-auto h-[330px]  my-[10px]">
-            <label className="block">
+          <div className="w-[350px] md:w-[464px] m-auto h-[330px]  my-[10px]">
+            <label className="flex flex-col md:block">
               Code:
-              <div className="w-[500px] h-[400px] m-auto">
+              <div className="w-[350px] md:w-[464px]  h-[400px] m-auto">
                 <MonacoEditor
                   language={language}
                   value={formData.code}
@@ -516,8 +547,8 @@ function QuestionForm() {
               </div>
             </label>
           </div>
-          <div className="w-[500px] mx-auto mt-[]">
-            <label className="block">
+          <div className="w-[350px] md:w-[464px]  mx-auto mt-[]">
+            <label className="flex flex-col md:block">
               Images:
               <input
                 type="file"
@@ -528,7 +559,7 @@ function QuestionForm() {
               />
             </label>
           </div>
-          <div className="w-[500px] m-auto my-[20px]">
+          <div className="w-[350px] md:w-[464px]  m-auto my-[20px]">
             <div className="grid grid-cols-5 gap-4 mt-4">
               {formData.images.map((image, index) => (
                 <div

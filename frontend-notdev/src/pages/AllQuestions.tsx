@@ -32,7 +32,6 @@ function QuestionList() {
   const topic = queryParams.get("title");
   const topicId = queryParams.get("topicId");
 
-
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
@@ -56,7 +55,7 @@ function QuestionList() {
       case "easy":
         return "bg-green-400";
       case "medium":
-        return "bg-orange-400";
+        return "bg-orange-300";
       case "hard":
         return "bg-red-600";
       default:
@@ -70,7 +69,7 @@ function QuestionList() {
   return (
     <div className="w-[100vw] h-max">
       <div className="flex justify-end">
-        <Link to={`/question/${topicId}`}>
+        <Link to={`/question-form/${topicId}/`}>
           <span className="flex justify-center items-center bg-btnbg w-[150px] text-[20px] rounded-[5px] cursor-pointer py-2 hover:bg-[#302f2f] transition-all active:scale-[0.95] m-2 mr-6">
             <MdOutlineCreateNewFolder className="text-[25px] mr-2 text-green-400" />
             <span>Create</span>
@@ -84,10 +83,12 @@ function QuestionList() {
       <div className="w-[60%] h-max flex flex-col justify-center px-8">
         {questions.map((question, index) => (
           <NavLink key={question._id} to={`/question/${question._id}`}>
-            <div className="h-[50px] bg-btnbg my-1 mx-auto rounded-[4px]  ease-in-out hover:bg-gradient-to-r hover:from-[#2f2d2d] hover:to-[#505050] transition duration-300">
+            <div className="question-item h-[50px] bg-[#212020] my-1 mx-auto rounded-[4px] transition duration-300 ease-in-out hover:bg-[#302f2f]">
               <div className="flex h-[50px] justify-between items-center px-4 font-light">
-                <p>{index + 1}</p>
-                <h2>{question.title}</h2>
+                <div className="flex">
+                  <p>{index + 1}</p>
+                  <h2 className="ml-[20px]">{question.title}</h2>
+                </div>
                 <h3
                   className={`${getDifficultyClass(
                     question.difficulty
