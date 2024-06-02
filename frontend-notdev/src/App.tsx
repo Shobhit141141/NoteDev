@@ -7,7 +7,7 @@ import QuestionList from "./pages/AllQuestions";
 import DsaForm from "./components-notdev/DsaFolderForm";
 import { Toaster } from "react-hot-toast";
 import  ResizableDemo from "./components-notdev/temp";
-import MyTabs from "./components-notdev/AceEditor";
+import TabNav from "./components-notdev/AceEditor";
 import QuillEditor from "./components-notdev/TextEditor";
 import SingleQuestion from "./pages/SingleQuestion";
 
@@ -24,7 +24,7 @@ function App() {
             <Route path="/questions" element={<QuestionList />} />
             <Route path="/dsa-topic-form" element={<DsaForm />} />
             <Route path="/temp" element={<ResizableDemo />} />
-            <Route path="/ace" element={<MyTabs />} />
+            {/* <Route path="/ace" element={<TabNav />} /> */}
             <Route path="/question/:id" element={<SingleQuestion />} />
 
 

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from "../../public/NotdevLogo.png";
+import logo from "/NotdevLogo.png";
 import {
   DropdownMenu,
   DropdownMenuContent,

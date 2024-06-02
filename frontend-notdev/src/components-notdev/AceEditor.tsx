@@ -1,13 +1,22 @@
 import { useState } from "react";
 import MonacoEditor from "./CodeEditor";
-import ImagePreview from "./ImagePreview";
+// import ImagePreview from "./ImagePreview";
 import QuillEditor from "./TextEditor";
+import Catalogue from "./Catalogue";
 
-const MyTabs = () => {
+const TabNav = ({
+  text,
+  images,
+  code,
+}: {
+  text: string;
+  images: string[];
+  code: string;
+}) => {
   const [activeTab, setActiveTab] = useState(1);
 
   return (
-    <div className="flex flex-col items-start space-y-4">
+    <div className="flex flex-col items-start space-y-4 mt-[20px]">
       <div className="flex space-x-4">
         <button
           className={`px-4 py-2 rounded ${
@@ -40,21 +49,30 @@ const MyTabs = () => {
           Notes
         </button>
       </div>
-      <div className="w-[100%] h-[85vh]">
+      <div className="w-[100%] h-[400px]">
         {activeTab === 1 && (
           <div>
-            <MonacoEditor language="" value="" onChange={() => console.log(void 0)} />
+            <MonacoEditor
+              language=""
+              value={code}
+              onChange={() => console.log(void 0)}
+            />
           </div>
         )}
         {activeTab === 2 && (
           <div>
-            <ImagePreview />
+            {/* <ImagePreview /> */}
+            <Catalogue images={images} />
           </div>
         )}
-        {activeTab === 3 && <div><QuillEditor value="" onChange={()=>console.log()}/></div>}
+        {activeTab === 3 && (
+          <div>
+            <QuillEditor value={text} onChange={() => console.log()} />
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default MyTabs;
+export default TabNav;
