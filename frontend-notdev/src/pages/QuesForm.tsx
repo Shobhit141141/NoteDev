@@ -552,32 +552,34 @@ function QuestionForm() {
               </div>
             </label>
           </div>
-          <div className="w-[350px] md:w-[464px]  mx-auto mb-[200px] translate-y-[100px]">
-            <label className="flex flex-col md:block">
-              Images:
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleImageChange}
-                className="border border-gray-300 rounded p-2 w-full"
-              />
-            </label>
-          </div>
-          <div className="w-[350px] md:w-[464px]  m-auto my-[20px]">
-            <div className="grid grid-cols-5 gap-4 mt-4">
-              {formData.images.map((image, index) => (
-                <div
-                  key={index}
-                  className="w-20 h-20 flex justify-center items-center border border-gray-300 rounded overflow-hidden"
-                >
-                  <img
-                    src={image}
-                    alt={`preview ${index}`}
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-              ))}
+          <div className=" mb-[200px] translate-y-[100px]">
+            <div className="w-[350px] md:w-[464px]  mx-auto ">
+              <label className="flex flex-col md:block">
+                Images:
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageChange}
+                  className="border border-gray-300 rounded p-2 w-full"
+                />
+              </label>
+            </div>
+            <div className="w-[350px] md:w-[464px]  m-auto my-[20px]">
+              <div className="grid grid-cols-5 gap-4 mt-4">
+                {formData.images.map((image, index) => (
+                  <div
+                    key={index}
+                    className="w-20 h-20 flex justify-center items-center border border-gray-300 rounded overflow-hidden"
+                  >
+                    <img
+                      src={image}
+                      alt={`preview ${index}`}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </>
