@@ -1,13 +1,25 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import lc from "/leetcode.svg";
 import gfg from "/gfg.svg";
 import yt from "/youtube.svg";
 import TabNav from "@/components-notdev/AceEditor";
-
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { MdDelete, MdEditDocument } from "react-icons/md";
+import toast from "react-hot-toast";
 interface Question {
   title: string;
   description: string;
@@ -30,6 +42,8 @@ const SingleQuestion: React.FC = () => {
   const [question, setQuestion] = useState<Question | null>(null);
   const [loading, setLoading] = useState<boolean>(true); // Loading state
   const { id } = useParams<{ id: string }>();
+  const [deleteTopicId, setDeleteTopicId] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchQuestion = async () => {
@@ -74,6 +88,21 @@ const SingleQuestion: React.FC = () => {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      console.log(deleteTopicId);
+      await axios.delete(
+        `http://localhost:5000/api/questions/delete-question/${deleteTopicId}`
+      );
+      navigate("/");
+      toast.success("Question deleted successfully");
+    } catch (error) {
+      console.error("Error deleting topic:", error);
+
+      toast.error("Failed to delete Question");
+    }
+  };
+
   return (
     <div>
       {loading ? (
@@ -92,15 +121,57 @@ const SingleQuestion: React.FC = () => {
           </SkeletonTheme>
         </div>
       ) : question ? (
-        <div className="w-[95%] md:w-[90%] bg-btnbg p-4 shadow-md px-8  rounded-2xl mx-auto">
-          <div className="flex justify-between">
-            <h2 className="text-[30px]">{question.title}</h2>
-            <span
-              className={`${getDifficultyClass(question.difficulty).text} ${
-                getDifficultyClass(question.difficulty).border
-              } px-4 rounded-[22px] border-2 flex justify-center items-center`}
-            >
-              {question.difficulty}
+        <div className="w-[95%] md:w-[90%] bg-[#00000090] p-4 shadow-md px-8  rounded-2xl mx-auto">
+          <div className="flex flex-col justify-between">
+            <div className="flex justify-between">
+              <h2 className="text-[30px]">{question.title}</h2>
+              <span
+                className={`${getDifficultyClass(question.difficulty).text} ${
+                  getDifficultyClass(question.difficulty).border
+                } px-4 rounded-[22px] border-2 flex justify-center items-center py-1 h-[40px]`}
+              >
+                {question.difficulty}
+              </span>
+            </div>
+            <span className="flex justify-start items-center gap-4 mt-[20px]">
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <button
+                    onClick={() => setDeleteTopicId(id || null)}
+                    className="text-white"
+                  >
+                    <MdDelete className="text-red-600 transition-all text-[40px] border-2 border-red-500 rounded p-2 hover:text-black hover:border-transparent hover:bg-red-500" />
+                  </button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="bg-appbg">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      your account and remove your data from our servers.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      className="text-red-500"
+                      onClick={() => {
+                        handleDelete();
+                        setDeleteTopicId(null);
+                      }}
+                    >
+                      Continue
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+
+              <MdEditDocument
+                className="text-blue-500 transition-all text-[40px] border-2 border-blue-500 rounded p-2 hover:text-black hover:border-transparent hover:bg-blue-500 cursor-pointer"
+                onClick={() => navigate(`/update-question/${id}`)}
+              />
             </span>
           </div>
           <p className="my-6 text-[20px] font-light roboto">
@@ -149,7 +220,11 @@ const SingleQuestion: React.FC = () => {
             )}
           </div>
 
-            <TabNav text={question.text ?? ''} code={question.code ?? ''} images={question.images ?? ''}/>
+          <TabNav
+            text={question.text ?? ""}
+            code={question.code ?? ""}
+            images={question.images ?? ""}
+          />
           <div className="flex flex-wrap mt-4">
             {question.tag.map((tag, index) => (
               <span

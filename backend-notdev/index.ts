@@ -2,8 +2,6 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './src/config/db';
-// import DSATopic from './models/DSATopic';
-// import Question from './models/Question';
 import questionRoutes from './src/routes/questionRoutes';
 import dsaTopicRoutes from './src/routes/dsaTopicRoutes';
 import bodyParser from 'body-parser';

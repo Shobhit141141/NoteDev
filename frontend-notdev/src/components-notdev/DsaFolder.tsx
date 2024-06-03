@@ -28,7 +28,9 @@ interface Topic {
 function DsaFolder() {
   const [loading, setLoading] = useState<boolean>(true);
   const [topics, setTopics] = useState<Topic[]>([]);
+  const [filteredTopics, setFilteredTopics] = useState<Topic[]>([]);
   const [deleteTopicId, setDeleteTopicId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,6 +39,7 @@ function DsaFolder() {
           "http://localhost:5000/api/topics/all-topics"
         );
         setTopics(response.data.topics);
+        setFilteredTopics(response.data.topics);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -46,6 +49,13 @@ function DsaFolder() {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const filtered = topics.filter((topic) =>
+      topic.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredTopics(filtered);
+  }, [searchQuery, topics]);
 
   const handleDelete = async () => {
     try {
@@ -57,6 +67,7 @@ function DsaFolder() {
         "http://localhost:5000/api/topics/all-topics"
       );
       setTopics(response.data.topics);
+      setFilteredTopics(response.data.topics);
 
       toast.success("Topic deleted successfully");
     } catch (error) {
@@ -75,6 +86,15 @@ function DsaFolder() {
             <span>Create</span>
           </span>
         </Link>
+      </div>
+      <div className="flex justify-center my-4">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search topics..."
+          className="w-[60%] p-2 border border-gray-300 rounded"
+        />
       </div>
       <div className="grid-container">
         {loading ? (
@@ -109,13 +129,12 @@ function DsaFolder() {
             </div>
           ))
         ) : (
-          // Render actual content once data is loaded
-          topics.map((topic, index) => (
+          filteredTopics.map((topic, index) => (
             <div key={index} className="grid-item">
               <div className="img-container">
-               <NavLink to={`/questions?title=${topic.title}&topicId=${topic._id}`}>
-               <img src={topic.image} alt={topic.title} />
-               </NavLink>
+                <NavLink to={`/questions?title=${topic.title}&topicId=${topic._id}`}>
+                  <img src={topic.image} alt={topic.title} />
+                </NavLink>
               </div>
 
               <div className="topic-details">
@@ -125,8 +144,17 @@ function DsaFolder() {
 
                 <div className="flex justify-between w-[60px] items-center">
                   <div className="no-of-ques text-[15px] w-[30px] h-[30px] flex justify-center items-center">
-                    {/* <p>{topic.totalQuestions}</p> */}
-                    <div className="radial-progress bg-green-700" style={{ "--value": 0 ,  "--size": "30px", "--thickness": "4px" } as any} role="progressbar">{topic.totalQuestions}</div>
+                    <div
+                      className="radial-progress bg-green-700"
+                      style={{
+                        "--value": 0,
+                        "--size": "30px",
+                        "--thickness": "4px",
+                      } as any}
+                      role="progressbar"
+                    >
+                      {topic.totalQuestions}
+                    </div>
                   </div>
                   <div className="text-[25px] hover:text-red-600 hover:rotate-6 transition-all cursor-pointer">
                     <AlertDialog>
@@ -135,7 +163,7 @@ function DsaFolder() {
                           onClick={() => setDeleteTopicId(topic._id)}
                           className="text-white"
                         >
-                          <MdDelete className="text-white hover:text-red-600 transition-all"/>
+                          <MdDelete className="text-white hover:text-red-600 transition-all" />
                         </button>
                       </AlertDialogTrigger>
                       <AlertDialogContent className="bg-appbg">
@@ -150,9 +178,7 @@ function DsaFolder() {
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                          <AlertDialogCancel>
-                            Cancel
-                          </AlertDialogCancel>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
                           <AlertDialogAction
                             className="text-red-500"
                             onClick={() => {
@@ -172,7 +198,6 @@ function DsaFolder() {
           ))
         )}
       </div>
-    
     </div>
   );
 }

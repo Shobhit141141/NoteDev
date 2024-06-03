@@ -6,7 +6,7 @@ const router = express.Router();
 router.post("/upload-question", createQuestion);
 router.delete("/delete-question/:id", deleteQuestion);
 router.get("/get-questions", getQuestions);
-router.patch('/questions/:id', updateQuestion);
+router.patch('/update-question/:id', updateQuestion);
 router.get("/filter-by-difficulty", filterQuestionsByDifficulty);
 router.get('/question/:id', getQuestionById);
 export default router;

@@ -3,7 +3,7 @@ import DSATopic from "../models/DSATopic";
 
 export const createDSATopic = async (req: Request, res: Response) => {
   try {
-    const { title: title , image:image} = req.body;
+    const { title: title, image: image } = req.body;
 
     if (!title) {
       return res
@@ -19,7 +19,7 @@ export const createDSATopic = async (req: Request, res: Response) => {
 
     const newTopic = new DSATopic({
       title: title,
-      image:image,
+      image: image,
     });
 
     await newTopic.save();
@@ -51,7 +51,6 @@ export const deleteDSATopic = async (req: Request, res: Response) => {
   }
 };
 
-
 export const getAllDSATopics = async (req: Request, res: Response) => {
   try {
     const topics = await DSATopic.find().sort({ title: 1 }); // Sort by title in ascending order
@@ -60,4 +59,36 @@ export const getAllDSATopics = async (req: Request, res: Response) => {
     console.error("Error fetching DSA topics:", error);
     res.status(500).json({ message: "Server error" });
   }
+
+  
 };
+export const getSingleTopic = async (req: Request, res: Response) => {
+  const {id} = req.params;
+  try {
+    
+    const topics = await DSATopic.findById(id).sort({ title: 1 }); // Sort by title in ascending order
+    res.status(200).json({ topics });
+  } catch (error) {
+    console.error("Error fetching DSA topics:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+
+// In your backend controller
+export const getQuestionsByTopicId = async (req: Request, res: Response) => {
+  try {
+    const topicId = req.params.topicId;
+    const topic = await DSATopic.findById(topicId).populate('questions');
+    if (!topic) {
+      return res.status(404).json({ message: "Topic not found" });
+    }
+    res.json(topic.questions);
+  } catch (error) {
+    console.error("Error fetching DSA topics:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+

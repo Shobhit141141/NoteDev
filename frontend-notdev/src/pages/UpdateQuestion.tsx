@@ -7,7 +7,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import toast from "react-hot-toast";
-
+import { RxCross2 } from "react-icons/rx";
 // import QuillEditor from "@/components-notdev/TextEditor";
 type FormData = {
   title: string;
@@ -65,18 +65,16 @@ const formats = [
   "blockquote",
   "code-block",
 ];
-
 function QuestionForm() {
   const [activeTab, setActiveTab] = useState(1);
-  const { topicId } = useParams();
-  const queryParams = new URLSearchParams(location.search);
-  const topic = queryParams.get("topic");
+  const { id } = useParams();
+  console.log("topicId : ", id);
   const [formData, setFormData] = useState<FormData>({
     title: "",
     description: "",
     difficulty: "",
     topicId: "",
-    tag: [`${topic}`],
+    tag: [],
     links: {
       leetcode: "",
       gfg: "",
@@ -88,16 +86,24 @@ function QuestionForm() {
     youtubeLink: "",
     images: [],
   });
-
   const navigate = useNavigate();
   useEffect(() => {
-    if (topicId) {
-      setFormData((prevData) => ({
-        ...prevData,
-        topicId,
-      }));
-    }
-  }, [location.search]);
+    // Fetch data from backend
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/questions/question/${id}`
+        );
+        console.log(response.data);
+        setFormData(response.data);
+        console.log(formData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData(); // Call the fetchData function
+  }, [id]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -124,20 +130,15 @@ function QuestionForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.tag.length === 0) {
-      toast.error("Please add at least one tag");
-      return;
-    }
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/questions/upload-question",
+      await axios.patch(
+        `http://localhost:5000/api/questions//update-question/${id}`,
         formData
       );
-      toast.success("Form submitted successfully");
-      console.log(response.data);
+      toast.success("Form updated successfully");
       navigate("/");
     } catch (error) {
-      toast.error("Failed to submit form");
+      toast.error("Failed to update form");
       console.error("Error:", error);
     }
   };
@@ -166,13 +167,21 @@ function QuestionForm() {
       .then((base64Files) => {
         setFormData((prevData) => ({
           ...prevData,
-          images: base64Files,
+          images: [...prevData.images, ...base64Files], // Append new images to the existing array
         }));
       })
       .catch((error) =>
         console.error("Error converting images to base64:", error)
       );
   };
+
+  const handleImageDelete = (indexToDelete: number) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      images: prevData.images.filter((_, index) => index !== indexToDelete), // Filter out the image with the specified index
+    }));
+  };
+
   const handleInputChange = (field: string, value: string) => {
     setFormData({
       ...formData,
@@ -543,7 +552,7 @@ function QuestionForm() {
           <div className="w-[350px] md:w-[464px] m-auto h-[330px]  my-[10px]">
             <label className="flex flex-col md:block">
               Code:
-              <div className="w-[350px] md:w-[464px]  h-[400px] m-auto">
+              <div className="w-[350px] md:w-[464px]  h-[300px] m-auto">
                 <MonacoEditor
                   language={language}
                   value={formData.code}
@@ -552,32 +561,41 @@ function QuestionForm() {
               </div>
             </label>
           </div>
-          <div className="w-[350px] md:w-[464px]  mx-auto mt-[]">
-            <label className="flex flex-col md:block">
-              Images:
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleImageChange}
-                className="border border-gray-300 rounded p-2 w-full"
-              />
-            </label>
-          </div>
-          <div className="w-[350px] md:w-[464px]  m-auto my-[20px]">
-            <div className="grid grid-cols-5 gap-4 mt-4">
-              {formData.images.map((image, index) => (
-                <div
-                  key={index}
-                  className="w-20 h-20 flex justify-center items-center border border-gray-300 rounded overflow-hidden"
-                >
-                  <img
-                    src={image}
-                    alt={`preview ${index}`}
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-              ))}
+          <div className="flex flex-col translate-y-[100px]">
+            <div className="w-[350px] md:w-[464px] mx-auto mt-4">
+              <label className="flex flex-col md:block">
+                Images:
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageChange}
+                  className="border border-gray-300 rounded p-2 w-full"
+                />
+              </label>
+            </div>
+
+            <div className="w-[350px] md:w-[464px]  m-auto my-[20px]">
+              <div className="grid grid-cols-5 gap-4 mt-4">
+                {formData.images.map((image, index) => (
+                  <div key={index} className="relative">
+                    <div className="w-20 h-20 flex justify-center items-center border border-gray-300 rounded overflow-hidden">
+                      <img
+                        src={image}
+                        alt={`preview ${index}`}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      className="absolute top-0 right-0 -mt-1 -mr-1 p-1 bg-red-500 text-black rounded-full text-xs hover:bg-red-600 focus:outline-none focus:bg-red-600 text-[30px] font-bold"
+                      onClick={() => handleImageDelete(index)}
+                    >
+                     <RxCross2/>
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </>

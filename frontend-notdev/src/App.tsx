@@ -7,9 +7,9 @@ import QuestionList from "./pages/AllQuestions";
 import DsaForm from "./components-notdev/DsaFolderForm";
 import { Toaster } from "react-hot-toast";
 import  ResizableDemo from "./components-notdev/temp";
-import TabNav from "./components-notdev/AceEditor";
 import QuillEditor from "./components-notdev/TextEditor";
 import SingleQuestion from "./pages/SingleQuestion";
+import UpdateQuestion from "./pages/UpdateQuestion";
 
 function App() {
   return (
@@ -26,7 +26,7 @@ function App() {
             <Route path="/temp" element={<ResizableDemo />} />
             {/* <Route path="/ace" element={<TabNav />} /> */}
             <Route path="/question/:id" element={<SingleQuestion />} />
-
+            <Route path="/update-question/:id" element={<UpdateQuestion />} />
 
             <Route path="/editor" element={<QuillEditor value="" onChange={()=>console.log()}/>} />
 
