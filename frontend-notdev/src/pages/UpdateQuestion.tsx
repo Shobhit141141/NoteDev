@@ -561,7 +561,7 @@ function QuestionForm() {
               </div>
             </label>
           </div>
-          <div className="flex flex-col translate-y-[100px]">
+          <div className="flex flex-col translate-y-[100px] mb-[200px]">
             <div className="w-[350px] md:w-[464px] mx-auto mt-4">
               <label className="flex flex-col md:block">
                 Images:
