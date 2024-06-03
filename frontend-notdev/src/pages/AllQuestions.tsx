@@ -104,7 +104,7 @@ function QuestionList() {
       <div className="w-[80%] sm:w-[25%] flex justify-between px-4 sm:px-8 items-center my-4">
         <button
           onClick={() => setDifficultyFilter("")}
-          className={`px-2 py-1 rounded ${difficultyFilter === "" ? "bg-blue-500 text-white" : "bg-gray-200 text-black"}`}
+          className={`px-2 py-1 rounded ${difficultyFilter === "" ? "bg-blue-700 text-white" : "bg-gray-200 text-black"}`}
         >
           All
         </button>
