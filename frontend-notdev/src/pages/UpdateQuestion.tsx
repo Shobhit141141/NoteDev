@@ -92,7 +92,7 @@ function QuestionForm() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/questions/question/${id}`
+          `${import.meta.env.VITE_SERVER_URL}/api/questions/question/${id}`
         );
         console.log(response.data);
         setFormData(response.data);

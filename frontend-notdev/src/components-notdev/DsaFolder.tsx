@@ -36,7 +36,7 @@ function DsaFolder() {
     const fetchData = async () => {
       try {
         const response = await axios.get<{ topics: Topic[] }>(
-          "http://localhost:5000/api/topics/all-topics"
+          `${import.meta.env.VITE_SERVER_URL}/api/topics/all-topics`
         );
         setTopics(response.data.topics);
         setFilteredTopics(response.data.topics);
@@ -60,11 +60,11 @@ function DsaFolder() {
   const handleDelete = async () => {
     try {
       await axios.delete(
-        `http://localhost:5000/api/topics/delete-topic/${deleteTopicId}`
+        `${import.meta.env.VITE_SERVER_URL}/api/topics/delete-topic/${deleteTopicId}`
       );
 
       const response = await axios.get<{ topics: Topic[] }>(
-        "http://localhost:5000/api/topics/all-topics"
+        `${import.meta.env.VITE_SERVER_URL}/api/topics/all-topics`
       );
       setTopics(response.data.topics);
       setFilteredTopics(response.data.topics);

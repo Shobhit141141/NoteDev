@@ -130,7 +130,7 @@ function QuestionForm() {
     }
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/questions/upload-question",
+        `${import.meta.env.VITE_SERVER_URL}/api/questions/upload-question`,
         formData
       );
       toast.success("Form submitted successfully");

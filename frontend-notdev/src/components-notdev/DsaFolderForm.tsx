@@ -36,7 +36,7 @@ const DsaForm = () => {
     }
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/topics/create-topic",
+        `${import.meta.env.VITE_SERVER_URL}/api/topics/create-topic`,
         {
           title,
           image,

@@ -39,7 +39,7 @@ function QuestionList() {
     const fetchQuestions = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/topics/topics/${topicId}/questions`
+          `${import.meta.env.VITE_SERVER_URL}/api/topics/topics/${topicId}/questions`
         );
         setQuestions(response.data);
         setFilteredQuestions(response.data);
