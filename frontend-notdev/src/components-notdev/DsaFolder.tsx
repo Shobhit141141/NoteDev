@@ -148,7 +148,7 @@ function DsaFolder() {
 
                   <div className="flex justify-between w-[60px] items-center">
                     <div className="no-of-ques text-[15px] w-[30px] h-[30px] flex justify-center items-center">
-                      <div
+                      {/* <div
                         className="radial-progress bg-green-700"
                         style={
                           {
@@ -160,9 +160,12 @@ function DsaFolder() {
                         role="progressbar"
                       >
                         {topic.totalQuestions}
+                      </div> */}
+                      <div className="bg-green-400 w-[50px] text-black h-[30px] flex justify-center items-center rounded-[6px]">
+                      {topic.totalQuestions}
                       </div>
                     </div>
-                    <div className="text-[25px] hover:text-red-600 hover:rotate-6 transition-all cursor-pointer">
+                    <div className="text-[25px] hover:text-red-600 hover:rotate-6 transition-all cursor-pointer  h-[30px] ">
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <button
@@ -196,7 +199,7 @@ function DsaFolder() {
                             </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
-                      </AlertDialog>{" "}
+                      </AlertDialog>
                     </div>
                   </div>
                 </div>
