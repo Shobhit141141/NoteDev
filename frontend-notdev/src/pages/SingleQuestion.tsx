@@ -92,7 +92,7 @@ const SingleQuestion: React.FC = () => {
     try {
       console.log(deleteTopicId);
       await axios.delete(
-        `http://localhost:5000/api/questions/delete-question/${deleteTopicId}`
+        `${import.meta.env.VITE_SERVER_URL}api/questions/delete-question/${deleteTopicId}`
       );
       navigate("/");
       toast.success("Question deleted successfully");

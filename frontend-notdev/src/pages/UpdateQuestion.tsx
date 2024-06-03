@@ -132,7 +132,7 @@ function QuestionForm() {
     e.preventDefault();
     try {
       await axios.patch(
-        `http://localhost:5000/api/questions//update-question/${id}`,
+        `${import.meta.env.VITE_SERVER_URL}/api/questions/update-question/${id}`,
         formData
       );
       toast.success("Form updated successfully");
