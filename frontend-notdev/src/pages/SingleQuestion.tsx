@@ -128,51 +128,12 @@ const SingleQuestion: React.FC = () => {
               <span
                 className={`${getDifficultyClass(question.difficulty).text} ${
                   getDifficultyClass(question.difficulty).border
-                } px-4 rounded-[22px] border-2 flex justify-center items-center py-1 h-[40px]`}
+                } px-4 rounded-[22px] border-2 flex justify-center items-center h-[35px] sm:h-[44px] md:h-[44px] lg:h-[44px] text-sm sm:text-base md:text-[20px] lg:text-[20px]`}
               >
                 {question.difficulty}
               </span>
             </div>
-            <span className="flex justify-start items-center gap-4 mt-[20px]">
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <button
-                    onClick={() => setDeleteTopicId(id || null)}
-                    className="text-white"
-                  >
-                    <MdDelete className="text-red-600 transition-all text-[40px] border-2 border-red-500 rounded p-2 hover:text-black hover:border-transparent hover:bg-red-500" />
-                  </button>
-                </AlertDialogTrigger>
-                <AlertDialogContent className="bg-appbg">
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Are you absolutely sure?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      your account and remove your data from our servers.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      className="text-red-500"
-                      onClick={() => {
-                        handleDelete();
-                        setDeleteTopicId(null);
-                      }}
-                    >
-                      Continue
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-
-              <MdEditDocument
-                className="text-blue-500 transition-all text-[40px] border-2 border-blue-500 rounded p-2 hover:text-black hover:border-transparent hover:bg-blue-500 cursor-pointer"
-                onClick={() => navigate(`/update-question/${id}`)}
-              />
-            </span>
+            
           </div>
           <p className="my-6 text-[20px] font-light roboto">
             {question.description}
@@ -235,6 +196,46 @@ const SingleQuestion: React.FC = () => {
               </span>
             ))}
           </div>
+          <span className="flex justify-start items-center gap-4 mt-[20px]">
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <button
+                    onClick={() => setDeleteTopicId(id || null)}
+                    className="text-white"
+                  >
+                    <MdDelete className="text-red-600 transition-all text-[40px] border-2 border-red-500 rounded p-2 hover:text-black hover:border-transparent hover:bg-red-500" />
+                  </button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="bg-appbg">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      your account and remove your data from our servers.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      className="text-red-500"
+                      onClick={() => {
+                        handleDelete();
+                        setDeleteTopicId(null);
+                      }}
+                    >
+                      Continue
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+
+              <MdEditDocument
+                className="text-blue-500 transition-all text-[40px] border-2 border-blue-500 rounded p-2 hover:text-black hover:border-transparent hover:bg-blue-500 cursor-pointer"
+                onClick={() => navigate(`/update-question/${id}`)}
+              />
+            </span>
         </div>
       ) : (
         <div>No question found</div>
