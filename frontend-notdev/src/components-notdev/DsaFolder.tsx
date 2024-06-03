@@ -60,7 +60,9 @@ function DsaFolder() {
   const handleDelete = async () => {
     try {
       await axios.delete(
-        `${import.meta.env.VITE_SERVER_URL}/api/topics/delete-topic/${deleteTopicId}`
+        `${
+          import.meta.env.VITE_SERVER_URL
+        }/api/topics/delete-topic/${deleteTopicId}`
       );
 
       const response = await axios.get<{ topics: Topic[] }>(
@@ -79,7 +81,16 @@ function DsaFolder() {
 
   return (
     <div className="dsa-wrapper relative">
-      <div className="flex justify-end">
+      <div className="flex justify-between items-center">
+        <div className="flex justify-start my-4 pl-10 w-[60%]">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search topics..."
+            className="w-[100%] sm:w-[50%] p-2 border border-gray-300 rounded"
+          />
+        </div>
         <Link to={"/dsa-topic-form"}>
           <span className="flex justify-center items-center bg-btnbg w-[150px] text-[20px] rounded-[5px] cursor-pointer py-2 hover:bg-[#302f2f] transition-all active:scale-[0.95] m-2 mr-6">
             <MdOutlineCreateNewFolder className="text-[25px] mr-2 text-green-400" />
@@ -87,116 +98,110 @@ function DsaFolder() {
           </span>
         </Link>
       </div>
-      <div className="flex justify-center my-4">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search topics..."
-          className="w-[60%] p-2 border border-gray-300 rounded"
-        />
-      </div>
+
       <div className="grid-container">
-        {loading ? (
-          Array.from({ length: 12 }, (_, index) => (
-            <div key={index}>
-              <SkeletonTheme
-                baseColor="#ffffff10"
-                highlightColor="#fff"
-                duration={500}
-                direction="ltr"
-                enableAnimation={true}
-              >
-                <Skeleton
-                  width={250}
-                  height={150}
-                  className="animated-skeleton animate-pulse"
-                />
-                <div className="flex justify-between w-[250px]">
+        {loading
+          ? Array.from({ length: 12 }, (_, index) => (
+              <div key={index}>
+                <SkeletonTheme
+                  baseColor="#ffffff10"
+                  highlightColor="#fff"
+                  duration={500}
+                  direction="ltr"
+                  enableAnimation={true}
+                >
                   <Skeleton
-                    width={190}
-                    height={50}
+                    width={250}
+                    height={150}
                     className="animated-skeleton animate-pulse"
                   />
-                  <Skeleton
-                    width={50}
-                    height={50}
-                    circle={true}
-                    className="animated-skeleton animate-pulse"
-                  />
-                </div>
-              </SkeletonTheme>
-            </div>
-          ))
-        ) : (
-          filteredTopics.map((topic, index) => (
-            <div key={index} className="grid-item">
-              <div className="img-container">
-                <NavLink to={`/questions?title=${topic.title}&topicId=${topic._id}`}>
-                  <img src={topic.image} alt={topic.title} />
-                </NavLink>
+                  <div className="flex justify-between w-[250px]">
+                    <Skeleton
+                      width={190}
+                      height={50}
+                      className="animated-skeleton animate-pulse"
+                    />
+                    <Skeleton
+                      width={50}
+                      height={50}
+                      circle={true}
+                      className="animated-skeleton animate-pulse"
+                    />
+                  </div>
+                </SkeletonTheme>
               </div>
-
-              <div className="topic-details">
-                <div className="title">
-                  <p>{topic.title}</p>
+            ))
+          : filteredTopics.map((topic, index) => (
+              <div key={index} className="grid-item">
+                <div className="img-container">
+                  <NavLink
+                    to={`/questions?title=${topic.title}&topicId=${topic._id}`}
+                  >
+                    <img src={topic.image} alt={topic.title} />
+                  </NavLink>
                 </div>
 
-                <div className="flex justify-between w-[60px] items-center">
-                  <div className="no-of-ques text-[15px] w-[30px] h-[30px] flex justify-center items-center">
-                    <div
-                      className="radial-progress bg-green-700"
-                      style={{
-                        "--value": 0,
-                        "--size": "30px",
-                        "--thickness": "4px",
-                      } as any}
-                      role="progressbar"
-                    >
-                      {topic.totalQuestions}
+                <div className="topic-details">
+                  <div className="title">
+                    <p>{topic.title}</p>
+                  </div>
+
+                  <div className="flex justify-between w-[60px] items-center">
+                    <div className="no-of-ques text-[15px] w-[30px] h-[30px] flex justify-center items-center">
+                      <div
+                        className="radial-progress bg-green-700"
+                        style={
+                          {
+                            "--value": 0,
+                            "--size": "30px",
+                            "--thickness": "4px",
+                          } as any
+                        }
+                        role="progressbar"
+                      >
+                        {topic.totalQuestions}
+                      </div>
+                    </div>
+                    <div className="text-[25px] hover:text-red-600 hover:rotate-6 transition-all cursor-pointer">
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <button
+                            onClick={() => setDeleteTopicId(topic._id)}
+                            className="text-white"
+                          >
+                            <MdDelete className="text-white hover:text-red-600 transition-all" />
+                          </button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent className="bg-appbg">
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Are you absolutely sure?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This action cannot be undone. This will
+                              permanently delete your account and remove your
+                              data from our servers.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              className="text-red-500"
+                              onClick={() => {
+                                handleDelete();
+                                setDeleteTopicId(null);
+                              }}
+                            >
+                              Continue
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>{" "}
                     </div>
                   </div>
-                  <div className="text-[25px] hover:text-red-600 hover:rotate-6 transition-all cursor-pointer">
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <button
-                          onClick={() => setDeleteTopicId(topic._id)}
-                          className="text-white"
-                        >
-                          <MdDelete className="text-white hover:text-red-600 transition-all" />
-                        </button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent className="bg-appbg">
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>
-                            Are you absolutely sure?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This action cannot be undone. This will permanently
-                            delete your account and remove your data from our
-                            servers.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction
-                            className="text-red-500"
-                            onClick={() => {
-                              handleDelete();
-                              setDeleteTopicId(null);
-                            }}
-                          >
-                            Continue
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>{" "}
-                  </div>
                 </div>
               </div>
-            </div>
-          ))
-        )}
+            ))}
       </div>
     </div>
   );
