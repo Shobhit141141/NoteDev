@@ -68,6 +68,8 @@ const formats = [
 function QuestionForm() {
   const [activeTab, setActiveTab] = useState(1);
   const { id } = useParams();
+  const [updating, setupdating] = useState(false);
+  const [fetching, setfetching] = useState(false);
   console.log("topicId : ", id);
   const [formData, setFormData] = useState<FormData>({
     title: "",
@@ -90,14 +92,17 @@ function QuestionForm() {
   useEffect(() => {
     // Fetch data from backend
     const fetchData = async () => {
+      setfetching(true);
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_SERVER_URL}/api/questions/question/${id}`
         );
-        console.log(response.data);
+
         setFormData(response.data);
-        console.log(formData);
+        setfetching(false);
       } catch (error) {
+        setfetching(false);
+
         console.error("Error fetching data:", error);
       }
     };
@@ -130,14 +135,21 @@ function QuestionForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setupdating(true);
     try {
       await axios.patch(
-        `${import.meta.env.VITE_SERVER_URL}/api/questions/update-question/${id}`,
+        `${
+          import.meta.env.VITE_SERVER_URL
+        }/api/questions/update-question/${id}`,
         formData
       );
       toast.success("Form updated successfully");
+      setupdating(false);
+
       navigate("/");
     } catch (error) {
+      setupdating(false);
+
       toast.error("Failed to update form");
       console.error("Error:", error);
     }
@@ -271,7 +283,7 @@ function QuestionForm() {
               className="bg-gradient-to-br from-blue-500 to-blue-800 hover:from-blue-800 hover:to-blue-500 transition-all rounded px-2 py-1"
               onClick={handleSubmit}
             >
-              Submit
+              {fetching || updating ? <span className="loading loading-dots loading-sm flex "></span> : "Update"}
             </button>
           </div>
 
@@ -591,7 +603,7 @@ function QuestionForm() {
                       className="absolute top-0 right-0 -mt-1 -mr-1 p-1 bg-red-500 text-black rounded-full text-xs hover:bg-red-600 focus:outline-none focus:bg-red-600 text-[30px] font-bold"
                       onClick={() => handleImageDelete(index)}
                     >
-                     <RxCross2/>
+                      <RxCross2 />
                     </button>
                   </div>
                 ))}

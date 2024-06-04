@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { MdDelete, MdEditDocument } from "react-icons/md";
 import toast from "react-hot-toast";
+
 interface Question {
   title: string;
   description: string;
@@ -92,7 +93,9 @@ const SingleQuestion: React.FC = () => {
     try {
       console.log(deleteTopicId);
       await axios.delete(
-        `${import.meta.env.VITE_SERVER_URL}api/questions/delete-question/${deleteTopicId}`
+        `${
+          import.meta.env.VITE_SERVER_URL
+        }api/questions/delete-question/${deleteTopicId}`
       );
       navigate("/");
       toast.success("Question deleted successfully");
@@ -106,22 +109,75 @@ const SingleQuestion: React.FC = () => {
   return (
     <div>
       {loading ? (
-        <div>
-          <SkeletonTheme
-            baseColor="#ffffff20"
-            highlightColor="#fff"
-            direction="rtl"
-            enableAnimation={true}
-          >
-            <Skeleton
-              height={50}
-              width={200}
-              className="animated-skeleton animate-pulse rounded-[6px]"
-            />
-          </SkeletonTheme>
-        </div>
+        <SkeletonTheme
+          baseColor="#ffffff20"
+          highlightColor="#fff"
+          direction="rtl"
+          enableAnimation={true}
+        >
+          <div className="w-[95%] md:w-[90%] bg-[#00000090] p-4 shadow-md px-8 rounded-2xl mx-auto">
+            <div className="flex flex-col justify-between">
+              <div className="flex justify-between items-center">
+                <Skeleton
+                  height={40}
+                  width={300}
+                  className="animated-skeleton animate-pulse rounded-[6px]"
+                />
+                <Skeleton
+                  height={35}
+                  width={100}
+                  className="animated-skeleton animate-pulse rounded-[22px]"
+                />
+              </div>
+              <Skeleton
+                height={100}
+                width="100%"
+                className="my-6 animated-skeleton animate-pulse rounded-[6px]"
+              />
+              <div className="flex gap-5">
+                <Skeleton
+                  height={50}
+                  width={50}
+                  className="animated-skeleton animate-pulse rounded-[15px]"
+                />
+                <Skeleton
+                  height={50}
+                  width={50}
+                  className="animated-skeleton animate-pulse rounded-[15px]"
+                />
+                <Skeleton
+                  height={50}
+                  width={50}
+                  className="animated-skeleton animate-pulse rounded-[15px]"
+                />
+              </div>
+              <Skeleton
+                height={200}
+                width="100%"
+                className="my-6 animated-skeleton animate-pulse rounded-[6px]"
+              />
+              <div className="flex flex-wrap mt-4 gap-2">
+                <Skeleton
+                  height={30}
+                  width={60}
+                  className="animated-skeleton animate-pulse rounded-full"
+                />
+                <Skeleton
+                  height={30}
+                  width={60}
+                  className="animated-skeleton animate-pulse rounded-full"
+                />
+                <Skeleton
+                  height={30}
+                  width={60}
+                  className="animated-skeleton animate-pulse rounded-full"
+                />
+              </div>
+            </div>
+          </div>
+        </SkeletonTheme>
       ) : question ? (
-        <div className="w-[95%] md:w-[90%] bg-[#00000090] p-4 shadow-md px-8  rounded-2xl mx-auto">
+        <div className="w-[95%] md:w-[90%] bg-[#00000090] p-4 shadow-md px-8 rounded-2xl mx-auto">
           <div className="flex flex-col justify-between">
             <div className="flex justify-between">
               <h2 className="text-[30px]">{question.title}</h2>
@@ -133,7 +189,6 @@ const SingleQuestion: React.FC = () => {
                 {question.difficulty}
               </span>
             </div>
-            
           </div>
           <p className="my-6 text-[20px] font-light roboto">
             {question.description}
@@ -165,7 +220,6 @@ const SingleQuestion: React.FC = () => {
                 />
               </a>
             )}
-
             {question.youtubeLink && (
               <a
                 href={question.youtubeLink}
@@ -174,7 +228,7 @@ const SingleQuestion: React.FC = () => {
               >
                 <img
                   src={yt}
-                  alt="GeeksforGeeks"
+                  alt="YouTube"
                   className="w-[50px] h-[50px] bg-[#111010] p-2 rounded-[15px] hover:bg-[#000000] transition-all cursor-pointer"
                 />
               </a>
@@ -196,46 +250,44 @@ const SingleQuestion: React.FC = () => {
               </span>
             ))}
           </div>
-          <span className="flex justify-start items-center gap-4 mt-[20px]">
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <button
-                    onClick={() => setDeleteTopicId(id || null)}
-                    className="text-white"
+          <span className="flex justify-start items-center gap-4 my-[20px] mb-[40px]">
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <button
+                  onClick={() => setDeleteTopicId(id || null)}
+                  className="text-white"
+                >
+                  <MdDelete className="text-red-600 transition-all text-[40px] border-2 border-red-500 rounded p-2 hover:text-black hover:border-transparent hover:bg-red-500" />
+                </button>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="bg-appbg">
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    your account and remove your data from our servers.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    className="text-red-500"
+                    onClick={() => {
+                      handleDelete();
+                      setDeleteTopicId(null);
+                    }}
                   >
-                    <MdDelete className="text-red-600 transition-all text-[40px] border-2 border-red-500 rounded p-2 hover:text-black hover:border-transparent hover:bg-red-500" />
-                  </button>
-                </AlertDialogTrigger>
-                <AlertDialogContent className="bg-appbg">
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Are you absolutely sure?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      your account and remove your data from our servers.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      className="text-red-500"
-                      onClick={() => {
-                        handleDelete();
-                        setDeleteTopicId(null);
-                      }}
-                    >
-                      Continue
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+                    Continue
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
 
-              <MdEditDocument
-                className="text-blue-500 transition-all text-[40px] border-2 border-blue-500 rounded p-2 hover:text-black hover:border-transparent hover:bg-blue-500 cursor-pointer"
-                onClick={() => navigate(`/update-question/${id}`)}
-              />
-            </span>
+            <MdEditDocument
+              className="text-blue-500 transition-all text-[40px] border-2 border-blue-500 rounded p-2 hover:text-black hover:border-transparent hover:bg-blue-500 cursor-pointer"
+              onClick={() => navigate(`/update-question/${id}`)}
+            />
+          </span>
         </div>
       ) : (
         <div>No question found</div>

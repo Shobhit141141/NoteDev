@@ -21,7 +21,7 @@ const navItems = [
 ];
 
 function Header() {
-  const [position, setPosition] = useState("bottom");
+  const [position, setPosition] = useState("Navbar");
 
   return (
     <div className="flex justify-between w-full items-center header-container px-4 sm:px-8">
