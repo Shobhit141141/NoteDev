@@ -69,22 +69,22 @@ const SingleQuestion: React.FC = () => {
       case "easy":
         return {
           text: "text-green-400",
-          border: "border-green-400",
+          bg: "bg-green-400",
         };
       case "medium":
         return {
           text: "text-orange-300",
-          border: "border-orange-300",
+          bg: "bg-orange-300",
         };
       case "hard":
         return {
           text: "text-red-500",
-          border: "border-red-500",
+          bg: "bg-red-500",
         };
       default:
         return {
           text: "",
-          border: "",
+          bg: "",
         };
     }
   };
@@ -182,9 +182,9 @@ const SingleQuestion: React.FC = () => {
             <div className="flex justify-between">
               <h2 className="text-[30px]">{question.title}</h2>
               <span
-                className={`${getDifficultyClass(question.difficulty).text} ${
-                  getDifficultyClass(question.difficulty).border
-                } px-4 rounded-[22px] border-2 flex justify-center items-center h-[35px] sm:h-[44px] md:h-[44px] lg:h-[44px] text-sm sm:text-base md:text-[20px] lg:text-[20px]`}
+                className={`{getDifficultyClass(question.difficulty).text} ${
+                  getDifficultyClass(question.difficulty).bg
+                } text-black px-4 rounded-[22px] flex justify-center items-center h-[35px] sm:h-[44px] md:h-[44px] lg:h-[44px] text-sm sm:text-base md:text-[20px] lg:text-[20px]`}
               >
                 {question.difficulty}
               </span>
