@@ -2,12 +2,12 @@ import { Carousel, Image } from "antd";
 
 function Catalogue({ images }: { images: string[] }) {
   return (
-    <div className=" w-[350px] h-[250px] sm:w-[500px] md:h-[300px] m-auto">
+    <div className=" w-[250px] h-[250px] sm:w-[500px] md:h-[300px] m-auto">
       <Carousel arrows infinite={false}>
         {images.map((src, index) => (
           <div
             key={index}
-            className="flex justify-center items-center my-auto w-[350px] h-[250px] sm:w-[500px] md:h-[300px] "
+            className="flex justify-center items-center my-auto w-[250px] h-[250px] sm:w-[500px] md:h-[300px] "
           >
             <Image
               width={"100%"}
