@@ -1,8 +1,7 @@
-<div align="center">
-    <img src="frontend-notdev/public/NotdevLogo.png" alt="NoteDev Logo" width="100px" height="100px"> <h1 align="center" id="title">NoteDev</h1>
-  
+<div align="center" style="display: flex; flex-direction: row; align-items: center;">
+    <img src="frontend-notdev/public/NotdevLogo.png" alt="NoteDev Logo" width="100px" height="100px">
+    <h1 align="center" id="title" style="font-size: calc(100px / 2.5);">NoteDev</h1>
 </div>
-
 <p id="description">NoteDev is a dynamic DSA note-taking app built with TypeScript, Shadcn, Ant Design, and DaisyUI. It supports creating text notes, code snippets, and images, offering a seamless experience for organizing and accessing DSA concepts. Features include folders, tags, search functionality, and a responsive design for optimal use across devices.</p>
 
 <h2>🚀 Live at </h2>
