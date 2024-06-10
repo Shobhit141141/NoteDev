@@ -4,6 +4,7 @@ import cors from 'cors';
 import connectDB from './src/config/db';
 import questionRoutes from './src/routes/questionRoutes';
 import dsaTopicRoutes from './src/routes/dsaTopicRoutes';
+import userRoutes from './src/routes/userRoutes'
 import bodyParser from 'body-parser';
 import path from 'path';
 
@@ -27,7 +28,7 @@ app.get('/', (req, res) => {
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/questions', questionRoutes);
 app.use('/api/topics', dsaTopicRoutes);
-
+app.use('/api/users', userRoutes);
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

@@ -1,11 +1,18 @@
-import express from 'express';
-import { createDSATopic, deleteDSATopic, getAllDSATopics, getQuestionsByTopicId, getSingleTopic } from '../controllers/dsaTopicController';
+import express from "express";
+import {
+  createDSATopic,
+  deleteDSATopic,
+  getAllDSATopics,
+  getQuestionsByTopicId,
+  getSingleTopic,
+} from "../controllers/dsaTopicController";
+import verifyToken from "../middleware/GoogleAuthMiddleware";
 
 const router = express.Router();
 
-router.post('/create-topic', createDSATopic);
-router.delete('/delete-topic/:id', deleteDSATopic);
-router.get('/all-topics',getAllDSATopics)
-router.get('/topic/:id',getSingleTopic)
-router.get('/topics/:topicId/questions', getQuestionsByTopicId);
+router.post("/create-topic", verifyToken, createDSATopic);
+router.delete("/delete-topic/:id", verifyToken, deleteDSATopic);
+router.get("/all-topics", verifyToken, getAllDSATopics);
+router.get("/topic/:id", verifyToken, getSingleTopic);
+router.get("/topics/:topicId/questions", verifyToken, getQuestionsByTopicId);
 export default router;

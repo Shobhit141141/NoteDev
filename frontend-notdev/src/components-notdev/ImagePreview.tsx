@@ -10,7 +10,7 @@ import {
 import { Image, Space } from "antd";
 
 const ImagePreview: React.FC = () => {
-  const onDownload = (src: any) => {
+  const onDownload = (src: string) => {
     fetch(src)
       .then((response) => response.blob())
       .then((blob) => {
