@@ -11,6 +11,7 @@ import QuillEditor from "./components-notdev/TextEditor";
 import SingleQuestion from "./pages/SingleQuestion";
 import UpdateQuestion from "./pages/UpdateQuestion";
 import SignIn from "./pages/SignIn";
+// import localStorageEncryption from "./pages/ED";
 
 function App() {
   return (
@@ -28,7 +29,6 @@ function App() {
             <Route path="/signin" element={<SignIn />} />
             <Route path="/question/:id" element={<SingleQuestion />} />
             <Route path="/update-question/:id" element={<UpdateQuestion />} />
-
             <Route
               path="/editor"
               element={<QuillEditor value="" onChange={() => console.log()} />}

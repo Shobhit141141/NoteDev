@@ -16,4 +16,5 @@ export default interface IQuestion extends Document {
   text: string;
   solutionLink: string;
   youtubeLink: string;
+  createdBy:string
 }

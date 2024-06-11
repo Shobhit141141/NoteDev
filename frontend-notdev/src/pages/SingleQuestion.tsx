@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+
 import { useNavigate, useParams } from "react-router-dom";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { MdDelete, MdEditDocument } from "react-icons/md";
 import toast from "react-hot-toast";
+import { useAuth } from "@/context/GoogleAuthContext";
+import { deleteDSAQues, fetchSingleQuesData } from "@/apis/quesApi";
 
 interface Question {
   title: string;
@@ -43,15 +45,16 @@ const SingleQuestion: React.FC = () => {
   const [question, setQuestion] = useState<Question | null>(null);
   const [loading, setLoading] = useState<boolean>(true); // Loading state
   const { id } = useParams<{ id: string }>();
-  const [deleteTopicId, setDeleteTopicId] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { token } = useAuth();
 
   useEffect(() => {
     const fetchQuestion = async () => {
       try {
-        const response = await axios.get<Question>(
-          `${import.meta.env.VITE_SERVER_URL}/api/questions/question/${id}`
-        );
+        if (!id || !token) {
+          return;
+        }
+        const response = await fetchSingleQuesData(id, token);
         console.log(response.data);
         setQuestion(response.data);
         setLoading(false);
@@ -62,7 +65,7 @@ const SingleQuestion: React.FC = () => {
     };
 
     fetchQuestion();
-  }, [id]);
+  }, [id,token]);
 
   const getDifficultyClass = (difficulty: "easy" | "medium" | "hard") => {
     switch (difficulty) {
@@ -73,8 +76,8 @@ const SingleQuestion: React.FC = () => {
         };
       case "medium":
         return {
-          text: "text-orange-300",
-          bg: "bg-orange-300",
+          text: "text-orange-500",
+          bg: "bg-orange-400",
         };
       case "hard":
         return {
@@ -91,18 +94,16 @@ const SingleQuestion: React.FC = () => {
 
   const handleDelete = async () => {
     try {
-      console.log(deleteTopicId);
-      await axios.delete(
-        `${
-          import.meta.env.VITE_SERVER_URL
-        }api/questions/delete-question/${deleteTopicId}`
-      );
+      if (!id || !token) {
+        return;
+      }
+      console.log("Deleting question with id:", id);
+      await deleteDSAQues(id, token);
       navigate("/");
       toast.success("Question deleted successfully");
     } catch (error) {
-      console.error("Error deleting topic:", error);
-
-      toast.error("Failed to delete Question");
+      console.error("Error deleting question:", error);
+      toast.error("Failed to delete question");
     }
   };
 
@@ -253,10 +254,7 @@ const SingleQuestion: React.FC = () => {
           <span className="flex justify-start items-center gap-4 my-[20px] mb-[40px]">
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <button
-                  onClick={() => setDeleteTopicId(id || null)}
-                  className="text-white"
-                >
+                <button className="text-white">
                   <MdDelete className="text-red-600 transition-all text-[40px] border-2 border-red-500 rounded p-2 hover:text-black hover:border-transparent hover:bg-red-500" />
                 </button>
               </AlertDialogTrigger>
@@ -274,7 +272,6 @@ const SingleQuestion: React.FC = () => {
                     className="text-red-500"
                     onClick={() => {
                       handleDelete();
-                      setDeleteTopicId(null);
                     }}
                   >
                     Continue

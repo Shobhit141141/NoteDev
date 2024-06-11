@@ -1,14 +1,15 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
-import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import { createDSATopic } from "@/apis/dsaApi";
+import { useAuth } from "@/context/GoogleAuthContext";
 
 const DsaForm = () => {
   const navigate = useNavigate(); // Initialize useNavigate
   const [title, setTitle] = useState<string>("");
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<string | null>("");
   const [errors, setErrors] = useState<{ title?: string; image?: string }>({});
-
+  const { user ,token } = useAuth();
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -34,14 +35,12 @@ const DsaForm = () => {
     if (Object.keys(validationErrors).length > 0) {
       return;
     }
+    if (!user || !token) {
+      toast.error("You must be logged in to submit the form");
+      return;
+    }
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/api/topics/create-topic`,
-        {
-          title,
-          image,
-        }
-      );
+      const response = await createDSATopic(title, image, token);
       toast.success("Form submitted successfully");
       console.log(response.data);
       navigate("/"); // Redirect to home page

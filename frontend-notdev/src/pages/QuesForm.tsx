@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
-import MonacoEditor from "../components-notdev/CodeEditor";
-// src/QuillEditor.tsx
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom"; 
 import toast from "react-hot-toast";
+import { createDSAQues } from "@/apis/quesApi";
+import { useAuth } from "@/context/GoogleAuthContext";
+import { RxCross2 } from "react-icons/rx";
+import CodeEditor from "@/components-notdev/SecondaryCodeEditor";
 
-// import QuillEditor from "@/components-notdev/TextEditor";
 type FormData = {
   title: string;
   description: string;
@@ -88,6 +88,7 @@ function QuestionForm() {
     youtubeLink: "",
     images: [],
   });
+  const { token } = useAuth()
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -97,7 +98,7 @@ function QuestionForm() {
         topicId,
       }));
     }
-  }, [location.search]);
+  }, [topicId]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -129,10 +130,10 @@ function QuestionForm() {
       return;
     }
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/api/questions/upload-question`,
-        formData
-      );
+      if(!token){
+        return
+      }
+      const response = await createDSAQues(formData,token)
       toast.success("Form submitted successfully");
       console.log(response.data);
       navigate("/");
@@ -201,6 +202,14 @@ function QuestionForm() {
       (e.target as HTMLInputElement).value = "";
     }
   };
+
+  const handleImageDelete = (indexToDelete: number) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      images: prevData.images.filter((_, index) => index !== indexToDelete), // Filter out the image with the specified index
+    }));
+  };
+
 
   const handleTagDelete = (index: number) => {
     setFormData((prevData) => ({
@@ -543,8 +552,8 @@ function QuestionForm() {
           <div className="w-[350px] md:w-[464px] m-auto h-[330px]  my-[10px]">
             <label className="flex flex-col md:block">
               Code:
-              <div className="w-[350px] md:w-[464px]  h-[400px] m-auto">
-                <MonacoEditor
+              <div className="w-[350px] md:w-[464px]  h-[300px] m-auto">
+                <CodeEditor
                   language={language}
                   value={formData.code}
                   onChange={handleCodeChange}
@@ -568,15 +577,21 @@ function QuestionForm() {
             <div className="w-[350px] md:w-[464px]  m-auto my-[20px]">
               <div className="grid grid-cols-5 gap-4 mt-4">
                 {formData.images.map((image, index) => (
-                  <div
-                    key={index}
-                    className="w-20 h-20 flex justify-center items-center border border-gray-300 rounded overflow-hidden"
-                  >
-                    <img
-                      src={image}
-                      alt={`preview ${index}`}
-                      className="object-cover w-full h-full"
-                    />
+                  <div key={index} className="relative">
+                    <div className="w-20 h-20 flex justify-center items-center border border-gray-300 rounded overflow-hidden">
+                      <img
+                        src={image}
+                        alt={`preview ${index}`}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      className="absolute top-0 right-0 -mt-1 -mr-1 p-1 bg-red-500 text-black rounded-full text-xs hover:bg-red-600 focus:outline-none focus:bg-red-600 text-[30px] font-bold"
+                      onClick={() => handleImageDelete(index)}
+                    >
+                      <RxCross2 />
+                    </button>
                   </div>
                 ))}
               </div>

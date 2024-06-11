@@ -8,9 +8,8 @@ type MonacoEditorProps = {
   onChange: (newCode: string) => void;
 };
 
-const MonacoEditor: React.FC<MonacoEditorProps> = ({ value, onChange }) => {
+const CodeEditor: React.FC<MonacoEditorProps> = ({ value, onChange }) => {
   const [code, setCode] = useState<string>(value);
-  const [fontSize, setFontSize] = useState<number>(14);
 
   useEffect(() => {
     setCode(value);
@@ -21,13 +20,17 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({ value, onChange }) => {
     onChange(value ?? '');
   };
 
-  const handleFontSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setFontSize(parseInt(event.target.value));
-  };
+//   const handleFontSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+//     setFontSize(parseInt(event.target.value));
+//   };
+
+//   const handleEditorClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+//     event.stopPropagation(); // Prevent click event from bubbling up
+//   };
 
   return (
     <div className="flex-grow rounded-xl h-[350px]">
-      <div className="flex justify-end mb-2">
+      {/* <div className="flex justify-end mb-2">
         <select
           className="px-2 py-1 mx-1 bg-btnbg rounded"
           value={fontSize}
@@ -39,7 +42,7 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({ value, onChange }) => {
             </option>
           ))}
         </select>
-      </div>
+      </div> */}
       <div className='h-[100%]'>
         <Editor
           height="100%"
@@ -47,7 +50,7 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({ value, onChange }) => {
           value={code}
           theme="vs-dark"
           options={{
-            fontSize: fontSize,
+            fontSize: 12,
             minimap: { enabled: false },
             readOnly: false,
             lineNumbers: 'on',
@@ -66,4 +69,4 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({ value, onChange }) => {
   );
 };
 
-export default MonacoEditor;
+export default CodeEditor;

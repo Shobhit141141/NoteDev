@@ -1,7 +1,8 @@
 import * as admin from 'firebase-admin';
-
-const serviceAccount = require("./notedev-6eca3-firebase-adminsdk-ju8mp-5ce91b1ce3.json");
-
+import dotenv from 'dotenv';
+dotenv.config();
+// const serviceAccount = require("./notedev-ca409-firebase-adminsdk-wh8mj-f01a6ede4b");
+const serviceAccount = JSON.parse(process.env.FIREBASE_PRIVATE_KEY || "{}");
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });

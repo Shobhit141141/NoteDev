@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { MdDelete, MdOutlineCreateNewFolder } from "react-icons/md";
-import axios from "axios";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import toast from "react-hot-toast";
@@ -17,6 +16,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { deleteDSATopic, fetchTopicsData } from "@/apis/dsaApi";
+import { useAuth } from "@/context/GoogleAuthContext";
 
 interface Topic {
   title: string;
@@ -31,16 +32,19 @@ function DsaFolder() {
   const [filteredTopics, setFilteredTopics] = useState<Topic[]>([]);
   const [deleteTopicId, setDeleteTopicId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const { token } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!token) {
+        return;
+      }
       try {
-        const response = await axios.get<{ topics: Topic[] }>(
-          `${import.meta.env.VITE_SERVER_URL}/api/topics/all-topics`
-        );
+        const response = await fetchTopicsData(token);
         setTopics(response.data.topics);
         setFilteredTopics(response.data.topics);
         setLoading(false);
+    
       } catch (error) {
         console.error("Error fetching data:", error);
         setLoading(false);
@@ -48,7 +52,7 @@ function DsaFolder() {
     };
 
     fetchData();
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     const filtered = topics.filter((topic) =>
@@ -59,22 +63,19 @@ function DsaFolder() {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(
-        `${
-          import.meta.env.VITE_SERVER_URL
-        }/api/topics/delete-topic/${deleteTopicId}`
-      );
-
-      const response = await axios.get<{ topics: Topic[] }>(
-        `${import.meta.env.VITE_SERVER_URL}/api/topics/all-topics`
-      );
+      if (!token || !deleteTopicId) {
+        return;
+      }
+  
+      await deleteDSATopic(deleteTopicId,token);
+  
+      const response = await fetchTopicsData(token);
       setTopics(response.data.topics);
       setFilteredTopics(response.data.topics);
-
+  
       toast.success("Topic deleted successfully");
     } catch (error) {
       console.error("Error deleting topic:", error);
-
       toast.error("Failed to delete topic");
     }
   };
@@ -162,7 +163,7 @@ function DsaFolder() {
                         {topic.totalQuestions}
                       </div> */}
                       <div className="bg-green-400 w-[50px] text-black h-[30px] flex justify-center items-center rounded-[6px]">
-                      {topic.totalQuestions}
+                        {topic.totalQuestions}
                       </div>
                     </div>
                     <div className="text-[25px] hover:text-red-600 hover:rotate-6 transition-all cursor-pointer  h-[30px] ">

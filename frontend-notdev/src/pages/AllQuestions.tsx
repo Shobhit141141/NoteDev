@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Link, NavLink } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { MdOutlineCreateNewFolder } from "react-icons/md";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { fetchQuesData } from "@/apis/quesApi";
+import { useAuth } from "@/context/GoogleAuthContext";
 
 type Question = {
   _id: string;
@@ -36,15 +37,14 @@ function QuestionList() {
   const queryParams = new URLSearchParams(location.search);
   const topic = queryParams.get("title");
   const topicId = queryParams.get("topicId");
-
+  const { token } = useAuth();
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await axios.get(
-          `${
-            import.meta.env.VITE_SERVER_URL
-          }/api/topics/topics/${topicId}/questions`
-        );
+        if (!token || !topicId) {
+          return;
+        }
+        const response = await fetchQuesData(topicId, token);
         setQuestions(response.data);
         setFilteredQuestions(response.data);
       } catch (error) {
@@ -55,7 +55,7 @@ function QuestionList() {
     };
 
     fetchQuestions();
-  }, [topicId]);
+  }, [topicId,token]);
 
   useEffect(() => {
     const filtered = questions.filter((question) => {
@@ -110,17 +110,30 @@ function QuestionList() {
             <Skeleton width={60} height={30} className="animate-pulse" />
           </div>
           <div className="w-full sm:w-[60%] h-max flex flex-col justify-center px-4 sm:px-8">
-          {Array.from({ length: 8 }, (_, index) => (
-            <div key={index}>
-              <div className="question-item h-[50px] my-1 mx-auto rounded-[4px] transition duration-300 ease-in-out">
-                <div className="flex h-[50px] justify-between items-center px-4 font-light">
-                  <Skeleton width={40} height={40} className="animate-pulse" />
-                  <Skeleton width={200} height={40} className="animate-pulse" />
-                  <Skeleton width={15} height={15} circle={true} className="animate-pulse" />
+            {Array.from({ length: 8 }, (_, index) => (
+              <div key={index}>
+                <div className="question-item h-[50px] my-1 mx-auto rounded-[4px] transition duration-300 ease-in-out">
+                  <div className="flex h-[50px] justify-between items-center px-4 font-light">
+                    <Skeleton
+                      width={40}
+                      height={40}
+                      className="animate-pulse"
+                    />
+                    <Skeleton
+                      width={200}
+                      height={40}
+                      className="animate-pulse"
+                    />
+                    <Skeleton
+                      width={15}
+                      height={15}
+                      circle={true}
+                      className="animate-pulse"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
           </div>
         </SkeletonTheme>
       </div>

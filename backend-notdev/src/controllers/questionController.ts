@@ -1,9 +1,13 @@
 import { Request, Response } from "express";
 import DSATopic from "../models/DSATopic";
 import Question from "../models/Question";
-import IDSATopic from "../interfaces/dsatopic.interface";
-import IQuestion from "../interfaces/question.interface";
 import mongoose from "mongoose";
+
+// Middleware to extract user from request
+const getUserUID = (req: Request): string | null => {
+  // This is a placeholder, adapt as necessary for your authentication mechanism
+  return req.user?.uid || null;
+};
 
 export const createQuestion = async (
   req: Request,
@@ -24,6 +28,12 @@ export const createQuestion = async (
       youtubeLink,
     } = req.body;
 
+    const createdBy = getUserUID(req);
+    if (!createdBy) {
+      res.status(404).json({ message: "Unauthorized" });
+      return;
+    }
+
     const newQuestion = new Question({
       title,
       description,
@@ -36,27 +46,24 @@ export const createQuestion = async (
       text,
       solutionLink,
       youtubeLink,
+      createdBy, // Set the creator UID
     });
 
-    const dsatopic = await DSATopic.findById(topicId);
-
+    const dsatopic = await DSATopic.findById({_id: topicId, createdBy});
     if (!dsatopic) {
       res.status(404).json({ message: "DSATopic not found" });
       return;
     }
+
     const savedQuestion = await newQuestion.save();
-
     dsatopic.totalQuestions += 1;
-
     if (
       !savedQuestion._id ||
       !(savedQuestion._id instanceof mongoose.Types.ObjectId)
     ) {
       throw new Error("Invalid _id type");
     }
-
     dsatopic.questions.push(savedQuestion._id);
-
     if (difficulty === "easy") {
       dsatopic.easy.push(savedQuestion._id);
     } else if (difficulty === "medium") {
@@ -66,7 +73,6 @@ export const createQuestion = async (
     }
 
     await dsatopic.save();
-
     res.status(201).json(savedQuestion);
   } catch (error) {
     console.error(error);
@@ -76,21 +82,35 @@ export const createQuestion = async (
 
 export const deleteQuestion = async (req: Request, res: Response) => {
   const questionId = req.params.id;
+  const userUID = getUserUID(req);
+
+  if (!userUID) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
 
   try {
-    const questionToDelete = await Question.findById(questionId);
+    const questionToDelete = await Question.findOne({
+      _id: questionId,
+      createdBy: userUID, 
+    });
     if (!questionToDelete) {
       return res.status(404).json({ message: "Question not found" });
+    }
+
+    if (questionToDelete.createdBy !== userUID) {
+      return res
+        .status(403)
+        .json({ message: "Forbidden: You cannot delete this question" });
     }
 
     const topic = await DSATopic.findById(questionToDelete.topicId);
     if (!topic) {
       return res.status(404).json({ message: "DSATopic not found" });
     }
+
     topic.questions = topic.questions.filter(
       (id) => id.toString() !== questionId
     );
-
     switch (questionToDelete.difficulty) {
       case "easy":
         topic.easy = topic.easy.filter((id) => id.toString() !== questionId);
@@ -106,9 +126,7 @@ export const deleteQuestion = async (req: Request, res: Response) => {
     }
 
     topic.totalQuestions -= 1;
-
     await topic.save();
-
     await Question.deleteOne({ _id: questionId });
 
     res.status(200).json({ message: "Question deleted successfully" });
@@ -117,24 +135,11 @@ export const deleteQuestion = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 export const getQuestions = async (req: Request, res: Response) => {
   try {
     const questions = await Question.find().populate("topicId", "title");
-
-    const questionsWithTopicName = await Promise.all(
-      questions.map(async (question) => {
-        const topic = await DSATopic.findById(question.topicId);
-        if (!topic) {
-          throw new Error("DSATopic not found");
-        }
-        return {
-          ...question.toObject(),
-          topicId: topic.title,
-        };
-      })
-    );
-
-    res.status(200).json(questionsWithTopicName);
+    res.status(200).json(questions);
   } catch (error) {
     console.error("Error fetching questions:", error);
     res.status(500).json({ message: "Server error" });
@@ -159,11 +164,24 @@ export const getTopicName = async (req: Request, res: Response) => {
 
 export const updateQuestion = async (req: Request, res: Response) => {
   const questionId: string = req.params.id;
+  const userUID = getUserUID(req);
+
+  if (!userUID) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
 
   try {
-    let questionToUpdate = await Question.findById(questionId);
+    let questionToUpdate = await Question.findOne({
+      _id: questionId,
+      createdBy: userUID, 
+    });
     if (!questionToUpdate) {
       return res.status(404).json({ message: "Question not found" });
+    }
+    if (questionToUpdate.createdBy !== userUID) {
+      return res
+        .status(403)
+        .json({ message: "Forbidden: You cannot update this question" });
     }
 
     const {
@@ -231,12 +249,10 @@ export const updateQuestion = async (req: Request, res: Response) => {
 
     questionToUpdate = await questionToUpdate.save();
 
-    res
-      .status(200)
-      .json({
-        message: "Question updated successfully",
-        question: questionToUpdate,
-      });
+    res.status(200).json({
+      message: "Question updated successfully",
+      question: questionToUpdate,
+    });
   } catch (error) {
     console.error("Error updating question:", error);
     res.status(500).json({ message: "Server error" });
@@ -251,7 +267,6 @@ export const filterQuestionsByDifficulty = async (
 
   try {
     const filteredQuestions = await Question.find({ difficulty });
-
     res.status(200).json(filteredQuestions);
   } catch (error) {
     console.error("Error filtering questions by difficulty:", error);
@@ -259,17 +274,17 @@ export const filterQuestionsByDifficulty = async (
   }
 };
 
-
 export const getQuestionById = async (req: Request, res: Response) => {
   const questionId = req.params.id;
 
   try {
-    const question = await Question.findById(questionId).populate("topicId", "title");
-
+    const question = await Question.findById(questionId).populate(
+      "topicId",
+      "title"
+    );
     if (!question) {
       return res.status(404).json({ message: "Question not found" });
     }
-
     res.status(200).json(question);
   } catch (error) {
     console.error("Error fetching question by ID:", error);

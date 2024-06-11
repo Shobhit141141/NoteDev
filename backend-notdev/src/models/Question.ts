@@ -22,6 +22,7 @@ const QuestionSchema: Schema = new Schema({
   solutionLink: { type: String },
   youtubeLink: { type: String },
   images: [{ type: String }],
+  createdBy: { type: String, ref: "User" },
 });
 
 const Question = mongoose.model<IQuestion>("Question", QuestionSchema);

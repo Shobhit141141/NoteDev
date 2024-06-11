@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
-import MonacoEditor from "../components-notdev/CodeEditor";
-// src/QuillEditor.tsx
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
 import toast from "react-hot-toast";
 import { RxCross2 } from "react-icons/rx";
+import CodeEditor from "@/components-notdev/SecondaryCodeEditor";
+import { fetchSingleQuesData, updateDSAQues } from "@/apis/quesApi";
+import { useAuth } from "@/context/GoogleAuthContext";
 // import QuillEditor from "@/components-notdev/TextEditor";
 type FormData = {
   title: string;
@@ -88,15 +87,17 @@ function QuestionForm() {
     youtubeLink: "",
     images: [],
   });
-  const navigate = useNavigate();
+  const { token } = useAuth();
+  // const navigate = useNavigate();
   useEffect(() => {
     // Fetch data from backend
     const fetchData = async () => {
       setfetching(true);
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_SERVER_URL}/api/questions/question/${id}`
-        );
+        if (!id || !token) {
+          return;
+        }
+        const response = await fetchSingleQuesData(id, token);
 
         setFormData(response.data);
         setfetching(false);
@@ -108,7 +109,7 @@ function QuestionForm() {
     };
 
     fetchData(); // Call the fetchData function
-  }, [id]);
+  }, [id, token]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -120,7 +121,7 @@ function QuestionForm() {
     }));
   };
 
-  const language = "cpp";
+  // const language = "cpp";
 
   const handleLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -137,16 +138,14 @@ function QuestionForm() {
     e.preventDefault();
     setupdating(true);
     try {
-      await axios.patch(
-        `${
-          import.meta.env.VITE_SERVER_URL
-        }/api/questions/update-question/${id}`,
-        formData
-      );
+      if (!id || !token) {
+        return;
+      }
+      updateDSAQues(formData, token, id);
       toast.success("Form updated successfully");
       setupdating(false);
 
-      navigate("/");
+      window.history.back();
     } catch (error) {
       setupdating(false);
 
@@ -179,7 +178,7 @@ function QuestionForm() {
       .then((base64Files) => {
         setFormData((prevData) => ({
           ...prevData,
-          images: [...prevData.images, ...base64Files], // Append new images to the existing array
+          images: [...prevData.images, ...base64Files], 
         }));
       })
       .catch((error) =>
@@ -190,7 +189,7 @@ function QuestionForm() {
   const handleImageDelete = (indexToDelete: number) => {
     setFormData((prevData) => ({
       ...prevData,
-      images: prevData.images.filter((_, index) => index !== indexToDelete), // Filter out the image with the specified index
+      images: prevData.images.filter((_, index) => index !== indexToDelete),
     }));
   };
 
@@ -283,7 +282,11 @@ function QuestionForm() {
               className="bg-gradient-to-br from-blue-500 to-blue-800 hover:from-blue-800 hover:to-blue-500 transition-all rounded px-2 py-1"
               onClick={handleSubmit}
             >
-              {fetching || updating ? <span className="loading loading-dots loading-sm flex "></span> : "Update"}
+              {fetching || updating ? (
+                <span className="loading loading-dots loading-sm flex "></span>
+              ) : (
+                "Update"
+              )}
             </button>
           </div>
 
@@ -565,8 +568,8 @@ function QuestionForm() {
             <label className="flex flex-col md:block">
               Code:
               <div className="w-[350px] md:w-[464px]  h-[300px] m-auto">
-                <MonacoEditor
-                  language={language}
+                <CodeEditor
+                  language={""}
                   value={formData.code}
                   onChange={handleCodeChange}
                 />

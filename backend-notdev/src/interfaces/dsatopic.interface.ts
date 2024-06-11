@@ -9,4 +9,5 @@ export default interface IDSATopic extends Document {
   easy: mongoose.Types.ObjectId[];
   medium: mongoose.Types.ObjectId[];
   hard: mongoose.Types.ObjectId[];
+  createdBy:string
 }
