@@ -8,8 +8,9 @@ const DsaForm = () => {
   const navigate = useNavigate(); // Initialize useNavigate
   const [title, setTitle] = useState<string>("");
   const [image, setImage] = useState<string>("");
+  const [submitting, setsubmitting] = useState(false);
   const [errors, setErrors] = useState<{ title?: string; image?: string }>({});
-  const { user ,token } = useAuth();
+  const { user, token } = useAuth();
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -32,6 +33,7 @@ const DsaForm = () => {
     e.preventDefault();
     const validationErrors = validate();
     setErrors(validationErrors);
+
     if (Object.keys(validationErrors).length > 0) {
       return;
     }
@@ -39,12 +41,15 @@ const DsaForm = () => {
       toast.error("You must be logged in to submit the form");
       return;
     }
+    setsubmitting(true);
     try {
       const response = await createDSATopic(title, image, token);
       toast.success("Form submitted successfully");
       console.log(response.data);
-      navigate("/"); // Redirect to home page
+      navigate("/"); 
+      setsubmitting(false);
     } catch (error) {
+      setsubmitting(false);
       toast.error("Failed to submit form");
       console.error(error);
     }
@@ -55,9 +60,7 @@ const DsaForm = () => {
       <Toaster />
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Title
-          </label>
+          <label className="block text-sm font-medium text-white">Title</label>
           <input
             type="text"
             value={title}
@@ -71,9 +74,7 @@ const DsaForm = () => {
           )}
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Image
-          </label>
+          <label className="block text-sm font-medium text-white">Image</label>
           <input
             type="file"
             accept="image/*"
@@ -90,7 +91,11 @@ const DsaForm = () => {
           type="submit"
           className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
         >
-          Submit
+          {submitting ? (
+            <span className="loading loading-dots loading-md flex mx-auto"></span>
+          ) : (
+            "Create"
+          )}
         </button>
       </form>
     </div>

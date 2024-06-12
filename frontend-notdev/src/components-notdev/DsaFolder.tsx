@@ -18,7 +18,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import { deleteDSATopic, fetchTopicsData } from "@/apis/dsaApi";
 import { useAuth } from "@/context/GoogleAuthContext";
-
+import { TbPhotoCode } from "react-icons/tb";
+import { LiaFileCode } from "react-icons/lia";
+import { LuCode } from "react-icons/lu";
 interface Topic {
   title: string;
   image: string;
@@ -32,7 +34,7 @@ function DsaFolder() {
   const [filteredTopics, setFilteredTopics] = useState<Topic[]>([]);
   const [deleteTopicId, setDeleteTopicId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const { token } = useAuth();
+  const { user, token } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,7 +46,6 @@ function DsaFolder() {
         setTopics(response.data.topics);
         setFilteredTopics(response.data.topics);
         setLoading(false);
-    
       } catch (error) {
         console.error("Error fetching data:", error);
         setLoading(false);
@@ -66,13 +67,13 @@ function DsaFolder() {
       if (!token || !deleteTopicId) {
         return;
       }
-  
-      await deleteDSATopic(deleteTopicId,token);
-  
+
+      await deleteDSATopic(deleteTopicId, token);
+
       const response = await fetchTopicsData(token);
       setTopics(response.data.topics);
       setFilteredTopics(response.data.topics);
-  
+
       toast.success("Topic deleted successfully");
     } catch (error) {
       console.error("Error deleting topic:", error);
@@ -80,25 +81,81 @@ function DsaFolder() {
     }
   };
 
+  if (!user) {
+    return (
+      <div className="flex justify-center items-center h-[60vh]">
+        <div className="login-prompt-card p-6 bg-[#00000090] shadow-md text-center rounded-2xl">
+          <div className="flex w-[100%] justify-center gap-4">
+            <span className="text-white">
+              <TbPhotoCode className="text-[30px]" />
+            </span>
+            <span className="text-white">
+              <LuCode className="text-[30px]" />
+            </span>
+            <span className="text-white">
+              <LiaFileCode className="text-[30px]" />
+            </span>
+          </div>
+          <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-purple-800 via-pink-500 to-pink-300 bg-clip-text text-transparent my-4">Welcome to NOTEDEV</h2>
+          <p className="mb-4">Please <Link to={"/signin"} className="mx-1 bg-gradient-to-r from-purple-600 via-pink-500 to-pink-300 bg-clip-text text-transparent border-b-[1px]">sign in</Link> to start your DSA journey.</p>
+        </div>
+      </div>
+    );
+  }
+   if (filteredTopics.length === 0) {
+    return (
+      <>
+      <div className="flex justify-between items-center">
+          <div className="flex justify-start my-4 pl-10 w-[60%]">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search topics..."
+              className="w-[100%] sm:w-[50%] p-2 border border-gray-300 rounded"
+            />
+          </div>
+
+          <Link to={"/dsa-topic-form"}>
+            <span className="flex justify-center items-center bg-btnbg w-[150px] text-[20px] rounded-[5px] cursor-pointer py-2 hover:bg-[#302f2f] transition-all active:scale-[0.95] m-2 mr-6">
+              <MdOutlineCreateNewFolder className="text-[25px] mr-2 text-green-400" />
+              <span>Create</span>
+            </span>
+          </Link>
+        </div>
+      <div className="flex justify-center items-center h-[60vh]">
+        <div className="empty-topics-message p-6 bg-[#00000090] shadow-md text-center rounded-2xl">
+          <h2 className="text-2xl font-bold mb-4 text-yellow-500">Oops! <p className="text-red-500">404</p>No topics found</h2>
+          <p className="mb-4">Start your DSA journey by creating a new topic.</p>
+        </div>
+      </div>
+      </>
+    );
+  }
+
+
   return (
     <div className="dsa-wrapper relative">
-      <div className="flex justify-between items-center">
-        <div className="flex justify-start my-4 pl-10 w-[60%]">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search topics..."
-            className="w-[100%] sm:w-[50%] p-2 border border-gray-300 rounded"
-          />
+      {user && (
+        <div className="flex justify-between items-center">
+          <div className="flex justify-start my-4 pl-10 w-[60%]">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search topics..."
+              className="w-[100%] sm:w-[50%] p-2 border border-gray-300 rounded"
+            />
+          </div>
+
+          <Link to={"/dsa-topic-form"}>
+            <span className="flex justify-center items-center bg-btnbg w-[150px] text-[20px] rounded-[5px] cursor-pointer py-2 hover:bg-[#302f2f] transition-all active:scale-[0.95] m-2 mr-6">
+              <MdOutlineCreateNewFolder className="text-[25px] mr-2 text-green-400" />
+              <span>Create</span>
+            </span>
+          </Link>
         </div>
-        <Link to={"/dsa-topic-form"}>
-          <span className="flex justify-center items-center bg-btnbg w-[150px] text-[20px] rounded-[5px] cursor-pointer py-2 hover:bg-[#302f2f] transition-all active:scale-[0.95] m-2 mr-6">
-            <MdOutlineCreateNewFolder className="text-[25px] mr-2 text-green-400" />
-            <span>Create</span>
-          </span>
-        </Link>
-      </div>
+      )}
 
       <div className="grid-container">
         {loading
@@ -183,8 +240,7 @@ function DsaFolder() {
                             </AlertDialogTitle>
                             <AlertDialogDescription>
                               This action cannot be undone. This will
-                              permanently delete your account and remove your
-                              data from our servers.
+                              permanently remove your DSA Topic and related questions from our servers
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>

@@ -7,7 +7,6 @@ import { RxCross2 } from "react-icons/rx";
 import CodeEditor from "@/components-notdev/SecondaryCodeEditor";
 import { fetchSingleQuesData, updateDSAQues } from "@/apis/quesApi";
 import { useAuth } from "@/context/GoogleAuthContext";
-// import QuillEditor from "@/components-notdev/TextEditor";
 type QuestionResponse = {
   title: string;
   description: string;
