@@ -80,7 +80,7 @@ function DsaFolder() {
       toast.error("Failed to delete topic");
     }
   };
-  if (userLoading || loading) {
+  if (userLoading) {
     return (
       <div className="w-full h-full fixed top-0 left-0 flex justify-center items-center bg-[#00000080] bg-opacity-50 z-50">
         <span className="loading loading-dots loading-sm text-white"></span>
@@ -89,7 +89,7 @@ function DsaFolder() {
   }
   
 
-  if (userLoading && !user) {
+  if (!user) {
     return (
       <div className="flex justify-center items-center h-[60vh]">
         <div className="login-prompt-card p-6 bg-[#00000090] shadow-md text-center rounded-2xl">
@@ -121,7 +121,7 @@ function DsaFolder() {
       </div>
     );
   }
-  if (userLoading && filteredTopics.length === 0) {
+  if (filteredTopics.length === 0) {
     return (
       <>
         <div className="flex justify-between items-center">
