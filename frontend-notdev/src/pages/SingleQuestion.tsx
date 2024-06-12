@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import { useNavigate, useParams } from "react-router-dom";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -41,6 +40,27 @@ interface Question {
   images: string[];
 }
 
+interface QuestionResponse {
+  title: string;
+  description: string;
+  difficulty: string;
+  topicId: string;
+  tag: string[];
+  links: {
+    leetcode?: string;
+    gfg?: string;
+    codeforces?: string;
+  };
+  text?: string;
+  code?: string;
+  solutionLink?: string;
+  youtubeLink?: string;
+  images: string[];
+}
+const isQuestion = (data: QuestionResponse): data is Question => {
+  return ["easy", "medium", "hard"].includes(data.difficulty);
+};
+
 const SingleQuestion: React.FC = () => {
   const [question, setQuestion] = useState<Question | null>(null);
   const [loading, setLoading] = useState<boolean>(true); // Loading state
@@ -55,8 +75,13 @@ const SingleQuestion: React.FC = () => {
           return;
         }
         const response = await fetchSingleQuesData(id, token);
-        console.log(response.data);
-        setQuestion(response.data);
+        const data: QuestionResponse = response.data;
+        console.log(data);
+        if (isQuestion(data)) {
+          setQuestion(data);
+        } else {
+          console.error("Invalid question data:", data);
+        }
         setLoading(false);
       } catch (error) {
         console.error("Error fetching question:", error);
@@ -65,7 +90,7 @@ const SingleQuestion: React.FC = () => {
     };
 
     fetchQuestion();
-  }, [id,token]);
+  }, [id, token]);
 
   const getDifficultyClass = (difficulty: "easy" | "medium" | "hard") => {
     switch (difficulty) {

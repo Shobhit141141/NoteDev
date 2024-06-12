@@ -8,7 +8,7 @@ import CodeEditor from "@/components-notdev/SecondaryCodeEditor";
 import { fetchSingleQuesData, updateDSAQues } from "@/apis/quesApi";
 import { useAuth } from "@/context/GoogleAuthContext";
 // import QuillEditor from "@/components-notdev/TextEditor";
-type FormData = {
+type QuestionResponse = {
   title: string;
   description: string;
   difficulty: string;
@@ -70,7 +70,7 @@ function QuestionForm() {
   const [updating, setupdating] = useState(false);
   const [fetching, setfetching] = useState(false);
   console.log("topicId : ", id);
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<QuestionResponse>({
     title: "",
     description: "",
     difficulty: "",

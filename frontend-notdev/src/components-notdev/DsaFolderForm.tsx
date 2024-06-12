@@ -7,7 +7,7 @@ import { useAuth } from "@/context/GoogleAuthContext";
 const DsaForm = () => {
   const navigate = useNavigate(); // Initialize useNavigate
   const [title, setTitle] = useState<string>("");
-  const [image, setImage] = useState<string | null>("");
+  const [image, setImage] = useState<string>("");
   const [errors, setErrors] = useState<{ title?: string; image?: string }>({});
   const { user ,token } = useAuth();
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
