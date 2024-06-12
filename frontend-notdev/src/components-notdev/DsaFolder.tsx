@@ -121,7 +121,7 @@ function DsaFolder() {
       </div>
     );
   }
-  if (filteredTopics.length === 0) {
+  if (userLoading && filteredTopics.length === 0) {
     return (
       <>
         <div className="flex justify-between items-center">
