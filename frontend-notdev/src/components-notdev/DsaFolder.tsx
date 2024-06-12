@@ -121,40 +121,40 @@ function DsaFolder() {
       </div>
     );
   }
-  if (userLoading && filteredTopics.length === 0) {
-    return (
-      <>
-        <div className="flex justify-between items-center">
-          <div className="flex justify-start my-4 pl-10 w-[60%]">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search topics..."
-              className="w-[100%] sm:w-[50%] p-2 border border-gray-300 rounded"
-            />
-          </div>
+  // if (userLoading || filteredTopics.length === 0) {
+  //   return (
+  //     <>
+  //       <div className="flex justify-between items-center">
+  //         <div className="flex justify-start my-4 pl-10 w-[60%]">
+  //           <input
+  //             type="text"
+  //             value={searchQuery}
+  //             onChange={(e) => setSearchQuery(e.target.value)}
+  //             placeholder="Search topics..."
+  //             className="w-[100%] sm:w-[50%] p-2 border border-gray-300 rounded"
+  //           />
+  //         </div>
 
-          <Link to={"/dsa-topic-form"}>
-            <span className="flex justify-center items-center bg-btnbg w-[150px] text-[20px] rounded-[5px] cursor-pointer py-2 hover:bg-[#302f2f] transition-all active:scale-[0.95] m-2 mr-6">
-              <MdOutlineCreateNewFolder className="text-[25px] mr-2 text-green-400" />
-              <span>Create</span>
-            </span>
-          </Link>
-        </div>
-        <div className="flex justify-center items-center h-[60vh]">
-          <div className="empty-topics-message p-6 bg-[#00000090] shadow-md text-center rounded-2xl">
-            <h2 className="text-2xl font-bold mb-4 text-yellow-500">
-              Oops! <p className="text-red-500">404</p>No topics found
-            </h2>
-            <p className="mb-4">
-              Start your DSA journey by creating a new topic.
-            </p>
-          </div>
-        </div>
-      </>
-    );
-  }
+  //         <Link to={"/dsa-topic-form"}>
+  //           <span className="flex justify-center items-center bg-btnbg w-[150px] text-[20px] rounded-[5px] cursor-pointer py-2 hover:bg-[#302f2f] transition-all active:scale-[0.95] m-2 mr-6">
+  //             <MdOutlineCreateNewFolder className="text-[25px] mr-2 text-green-400" />
+  //             <span>Create</span>
+  //           </span>
+  //         </Link>
+  //       </div>
+  //       <div className="flex justify-center items-center h-[60vh]">
+  //         <div className="empty-topics-message p-6 bg-[#00000090] shadow-md text-center rounded-2xl">
+  //           <h2 className="text-2xl font-bold mb-4 text-yellow-500">
+  //             Oops! <p className="text-red-500">404</p>No topics found
+  //           </h2>
+  //           <p className="mb-4">
+  //             Start your DSA journey by creating a new topic.
+  //           </p>
+  //         </div>
+  //       </div>
+  //     </>
+  //   );
+  // }
 
   return (
     <div className="dsa-wrapper relative">
@@ -211,7 +211,18 @@ function DsaFolder() {
                 </SkeletonTheme>
               </div>
             ))
-          : filteredTopics.map((topic, index) => (
+          : filteredTopics.length === 0 ? (
+            <div className="flex justify-center items-center h-[60vh] w-[100vw]">
+              <div className="empty-topics-message p-6 bg-[#00000090] shadow-md text-center rounded-2xl">
+                <h2 className="text-2xl font-bold mb-4 text-yellow-500">
+                  Oops! 404 No topics found
+                </h2>
+                <p className="mb-4">
+                  Start your DSA journey by creating a new topic.
+                </p>
+              </div>
+            </div>
+          ) :  filteredTopics.map((topic, index) => (
               <div key={index} className="grid-item">
                 <div className="img-container">
                   <NavLink
