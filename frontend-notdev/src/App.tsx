@@ -13,10 +13,10 @@ import SignIn from "./pages/SignIn";
 import UserProfile from "./pages/UserProfile";
 import ProtectedRoute from "./components-notdev/ProtectedRoute";
 import PublicRoute from "./components-notdev/PublicRoute";
-
+import bg from "/assets/notedev_bg.png"
 function App() {
   return (
-    <div className="main-app">
+    <div className="main-app" style={{ backgroundImage: `url(${bg})` }}>
       <div className="gm-bg overflow-x-hidden h-[100vh]">
         <Toaster />
         <BrowserRouter>
