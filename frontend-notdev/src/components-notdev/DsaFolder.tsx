@@ -34,7 +34,7 @@ function DsaFolder() {
   const [filteredTopics, setFilteredTopics] = useState<Topic[]>([]);
   const [deleteTopicId, setDeleteTopicId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const { user, token } = useAuth();
+  const { user, token, userLoading } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -80,8 +80,16 @@ function DsaFolder() {
       toast.error("Failed to delete topic");
     }
   };
+  if (userLoading || loading) {
+    return (
+      <div className="w-full h-full fixed top-0 left-0 flex justify-center items-center bg-[#00000080] bg-opacity-50 z-50">
+        <span className="loading loading-dots loading-sm text-white"></span>
+      </div>
+    );
+  }
+  
 
-  if (!user) {
+  if (userLoading && !user) {
     return (
       <div className="flex justify-center items-center h-[60vh]">
         <div className="login-prompt-card p-6 bg-[#00000090] shadow-md text-center rounded-2xl">
@@ -96,16 +104,27 @@ function DsaFolder() {
               <LiaFileCode className="text-[30px]" />
             </span>
           </div>
-          <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-purple-800 via-pink-500 to-pink-300 bg-clip-text text-transparent my-4">Welcome to NOTEDEV</h2>
-          <p className="mb-4">Please <Link to={"/signin"} className="mx-1 bg-gradient-to-r from-purple-600 via-pink-500 to-pink-300 bg-clip-text text-transparent border-b-[1px]">sign in</Link> to start your DSA journey.</p>
+          <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-purple-800 via-pink-500 to-pink-300 bg-clip-text text-transparent my-4">
+            Welcome to NOTEDEV
+          </h2>
+          <p className="mb-4">
+            Please{" "}
+            <Link
+              to={"/signin"}
+              className="mx-1 bg-gradient-to-r from-purple-600 via-pink-500 to-pink-300 bg-clip-text text-transparent border-b-[1px]"
+            >
+              sign in
+            </Link>{" "}
+            to start your DSA journey.
+          </p>
         </div>
       </div>
     );
   }
-   if (filteredTopics.length === 0) {
+  if (userLoading && filteredTopics.length === 0) {
     return (
       <>
-      <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center">
           <div className="flex justify-start my-4 pl-10 w-[60%]">
             <input
               type="text"
@@ -123,16 +142,19 @@ function DsaFolder() {
             </span>
           </Link>
         </div>
-      <div className="flex justify-center items-center h-[60vh]">
-        <div className="empty-topics-message p-6 bg-[#00000090] shadow-md text-center rounded-2xl">
-          <h2 className="text-2xl font-bold mb-4 text-yellow-500">Oops! <p className="text-red-500">404</p>No topics found</h2>
-          <p className="mb-4">Start your DSA journey by creating a new topic.</p>
+        <div className="flex justify-center items-center h-[60vh]">
+          <div className="empty-topics-message p-6 bg-[#00000090] shadow-md text-center rounded-2xl">
+            <h2 className="text-2xl font-bold mb-4 text-yellow-500">
+              Oops! <p className="text-red-500">404</p>No topics found
+            </h2>
+            <p className="mb-4">
+              Start your DSA journey by creating a new topic.
+            </p>
+          </div>
         </div>
-      </div>
       </>
     );
   }
-
 
   return (
     <div className="dsa-wrapper relative">
@@ -240,7 +262,8 @@ function DsaFolder() {
                             </AlertDialogTitle>
                             <AlertDialogDescription>
                               This action cannot be undone. This will
-                              permanently remove your DSA Topic and related questions from our servers
+                              permanently remove your DSA Topic and related
+                              questions from our servers
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>

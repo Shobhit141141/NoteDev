@@ -71,6 +71,7 @@ function QuestionForm() {
   const { topicId } = useParams();
   const queryParams = new URLSearchParams(location.search);
   const topic = queryParams.get("topic");
+  const [submitting, setsubmitting] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     title: "",
     description: "",
@@ -129,6 +130,7 @@ function QuestionForm() {
       toast.error("Please add at least one tag");
       return;
     }
+    setsubmitting(true)
     try {
       if(!token){
         return
@@ -136,8 +138,10 @@ function QuestionForm() {
       const response = await createDSAQues(formData,token)
       toast.success("Form submitted successfully");
       console.log(response.data);
+      setsubmitting(false)
       navigate("/");
     } catch (error) {
+      setsubmitting(false)
       toast.error("Failed to submit form");
       console.error("Error:", error);
     }
@@ -271,7 +275,11 @@ function QuestionForm() {
               className="bg-gradient-to-br from-blue-500 to-blue-800 hover:from-blue-800 hover:to-blue-500 transition-all rounded px-2 py-1"
               onClick={handleSubmit}
             >
-              Submit
+              {submitting ? (
+                <span className="loading loading-dots loading-sm flex mx-auto"></span>
+              ) : (
+                "Submit"
+              )}
             </button>
           </div>
 

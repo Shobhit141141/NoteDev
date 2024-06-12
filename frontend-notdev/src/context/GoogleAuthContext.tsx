@@ -16,7 +16,7 @@ interface AuthContextType {
   token: string | null;
   login: () => Promise<void>;
   logout: () => void;
-  loading: boolean;
+  userLoading: boolean;
   error: string | null;
 }
 
@@ -62,7 +62,7 @@ type AuthProviderProps = {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [userLoading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
 
@@ -132,7 +132,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, loading, error }}>
+    <AuthContext.Provider value={{ user, token, login, logout, userLoading: userLoading, error }}>
       {children}
     </AuthContext.Provider>
   );

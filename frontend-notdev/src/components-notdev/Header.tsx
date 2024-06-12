@@ -20,7 +20,7 @@ const navItems = [
 
 function Header() {
   const [position, setPosition] = useState("Navbar");
-  const { user, logout } = useAuth();
+  const { user, logout,userLoading } = useAuth();
   const navigate = useNavigate();
   const handleLogout = () => {
     logout();
@@ -39,15 +39,15 @@ function Header() {
         </Link>
       </div>
 
-      {user ? (
+      { userLoading || user ? (
         <div className="dropdown-menu-container m-2 sm:m-6">
           <DropdownMenu>
             <div className="flex justify-between items-center gap-6">
               <span>
-                <h2 className="hidden sm:block">{user.name}</h2>
+                <h2 className="hidden sm:block">{user?.name}</h2>
               </span>
               <DropdownMenuTrigger className="dropdown-trigger w-[50px] h-[50px] bg-gradient-to-r from-purple-800 to-pink-500 sm:h-[50px] flex items-center justify-center text-white font-bold rounded-full overflow-hidden">
-                <img src={user.picture} alt="" />
+                <img src={user?.picture} alt="" />
               </DropdownMenuTrigger>
             </div>
             <DropdownMenuContent className="dropdown-content w-[100px] sm:w-[200px] rounded-[6px] bg-appbg shadow-lg m-4">
