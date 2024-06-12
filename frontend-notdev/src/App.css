@@ -13,16 +13,12 @@ body,
   font-weight: 600;
   color: white;
   /* background-color:#0f0e0e; */
-  background-image: url("https://img.freepik.com/premium-photo/neon-light-background-image_944011-280.jpg?size=626&ext=jpg&ga=GA1.1.1826414947.1699488000&semt=ais");
+  background-image: url("./notedev-bg.png");
   background-color: rgba(0, 0, 0, 0.667);
   background-size: cover;
   background-position: center;
   height: 100%;
   background-repeat: no-repeat;
-}
-.gm-bg {
-  backdrop-filter: blur(15px);
-  background: rgba(0, 0, 0, 0.667);
 }
 /* .app-container {
   display: flex;
