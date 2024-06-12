@@ -80,9 +80,9 @@ function DsaFolder() {
       toast.error("Failed to delete topic");
     }
   };
-  if (userLoading) {
+  if (!userLoading) {
     return (
-      <div className="w-full h-full fixed top-0 left-0 flex justify-center items-center bg-[#00000080] bg-opacity-50 z-50">
+      <div className="w-[100vw] h-[100vh] fixed top-0 left-0 flex justify-center items-center bg-[#00000080] bg-opacity-50 z-50">
         <span className="loading loading-dots loading-sm text-white"></span>
       </div>
     );
