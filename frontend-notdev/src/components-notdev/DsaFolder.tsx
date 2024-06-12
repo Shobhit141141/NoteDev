@@ -212,7 +212,7 @@ function DsaFolder() {
               </div>
             ))
           : filteredTopics.length === 0 ? (
-            <div className="flex justify-center items-center h-[60vh] w-[100vw]">
+           
               <div className="empty-topics-message p-6 bg-[#00000090] shadow-md text-center rounded-2xl">
                 <h2 className="text-2xl font-bold mb-4 text-yellow-500">
                   Oops! 404 No topics found
@@ -221,7 +221,7 @@ function DsaFolder() {
                   Start your DSA journey by creating a new topic.
                 </p>
               </div>
-            </div>
+         
           ) :  filteredTopics.map((topic, index) => (
               <div key={index} className="grid-item">
                 <div className="img-container">

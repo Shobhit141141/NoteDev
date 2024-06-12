@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged, signInWithPopup, UserCredential } from "firebase/auth";
 import { auth, googleProvider } from "../firebase";
 import CryptoJS from "crypto-js";
+import { createUser } from "@/apis/userApi";
 
 interface UserProfile {
   uid: string;
@@ -37,19 +38,12 @@ const createUserProfile = async (token: string, userData: UserProfile) => {
     localStorage.setItem("encryptedToken", encryptedToken);
     const encryptedUid = encryptData(userData.uid, import.meta.env.VITE_ENCRYPTION_KEY || "");
     localStorage.setItem("encryptedUid", encryptedUid);
-    const response = await fetch("http://localhost:5000/api/users/profile", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(userData),
-    });
+    const response = await createUser(userData,token)
 
-    if (!response.ok) {
+    if (response.status !== 200) {
       throw new Error("Failed to create user profile");
     }
-    const createdUserData = await response.json();
+    const createdUserData = await response.data;
     console.log("Created User Data:", createdUserData);
   } catch (error) {
     console.error("Error creating user profile:", error);
@@ -79,7 +73,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       await createUserProfile(token, userData);
       setUser(userData);
-      setToken(token); // Set the token here
+      setToken(token); 
     } catch (error) {
       console.error("Error during sign-in:", error);
       throw error;
