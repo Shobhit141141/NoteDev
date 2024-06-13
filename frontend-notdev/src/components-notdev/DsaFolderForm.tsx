@@ -25,7 +25,6 @@ const DsaForm = () => {
   const validate = () => {
     const errors: { title?: string; image?: string } = {};
     if (!title) errors.title = "Title is required";
-    if (!image) errors.image = "Image is required";
     return errors;
   };
 
