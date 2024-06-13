@@ -64,6 +64,8 @@ export const deleteDSATopic = async (req: Request, res: Response) => {
         .json({ message: "Forbidden: You cannot delete this topic" });
     }
 
+    await Question.deleteMany({ topicId: topicId });
+
     await topicToDelete.deleteOne();
 
     res.status(200).json({ message: "DSA topic deleted successfully" });
