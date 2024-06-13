@@ -172,13 +172,14 @@ function QuestionList() {
           className="w-full p-2 border border-gray-300 rounded"
         />
       </div>
-      <div className="flex items-center justify-between px-4 sm:px-8 mb-4">
+      <div className="flex items-center px-4 sm:px-8 mb-4 gap-4">
         <span className="text-lg">Search by Tag</span>
         <input
           type="checkbox"
-          className="toggle toggle-primary"
+          className="toggle toggle-primary "
           checked={searchByTag}
           onChange={() => setSearchByTag(!searchByTag)}
+          
         />
       </div>
       <div className="w-[80%] sm:w-[40%] md:w-[20%] flex justify-between px-4 sm:px-8 items-center my-4 gap-[15px]">
