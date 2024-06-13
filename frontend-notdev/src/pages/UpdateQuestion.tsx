@@ -228,8 +228,6 @@ function QuestionForm() {
     }));
   };
 
-  console.log("formData : ", formData);
-
   return (
     <>
       <div className="max-w-lg mx-auto p-6 ">

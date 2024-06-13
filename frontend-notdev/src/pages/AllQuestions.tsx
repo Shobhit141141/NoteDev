@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { MdOutlineCreateNewFolder } from "react-icons/md";
+import { MdEditDocument, MdOutlineCreateNewFolder } from "react-icons/md";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { fetchQuesData } from "@/apis/quesApi";
 import { useAuth } from "@/context/GoogleAuthContext";
-import "daisyui/dist/full.css";  // Add this line to include DaisyUI styles
+import "daisyui/dist/full.css"; // Add this line to include DaisyUI styles
 
 type Question = {
   _id: string;
@@ -150,12 +150,21 @@ function QuestionList() {
   return (
     <div className="w-full h-max px-4 sm:px-8">
       <div className="flex justify-end">
-        <Link to={`/question-form/${topicId}/?topic=${topic}`}>
-          <span className="flex justify-center items-center bg-btnbg w-[120px] sm:w-[150px] text-[16px] sm:text-[20px] rounded-[5px] cursor-pointer py-2 hover:bg-[#302f2f] transition-all active:scale-[0.95] m-2 mr-4 sm:mr-6">
-            <MdOutlineCreateNewFolder className="text-[20px] sm:text-[25px] mr-2 text-green-400" />
-            <span>Create</span>
-          </span>
-        </Link>
+        <div className="flex gap-2">
+          <Link to={`/question-form/${topicId}/?topic=${topic}`}>
+            <span className="flex justify-center items-center bg-btnbg w-[120px] sm:w-[150px] text-[16px] sm:text-[20px] rounded-[5px] cursor-pointer py-2 hover:bg-[#302f2f] transition-all active:scale-[0.95] m-2 mr-4 sm:mr-6">
+              <MdOutlineCreateNewFolder className="text-[20px] sm:text-[25px] mr-2 text-green-400" />
+              <span>Create</span>
+            </span>
+          </Link>
+
+          <Link to={`/update-topic/${topicId}/?topic=${topic}`}>
+            <span className="flex justify-center items-center bg-btnbg w-[120px] sm:w-[150px] text-[16px] sm:text-[20px] rounded-[5px] cursor-pointer py-2 hover:bg-[#302f2f] transition-all active:scale-[0.95] m-2 mr-4 sm:mr-6">
+              <MdEditDocument className="text-[20px] sm:text-[25px] mr-2 text-blue-600" />
+              <span>Update</span>
+            </span>
+          </Link>
+        </div>
       </div>
       <div className="flex flex-col sm:flex-row justify-between px-4 sm:px-8 items-center">
         <h1 className="text-[28px] sm:text-[40px]">{topic}</h1>
@@ -179,7 +188,6 @@ function QuestionList() {
           className="toggle toggle-primary "
           checked={searchByTag}
           onChange={() => setSearchByTag(!searchByTag)}
-          
         />
       </div>
       <div className="w-[80%] sm:w-[40%] md:w-[20%] flex justify-between px-4 sm:px-8 items-center my-4 gap-[15px]">

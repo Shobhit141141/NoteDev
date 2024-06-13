@@ -56,7 +56,7 @@ const DsaForm = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto my-10 p-5 border rounded-lg shadow-lg">
+    <div className="max-w-md mx-auto my-10 p-5 rounded-[20px] shadow-lg bg-[#00000090]">
       <Toaster />
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>

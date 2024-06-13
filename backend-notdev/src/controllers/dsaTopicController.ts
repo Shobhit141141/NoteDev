@@ -128,3 +128,37 @@ export const getQuestionsByTopicId = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const patchDSATopic = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const userUID = getUserUID(req);
+  const { title, image } = req.body;
+
+  if (!userUID) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  try {
+    const topicToUpdate = await DSATopic.findById(id);
+    if (!topicToUpdate) {
+      return res.status(404).json({ message: "DSA topic not found" });
+    }
+
+    if (topicToUpdate.createdBy !== userUID) {
+      return res
+        .status(403)
+        .json({ message: "Forbidden: You cannot update this topic" });
+    }
+
+    const updateObject = { title, image };
+    // Update only the properties that exist in the request body
+    topicToUpdate.set(updateObject);
+
+    await topicToUpdate.save();
+
+    res.status(200).json({ message: "DSA topic updated successfully", topic: topicToUpdate });
+  } catch (error) {
+    console.error("Error updating DSA topic:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

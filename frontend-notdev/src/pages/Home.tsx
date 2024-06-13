@@ -6,6 +6,8 @@ function HomePage() {
       <h1 className="text-[40px] p-4 font-bold ">
         Take DSA notes like never before
       </h1>
+
+      
       <DsaFolder />
     </div>
   );
