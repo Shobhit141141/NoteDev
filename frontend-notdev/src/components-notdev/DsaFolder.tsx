@@ -228,7 +228,7 @@ function DsaFolder() {
                   <NavLink
                     to={`/questions?title=${topic.title}&topicId=${topic._id}`}
                   >
-                    <img src={topic.image} alt={topic.title} />
+                    {topic.image ? <img src={topic.image} alt={topic.title} /> : <img src={"https://img.freepik.com/premium-photo/neon-light-background-image_944011-280.jpg?w=1060"} alt={topic.title} />}
                   </NavLink>
                 </div>
 

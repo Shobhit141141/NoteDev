@@ -21,12 +21,6 @@ export const createDSATopic = async (req: Request, res: Response) => {
         .json({ message: "Title is required for the DSA topic" });
     }
 
-    if (!image) {
-      return res
-        .status(400)
-        .json({ message: "Image is required for the DSA topic" });
-    }
-
     const newTopic = new DSATopic({
       title,
       image,
