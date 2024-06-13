@@ -6,6 +6,7 @@ import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { fetchQuesData } from "@/apis/quesApi";
 import { useAuth } from "@/context/GoogleAuthContext";
+import "daisyui/dist/full.css";  // Add this line to include DaisyUI styles
 
 type Question = {
   _id: string;
@@ -33,11 +34,13 @@ function QuestionList() {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [difficultyFilter, setDifficultyFilter] = useState<string>("");
+  const [searchByTag, setSearchByTag] = useState<boolean>(false);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const topic = queryParams.get("title");
   const topicId = queryParams.get("topicId");
   const { token } = useAuth();
+
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
@@ -55,20 +58,22 @@ function QuestionList() {
     };
 
     fetchQuestions();
-  }, [topicId,token]);
+  }, [topicId, token]);
 
   useEffect(() => {
     const filtered = questions.filter((question) => {
-      const matchesSearchQuery = question.title
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
+      const matchesSearchQuery = searchByTag
+        ? question.tag.some((tag) =>
+            tag.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+        : question.title.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesDifficulty = difficultyFilter
         ? question.difficulty.toLowerCase() === difficultyFilter.toLowerCase()
         : true;
       return matchesSearchQuery && matchesDifficulty;
     });
     setFilteredQuestions(filtered);
-  }, [searchQuery, difficultyFilter, questions]);
+  }, [searchQuery, difficultyFilter, searchByTag, questions]);
 
   const getDifficultyClass = (difficulty: string) => {
     switch (difficulty.toLowerCase()) {
@@ -163,8 +168,17 @@ function QuestionList() {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search questions..."
+          placeholder={searchByTag ? "Search by tag..." : "Search questions..."}
           className="w-full p-2 border border-gray-300 rounded"
+        />
+      </div>
+      <div className="flex items-center justify-between px-4 sm:px-8 mb-4">
+        <span className="text-lg">Search by Tag</span>
+        <input
+          type="checkbox"
+          className="toggle toggle-primary"
+          checked={searchByTag}
+          onChange={() => setSearchByTag(!searchByTag)}
         />
       </div>
       <div className="w-[80%] sm:w-[40%] md:w-[20%] flex justify-between px-4 sm:px-8 items-center my-4 gap-[15px]">
