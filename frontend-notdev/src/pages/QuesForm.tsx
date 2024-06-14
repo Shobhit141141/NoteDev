@@ -222,7 +222,6 @@ function QuestionForm() {
     }));
   };
 
-  console.log("formData : ", formData);
 
   return (
     <>
@@ -268,7 +267,7 @@ function QuestionForm() {
               }`}
               onClick={() => setActiveTab(4)}
             >
-              Text
+              Notes
             </button>
             <button
               type="submit"

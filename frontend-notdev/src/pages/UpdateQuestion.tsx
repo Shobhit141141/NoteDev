@@ -272,7 +272,7 @@ function QuestionForm() {
               }`}
               onClick={() => setActiveTab(4)}
             >
-              Text
+              Notes
             </button>
             <button
               type="submit"
