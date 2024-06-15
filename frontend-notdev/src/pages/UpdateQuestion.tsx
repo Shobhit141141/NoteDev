@@ -456,6 +456,30 @@ function QuestionForm() {
                     />
                   </label>
                 </div>
+                <div>
+                  <label className="block">
+                    Solution Link:
+                    <input
+                      type="text"
+                      name="solutionLink"
+                      value={formData.solutionLink}
+                      onChange={handleChange}
+                      className="border border-gray-300 rounded p-2 w-full"
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label className="block">
+                    YouTube Link:
+                    <input
+                      type="text"
+                      name="youtubeLink"
+                      value={formData.youtubeLink}
+                      onChange={handleChange}
+                      className="border border-gray-300 rounded p-2 w-full"
+                    />
+                  </label>
+                </div>
               </div>
             )}
 
