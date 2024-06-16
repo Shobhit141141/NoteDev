@@ -33,7 +33,7 @@ export const createDSATopic = async (req: Request, res: Response) => {
       .status(201)
       .json({ message: "DSA topic created successfully", topic: newTopic });
   } catch (error) {
-    console.error(error);
+
     res.status(500).json({ message: "Server error" });
   }
 };

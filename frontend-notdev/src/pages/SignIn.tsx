@@ -8,12 +8,12 @@ import { useNavigate } from "react-router-dom";
 
 const GoogleSignInPage: React.FC = () => {
   const { login } = useAuth();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleGoogleSignIn = async () => {
     try {
-      await login();
-      navigate("/")
+      login();
+      navigate("/");
     } catch (error) {
       console.error("Error during sign-in:", error);
     }
@@ -40,7 +40,7 @@ const GoogleSignInPage: React.FC = () => {
           className="flex justify-center items-center gap-4 bg-[#ffffff] px-4 py-2 cursor-pointer rounded-[16px] text-black"
           onClick={handleGoogleSignIn}
         >
-          <img src={icon} alt="" className="w-[40px] h-[40px]" />
+          <img src={icon} alt="Google Icon" className="w-[40px] h-[40px]" />
           <p className="text-[20px]">Sign in with Google</p>
         </div>
       </div>
