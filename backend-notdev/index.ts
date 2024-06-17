@@ -78,7 +78,7 @@ app.get("/user/profile", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-    res.send("API is running...");
+    res.send("API is live");
 });
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/questions", questionRoutes);
