@@ -16,16 +16,17 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 connectDB();
+const FRONTEND_URL= process.env.FRONTEND_URL
 app.use(
     cors({
-        origin: "http://localhost:5173", // Replace with your actual frontend URL in production
+        origin: FRONTEND_URL, // Replace with your actual frontend URL in production
         methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
         allowedHeaders: ["Content-Type", "Authorization"],
         credentials: true, // Allow credentials (cookies, authorization headers, etc.)
     })
 );
 const COOKIE_KEY = crypto.randomBytes(32).toString("hex");
-const FRONTEND_URL= process.env.FRONTEND_URL
+
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(express.json());
@@ -35,7 +36,7 @@ app.use(
         secret: COOKIE_KEY,
         resave: false,
         saveUninitialized: false,
-        cookie: { maxAge: 24 * 60 * 60 * 1000 },
+        cookie: { maxAge: 24 * 60 * 60 * 1000,  httpOnly: true, secure: process.env.NODE_ENV === 'production'},
     })
 );
 
