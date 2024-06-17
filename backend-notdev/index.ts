@@ -36,7 +36,7 @@ app.use(
         secret: COOKIE_KEY,
         resave: false,
         saveUninitialized: false,
-        cookie: { maxAge: 24 * 60 * 60 * 1000,  httpOnly: true, secure: process.env.NODE_ENV === 'production'},
+        cookie: { maxAge: 24 * 60 * 60 * 1000 },
     })
 );
 
@@ -69,17 +69,13 @@ app.get("/auth/logout", (req, res, next) => {
     });
 });
 
-app.get("/user/profile", (req, res) => {
-    if (req.isAuthenticated()) {
-        const token = req.user.token; 
-        if(!token){
-            res.status(401).json({ message: "Token not present" });
-        }
-        res.json({ user: req.user, token });
-    } else {
-        res.status(401).json({ message: "Unauthorized" });
+app.get('/user/profile', (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Unauthorized" });
     }
-});
+  
+    res.json({ user: req.user });
+  });
 
 app.get("/", (req, res) => {
     res.send("API is live");
