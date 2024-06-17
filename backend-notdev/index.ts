@@ -31,14 +31,12 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(express.json());
 
-app.use(
-    session({
-        secret: COOKIE_KEY,
-        resave: false,
-        saveUninitialized: false,
-        cookie: { maxAge: 24 * 60 * 60 * 1000 },
-    })
-);
+app.use(session({
+    secret: 'dcfvhbwsjkcnduheyii5467889ecghibhb',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: process.env.NODE_ENV === 'production' }
+  }));
 
 app.use(passport.initialize());
 app.use(passport.session());
