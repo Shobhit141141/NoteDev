@@ -72,6 +72,9 @@ app.get("/auth/logout", (req, res, next) => {
 app.get("/user/profile", (req, res) => {
     if (req.isAuthenticated()) {
         const token = req.user.token; 
+        if(!token){
+            res.status(401).json({ message: "Token not present" });
+        }
         res.json({ user: req.user, token });
     } else {
         res.status(401).json({ message: "Unauthorized" });
