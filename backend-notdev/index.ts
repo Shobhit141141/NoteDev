@@ -35,7 +35,7 @@ app.use(session({
     secret: 'dcfvhbwsjkcnduheyii5467889ecghibhb',
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: process.env.NODE_ENV === 'production' }
+    cookie: { secure:true }
   }));
 
 app.use(passport.initialize());
