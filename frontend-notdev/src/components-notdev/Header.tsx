@@ -24,7 +24,9 @@ function Header() {
   const navigate = useNavigate();
   const handleLogout = () => {
     logout();
-    navigate("/signin");
+    
+    window.location.reload();
+    navigate("/");
   };
   return (
     <div className="flex justify-between w-full items-center header-container px-4 sm:px-8">

@@ -3,7 +3,9 @@ import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { Request } from "express";
 import User from "./models/User";
-import jwt from 'jsonwebtoken'; 
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 passport.serializeUser((user, done) => {
     done(null, user);
 });
@@ -15,9 +17,8 @@ passport.deserializeUser((user: any, done) => {
 passport.use(
     new GoogleStrategy(
         {
-            clientID:
-                "33131181959-gfm3gu1kki5qq42njhio4sba3bva9i40.apps.googleusercontent.com",
-            clientSecret: "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",
+            clientID: process.env.GOOGLE_CLIENT_ID!,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
             callbackURL: "http://localhost:5000/auth/google/callback",
         },
         async (accessToken, refreshToken, profile, done) => {
@@ -37,21 +38,27 @@ passport.use(
                     .getSeconds()
                     .toString()
                     .padStart(2, "0")}`;
-                console.log(formattedTime)
-                let user = await User.findOne({ uid: id });
+                console.log(formattedTime);
+                let user = await User.findOne({ googleId: id });
                 if (!user) {
                     user = await User.create({
-                        uid: id,
+                        googleId: id,
                         name: displayName,
                         email,
                         picture,
-                        createdTime:formattedTime
+                        createdTime: formattedTime,
                     });
                 }
-                const token = jwt.sign({ uid: user._id }, "jqhvhjvchjv@JWT_SECRET_KEY!", { expiresIn: '1d' });
+                const token = jwt.sign(
+                    { googleId: user._id },
+                    process.env.JWT_SECRET!,
+                    { expiresIn: "1d" }
+                );
 
-                user.token=token;
                 
+
+                user.token = token;
+
                 return done(null, user);
             } catch (err) {
                 return done(err, undefined);

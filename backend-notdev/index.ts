@@ -1,5 +1,4 @@
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./src/config/db";
 import questionRoutes from "./src/routes/questionRoutes";
@@ -11,9 +10,8 @@ import passport from "passport";
 import session from "express-session";
 import "./src/passport";
 import crypto from "crypto";
-import verifyToken from "./src/middleware/GoogleAuthMiddleware";
+import dotenv from "dotenv";
 dotenv.config();
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -27,7 +25,7 @@ app.use(
     })
 );
 const COOKIE_KEY = crypto.randomBytes(32).toString("hex");
-
+const FRONTEND_URL= process.env.FRONTEND_URL
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(express.json());
@@ -52,12 +50,12 @@ app.get(
 app.get(
     "/auth/google/callback",
     passport.authenticate("google", {
-        failureRedirect: "http://localhost:5173",
-        successRedirect: "http://localhost:5173",
+        failureRedirect: `${FRONTEND_URL}`,
+        successRedirect: `${FRONTEND_URL}`,
     })
 );
 
-app.get("/api/user", verifyToken, (req, res) => {
+app.get("/api/user", (req, res) => {
     res.send(req.user);
 });
 
@@ -66,13 +64,13 @@ app.get("/auth/logout", (req, res, next) => {
         if (err) {
             return next(err);
         }
-        res.redirect("http://localhost:5173");
+        res.redirect(`${FRONTEND_URL}`);
     });
 });
 
 app.get("/user/profile", (req, res) => {
     if (req.isAuthenticated()) {
-        const token = req.user.token; // Assuming token is attached to user object
+        const token = req.user.token; 
         res.json({ user: req.user, token });
     } else {
         res.status(401).json({ message: "Unauthorized" });

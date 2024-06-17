@@ -11,7 +11,7 @@ declare global {
 
 export const getUserProfile = async (req: Request, res: Response) => {
     try {
-        if (!req.user || !req.user.uid) {
+        if (!req.user || !req.user.googleId) {
             return res.status(401).json({ message: "Unauthorized" });
         }
 
@@ -30,12 +30,12 @@ export const getUserProfile = async (req: Request, res: Response) => {
 
 export const updateUserProfile = async (req: Request, res: Response) => {
     try {
-        if (!req.user || !req.user.uid) {
+        if (!req.user || !req.user.googleId) {
             return res.status(401).json({ message: "Unauthorized" });
         }
 
         const updatedUser = await User.findByIdAndUpdate(
-            req.user.uid,
+            req.user.googleId,
             req.body,
             {
                 new: true,
@@ -52,16 +52,16 @@ export const updateUserProfile = async (req: Request, res: Response) => {
 
 export const createUser = async (req: Request, res: Response) => {
     try {
-        const { uid, name, email, picture } = req.body;
+        const { googleId, name, email, picture } = req.body;
 
-        let user = await User.findOne({ uid });
+        let user = await User.findOne({ googleId });
 
         if (user) {
             return res.status(201).json("User already present");
         }
 
         if (!user) {
-            user = new User({ uid, name, email, picture });
+            user = new User({ googleId, name, email, picture });
             await user.save();
         }
 
