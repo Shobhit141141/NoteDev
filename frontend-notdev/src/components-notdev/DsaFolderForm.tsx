@@ -10,7 +10,7 @@ const DsaForm = () => {
   const [image, setImage] = useState<string>("");
   const [submitting, setsubmitting] = useState(false);
   const [errors, setErrors] = useState<{ title?: string; image?: string }>({});
-  const { user, token } = useAuth();
+  const { user, token,uid } = useAuth();
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -40,9 +40,12 @@ const DsaForm = () => {
       toast.error("You must be logged in to submit the form");
       return;
     }
+    if(!uid){
+      return;
+    }
     setsubmitting(true);
     try {
-      const response = await createDSATopic(title, image, token);
+      const response = await createDSATopic(title, image, token,uid);
       toast.success("Form submitted successfully");
       console.log(response.data);
       navigate("/"); 

@@ -68,7 +68,6 @@ function QuestionForm() {
   const { id } = useParams();
   const [updating, setupdating] = useState(false);
   const [fetching, setfetching] = useState(false);
-  console.log("topicId : ", id);
   const [formData, setFormData] = useState<QuestionResponse>({
     title: "",
     description: "",
@@ -86,17 +85,20 @@ function QuestionForm() {
     youtubeLink: "",
     images: [],
   });
-  const { token } = useAuth();
+  const { token,uid } = useAuth();
   // const navigate = useNavigate();
   useEffect(() => {
-    // Fetch data from backend
+ 
     const fetchData = async () => {
       setfetching(true);
       try {
         if (!id || !token) {
           return;
         }
-        const response = await fetchSingleQuesData(id, token);
+        if(!uid){
+          return;
+        }
+        const response = await fetchSingleQuesData(id, token,uid);
 
         setFormData(response.data);
         setfetching(false);
@@ -140,7 +142,10 @@ function QuestionForm() {
       if (!id || !token) {
         return;
       }
-      updateDSAQues(formData, token, id);
+      if(!uid){
+        return;
+      }
+      updateDSAQues(formData, token, id,uid);
       toast.success("Form updated successfully");
       setupdating(false);
 

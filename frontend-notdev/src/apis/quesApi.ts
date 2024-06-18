@@ -19,19 +19,23 @@ type QuestionResponse = {
   youtubeLink: string;
   images: string[];
 };
-export const fetchQuesData = async (topicId: string, token: string) => {
+export const fetchQuesData = async (topicId: string, token: string, uid: string) => {
   const response = await axios.get(
     `${serverurl}/api/topics/topics/${topicId}/questions`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
       },
+      params: {
+        uid: uid,
+      },
     }
   );
   return response;
 };
 
-export const createDSAQues = async (formData: QuestionResponse, token: string) => {
+
+export const createDSAQues = async (formData: QuestionResponse, token: string, uid: string) => {
   const response = await axios.post(
     `${serverurl}/api/questions/upload-question`,
     formData,
@@ -39,43 +43,55 @@ export const createDSAQues = async (formData: QuestionResponse, token: string) =
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
-  );
-  return response;
-};
-
-export const deleteDSAQues = async (id: string, token: string) => {
-  await axios.delete(`${serverurl}/api/questions/delete-question/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-};
-
-export const fetchSingleQuesData = async (id: string, token: string) => {
-  const response = await axios.get<QuestionResponse>(
-    `${import.meta.env.VITE_SERVER_URL}/api/questions/question/${id}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
+      params: {
+        uid: uid,
       },
     }
   );
   return response;
 };
 
-export const updateDSAQues = async (
-  formData: QuestionResponse,
-  token: string,
-  id: string
-) => {
+
+export const deleteDSAQues = async (id: string, token: string, uid: string) => {
+  await axios.delete(`${serverurl}/api/questions/delete-question/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params: {
+      uid: uid,
+    },
+  });
+};
+
+
+export const fetchSingleQuesData = async (id: string, token: string, uid: string) => {
+  const response = await axios.get<QuestionResponse>(
+    `${serverurl}/api/questions/question/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        uid: uid,
+      },
+    }
+  );
+  return response;
+};
+
+
+export const updateDSAQues = async (formData: QuestionResponse, token: string, id: string, uid: string) => {
   await axios.patch(
-    `${import.meta.env.VITE_SERVER_URL}/api/questions/update-question/${id}`,
+    `${serverurl}/api/questions/update-question/${id}`,
     formData,
     {
       headers: {
         Authorization: `Bearer ${token}`,
       },
+      params: {
+        uid: uid,
+      },
     }
   );
 };
+

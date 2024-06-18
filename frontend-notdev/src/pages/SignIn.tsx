@@ -13,7 +13,6 @@ const GoogleSignInPage: React.FC = () => {
   const handleGoogleSignIn = async () => {
     try {
       await login();
-      navigate("/")
     } catch (error) {
       console.error("Error during sign-in:", error);
     }

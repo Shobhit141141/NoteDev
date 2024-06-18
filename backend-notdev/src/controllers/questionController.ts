@@ -3,12 +3,15 @@ import DSATopic from "../models/DSATopic";
 import Question from "../models/Question";
 import mongoose from "mongoose";
 
-// Middleware to extract user from request
 const getUserUID = (req: Request): string | null => {
-  // This is a placeholder, adapt as necessary for your authentication mechanism
-  return req.user?.uid || null;
+ 
+  const uidFromQuery = req.query.uid;
+  if (uidFromQuery) {
+    return uidFromQuery.toString(); 
+  } else {
+    return req.user?.uid || null;
+  }
 };
-
 export const createQuestion = async (
   req: Request,
   res: Response

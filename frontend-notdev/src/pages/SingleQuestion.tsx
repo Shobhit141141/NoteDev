@@ -66,7 +66,7 @@ const SingleQuestion: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true); // Loading state
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { token } = useAuth();
+  const { token ,uid} = useAuth();
 
   useEffect(() => {
     const fetchQuestion = async () => {
@@ -74,9 +74,12 @@ const SingleQuestion: React.FC = () => {
         if (!id || !token) {
           return;
         }
-        const response = await fetchSingleQuesData(id, token);
+        if(!uid){
+          return;
+        }
+        const response = await fetchSingleQuesData(id, token,uid);
         const data: QuestionResponse = response.data;
-        console.log(data);
+
         if (isQuestion(data)) {
           setQuestion(data);
         } else {
@@ -122,8 +125,10 @@ const SingleQuestion: React.FC = () => {
       if (!id || !token) {
         return;
       }
-      console.log("Deleting question with id:", id);
-      await deleteDSAQues(id, token);
+      if(!uid){
+        return;
+      }
+      await deleteDSAQues(id, token,uid);
       navigate("/");
       toast.success("Question deleted successfully");
     } catch (error) {

@@ -3,13 +3,22 @@ import DSATopic from "../models/DSATopic";
 import Question from "../models/Question";
 
 const getUserUID = (req: Request): string | null => {
-  return req.user?.uid || null;
+  // Check if uid is present in query parameters
+  const uidFromQuery = req.query.uid;
+  if (uidFromQuery) {
+    return uidFromQuery.toString(); // Ensure to convert to string if necessary
+  } else {
+    return req.user?.uid || null;
+  }
 };
+
 
 export const createDSATopic = async (req: Request, res: Response) => {
   try {
-    const { title, image, uid } = req.body;
+    const { title, image } = req.body;
+    
     const createdBy = getUserUID(req);
+
 
     if (!createdBy) {
       return res.status(401).json({ message: "Unauthorized" });
@@ -71,7 +80,6 @@ export const deleteDSATopic = async (req: Request, res: Response) => {
 
 export const getAllDSATopics = async (req: Request, res: Response) => {
   const userUID = getUserUID(req);
-
   if (!userUID) {
     return res.status(401).json({ message: "Unauthorized" });
   }

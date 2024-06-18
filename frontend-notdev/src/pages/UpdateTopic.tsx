@@ -20,7 +20,7 @@ const UpdateTopic = () => {
 
   const [submitting, setSubmitting] = useState(false);
 
-  const { user, token } = useAuth();
+  const { user, token ,uid} = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,8 +28,11 @@ const UpdateTopic = () => {
         if (!id || !token) {
           return;
         }
+        if(!uid){
+          return;
+        }
         setSubmitting(true)
-        const response = await fetchSingleTopicData(id, token);
+        const response = await fetchSingleTopicData(id, token,uid);
         setTopicData({
           title: response.data.topic.title,
           image: response.data.topic.image,
@@ -71,6 +74,10 @@ const UpdateTopic = () => {
       return;
     }
 
+    if(!uid){
+      return;
+    }
+
     setSubmitting(true);
     try {
       const updatedData = {
@@ -78,7 +85,7 @@ const UpdateTopic = () => {
         image: topicData.image,
       };
 
-      await updateDSATopic(id, updatedData, token);
+      await updateDSATopic(id, updatedData, token,uid);
       toast.success("Form submitted successfully");
       navigate("/");
     } catch (error) {

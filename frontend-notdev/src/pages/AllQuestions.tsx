@@ -39,7 +39,7 @@ function QuestionList() {
   const queryParams = new URLSearchParams(location.search);
   const topic = queryParams.get("title");
   const topicId = queryParams.get("topicId");
-  const { token } = useAuth();
+  const { token ,uid } = useAuth();
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -47,7 +47,10 @@ function QuestionList() {
         if (!token || !topicId) {
           return;
         }
-        const response = await fetchQuesData(topicId, token);
+        if(!uid){
+          return;
+        }
+        const response = await fetchQuesData(topicId, token,uid);
         setQuestions(response.data);
         setFilteredQuestions(response.data);
       } catch (error) {

@@ -89,7 +89,7 @@ function QuestionForm() {
     youtubeLink: "",
     images: [],
   });
-  const { token } = useAuth()
+  const { token,uid } = useAuth()
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -135,7 +135,10 @@ function QuestionForm() {
       if(!token){
         return
       }
-      const response = await createDSAQues(formData,token)
+      if(!uid){
+        return;
+      }
+      const response = await createDSAQues(formData,token,uid)
       toast.success("Form submitted successfully");
       console.log(response.data);
       setsubmitting(false)

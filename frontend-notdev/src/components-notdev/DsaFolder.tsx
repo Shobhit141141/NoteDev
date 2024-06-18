@@ -34,15 +34,21 @@ function DsaFolder() {
   const [filteredTopics, setFilteredTopics] = useState<Topic[]>([]);
   const [deleteTopicId, setDeleteTopicId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const { user, token, userLoading } = useAuth();
+  const { user, token,uid, userLoading } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!token) {
+    
+      if (!token ) {
         return;
       }
+
+      if (!uid ) {
+        return;
+      }
+
       try {
-        const response = await fetchTopicsData(token);
+        const response = await fetchTopicsData(token,uid);
         setTopics(response.data.topics);
         setFilteredTopics(response.data.topics);
         setLoading(false);
@@ -64,13 +70,19 @@ function DsaFolder() {
 
   const handleDelete = async () => {
     try {
-      if (!token || !deleteTopicId) {
+
+
+
+      if (!token || !deleteTopicId ) {
+        return;
+      }
+      if(!uid){
         return;
       }
 
-      await deleteDSATopic(deleteTopicId, token);
+      await deleteDSATopic(deleteTopicId, token ,uid);
 
-      const response = await fetchTopicsData(token);
+      const response = await fetchTopicsData(token,uid);
       setTopics(response.data.topics);
       setFilteredTopics(response.data.topics);
 
