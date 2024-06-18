@@ -27,11 +27,11 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const [userLoading, setUserLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [token, setToken] = useState<string | null>(null);
-
+    const serverurl=import.meta.env.VITE_SERVER_URL;
     const login = async () => {
         try {
             // Redirect to Google OAuth URL
-            window.location.href = "https://note-dev-backend-git-google-oauth-shobhits-projects-17664ef9.vercel.app/auth/google";
+            window.location.href = `${serverurl}/auth/google`;
         } catch (error) {
             console.error("Error during sign-in:", error);
             throw error;
@@ -63,7 +63,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
                 const token = localStorage.getItem("token");
                 if (token) {
                     const response = await fetch(
-                        "https://note-dev-backend-git-google-oauth-shobhits-projects-17664ef9.vercel.app/auth/user/profile",
+                        `${serverurl}/auth/user/profile`,
                         {
                             headers: { Authorization: `Bearer ${token}` },
                         }
