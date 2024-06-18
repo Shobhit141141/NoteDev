@@ -1,5 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
 import IQuestion from "../interfaces/question.interface";
+
 const QuestionSchema: Schema = new Schema({
   title: { type: String },
   description: { type: String },
