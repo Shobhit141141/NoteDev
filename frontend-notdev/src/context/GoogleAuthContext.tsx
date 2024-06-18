@@ -1,7 +1,4 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import CryptoJS from "crypto-js";
-import { setuid } from "process";
-
 interface UserProfile {
     uid: string;
     name: string;
@@ -21,17 +18,6 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
-
-const encryptData = (data: string, privateKey: string) => {
-    const ciphertext = CryptoJS.AES.encrypt(data, privateKey).toString();
-    return ciphertext;
-};
-
-const decryptData = (ciphertext: string, privateKey: string) => {
-    const bytes = CryptoJS.AES.decrypt(ciphertext, privateKey);
-    const originalText = bytes.toString(CryptoJS.enc.Utf8);
-    return originalText;
-};
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     children,
