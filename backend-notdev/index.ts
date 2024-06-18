@@ -23,21 +23,22 @@ app.use(cors());
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.json());
-// Serve static files (uploads folder)
+
+
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Google OAuth 2.0 Configuration
+
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const REDIRECT_URI = process.env.REDIRECT_URI || 'https://note-dev-backend-git-google-oauth-shobhits-projects-17664ef9.vercel.app/auth/google/callback';
 
-// Google Sign-in Route
+
 app.get('/auth/google', (req, res) => {
   const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=profile email`;
   res.redirect(authUrl);
 });
 
-// Google Callback Route
+
 app.get('/auth/google/callback', async (req, res) => {
   const { code } = req.query;
   if (!code || typeof code !== 'string') {
@@ -45,7 +46,8 @@ app.get('/auth/google/callback', async (req, res) => {
   }
 
   try {
-    // Exchange authorization code for access token
+
+
     const response = await fetch('https://oauth2.googleapis.com/token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -62,15 +64,13 @@ app.get('/auth/google/callback', async (req, res) => {
     const accessToken = data.access_token;
 
 
-
-    // Use the access token to fetch user info
     const userResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
 
     const userData = await userResponse.json();
 
-    // Save user data to MongoDB
+   
     const existingUser = await User.findOne({ uid: userData.id });
     if (!existingUser) {
       const newUser = new User({
@@ -88,6 +88,7 @@ app.get('/auth/google/callback', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch access token' });
   }
 });
+
 
 app.get('/auth/user/profile', async (req, res) => {
 
@@ -119,11 +120,13 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/questions', questionRoutes);
 app.use('/api/topics', dsaTopicRoutes);
 app.use('/api/users', userRoutes);
-// Default route
+
+
 app.get('/', (req, res) => {
   res.send('API is running...');
 });
-// Start the server
+
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
