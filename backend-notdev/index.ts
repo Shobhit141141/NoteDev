@@ -82,7 +82,7 @@ app.get('/auth/google/callback', async (req, res) => {
       await newUser.save();
     }
 
-    res.redirect(`http://localhost:5173/?token=${accessToken}&uid=${userData.id}`)
+    res.redirect(`${process.env.FRONTEND_URL}/?token=${accessToken}&uid=${userData.id}`)
   } catch (err) {
     console.error('Error fetching access token:', err);
     res.status(500).json({ error: 'Failed to fetch access token' });
