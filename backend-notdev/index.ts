@@ -30,7 +30,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-const REDIRECT_URI = process.env.REDIRECT_URI || 'https://note-dev-backend-git-google-oauth-shobhits-projects-17664ef9.vercel.app/auth/google/callback';
+const REDIRECT_URI = process.env.REDIRECT_URI || 'http://localhost:5000/auth/google/callback';
 
 
 app.get('/auth/google', (req, res) => {
