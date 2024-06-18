@@ -10,8 +10,6 @@ function HomePage() {
     const token = params.get('token');
     const uid = params.get('uid');
 
-    
-
     if (token) {
   
       localStorage.setItem('token', token);
