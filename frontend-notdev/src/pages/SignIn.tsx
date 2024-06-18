@@ -4,11 +4,9 @@ import { useAuth } from "../context/GoogleAuthContext";
 import { LiaFileCode } from "react-icons/lia";
 import { LuCode } from "react-icons/lu";
 import { TbPhotoCode } from "react-icons/tb";
-import { useNavigate } from "react-router-dom";
 
 const GoogleSignInPage: React.FC = () => {
   const { login } = useAuth();
-  const navigate = useNavigate()
 
   const handleGoogleSignIn = async () => {
     try {
