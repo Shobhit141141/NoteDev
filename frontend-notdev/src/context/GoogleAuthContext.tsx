@@ -46,6 +46,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     useEffect(() => {
+        setUserLoading(true)
         const storedToken = localStorage.getItem("token");
         const storeduid = localStorage.getItem("uid");
 
@@ -60,6 +61,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
+                setUserLoading(true)
                 const token = localStorage.getItem("token");
                 if (token) {
                     const response = await fetch(
@@ -73,12 +75,16 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
                       const userData = await response.json();
         
                       setUser(userData.user);  
+                      setUserLoading(false)
                   
                   } else {
+                    setUserLoading(false)
                       throw new Error("Failed to fetch user profile");
+                   
                   }
                 }
             } catch (error) {
+                setUserLoading(false)
                 console.error("Error fetching user profile:", error);
                 setError("Failed to fetch user profile");
             } finally {
