@@ -139,10 +139,10 @@ const SingleQuestion: React.FC = () => {
 
   return (
     <div>
-      {!loading ? (
+      {loading ? (
         <SkeletonTheme
           baseColor="#ffffff20"
-          highlightColor="#fff"
+          highlightColor="#fff40"
          
         >
           <div className="w-[95%] md:w-[90%] bg-[#00000090] p-4 shadow-md px-8 rounded-2xl mx-auto">
@@ -151,56 +151,56 @@ const SingleQuestion: React.FC = () => {
                 <Skeleton
                   height={40}
                   width={200}
-                  className="animated-skeleton animate-pulse rounded-[6px]"
+                  className="animate-pulse rounded-[6px]"
                 />
                 <Skeleton
                   height={40}
                   width={100}
-                  className="animated-skeleton animate-pulse rounded-[22px]"
+                  className=" animate-pulse rounded-[22px]"
                 />
               </div>
               <Skeleton
                 height={100}
                 width="100%"
-                className="my-6 animated-skeleton animate-pulse rounded-[6px]"
+                className="my-6 animate-pulse rounded-[6px]"
               />
               <div className="flex gap-5">
                 <Skeleton
                   height={50}
                   width={50}
-                  className="animated-skeleton animate-pulse rounded-[15px]"
+                  className=" animate-pulse rounded-[15px]"
                 />
                 <Skeleton
                   height={50}
                   width={50}
-                  className="animated-skeleton animate-pulse rounded-[15px]"
+                  className=" animate-pulse rounded-[15px]"
                 />
                 <Skeleton
                   height={50}
                   width={50}
-                  className="animated-skeleton animate-pulse rounded-[15px]"
+                  className=" animate-pulse rounded-[15px]"
                 />
               </div>
               <Skeleton
                 height={200}
                 width="100%"
-                className="my-6 animated-skeleton animate-pulse rounded-[6px]"
+                className="my-6  animate-pulse rounded-[6px]"
               />
               <div className="flex flex-wrap mt-4 gap-2">
                 <Skeleton
                   height={30}
                   width={60}
-                  className="animated-skeleton animate-pulse rounded-full"
+                  className=" animate-pulse rounded-full"
                 />
                 <Skeleton
                   height={30}
                   width={60}
-                  className="animated-skeleton animate-pulse rounded-full"
+                  className=" animate-pulse rounded-full"
                 />
                 <Skeleton
                   height={30}
                   width={60}
-                  className="animated-skeleton animate-pulse rounded-full"
+                  className=" animate-pulse rounded-full"
                 />
               </div>
             </div>
