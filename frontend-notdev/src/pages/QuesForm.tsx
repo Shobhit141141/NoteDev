@@ -14,6 +14,7 @@ type FormData = {
   description: string;
   difficulty: string;
   topicId: string;
+  topic: string;
   tag: string[];
   links: {
     leetcode: string;
@@ -77,6 +78,7 @@ function QuestionForm() {
     description: "",
     difficulty: "",
     topicId: "",
+    topic:`${topic}`,
     tag: [`${topic}`],
     links: {
       leetcode: "",

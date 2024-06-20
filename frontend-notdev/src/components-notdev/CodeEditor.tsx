@@ -26,8 +26,8 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({ value, onChange }) => {
   };
 
   return (
-    <div className="flex-grow rounded-xl h-[350px]">
-      <div className="flex justify-end mb-2">
+    <div className="flex-grow rounded-xl h-[350px] relative">
+      <div className="flex justify-end mb-2 absolute top-4 right-4 z-50">
         <select
           className="px-2 py-1 mx-1 bg-btnbg rounded"
           value={fontSize}
@@ -40,9 +40,9 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({ value, onChange }) => {
           ))}
         </select>
       </div>
-      <div className='h-[100%]'>
+      <div className='h-[100%] p-2'>
         <Editor
-          height="100%"
+          height="600px"
           defaultLanguage="cpp"
           value={code}
           theme="vs-dark"

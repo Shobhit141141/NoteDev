@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
+// import "react-loading-skeleton/dist/skeleton.css";
 import lc from "/leetcode.svg";
 import gfg from "/gfg.svg";
 import yt from "/youtube.svg";
@@ -63,7 +63,7 @@ const isQuestion = (data: QuestionResponse): data is Question => {
 
 const SingleQuestion: React.FC = () => {
   const [question, setQuestion] = useState<Question | null>(null);
-  const [loading, setLoading] = useState<boolean>(true); // Loading state
+  const [loading, setLoading] = useState<boolean>(true);
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { token ,uid} = useAuth();
@@ -139,23 +139,22 @@ const SingleQuestion: React.FC = () => {
 
   return (
     <div>
-      {loading ? (
+      {!loading ? (
         <SkeletonTheme
           baseColor="#ffffff20"
           highlightColor="#fff"
-          direction="rtl"
-          enableAnimation={true}
+         
         >
           <div className="w-[95%] md:w-[90%] bg-[#00000090] p-4 shadow-md px-8 rounded-2xl mx-auto">
             <div className="flex flex-col justify-between">
               <div className="flex justify-between items-center">
                 <Skeleton
                   height={40}
-                  width={300}
+                  width={200}
                   className="animated-skeleton animate-pulse rounded-[6px]"
                 />
                 <Skeleton
-                  height={35}
+                  height={40}
                   width={100}
                   className="animated-skeleton animate-pulse rounded-[22px]"
                 />

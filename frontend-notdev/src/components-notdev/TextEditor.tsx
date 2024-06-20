@@ -54,14 +54,14 @@ const QuillEditor: React.FC<{
   onChange: (value: string) => void;
 }> = ({ value, onChange }) => {
   return (
-    <span className="h-[250px] w-[100%] flex justify-center items-center">
+    <span className="h-[450px] sm:h-[530px] w-[100%] sm:w-[90%]">
       <ReactQuill
         value={value}
         onChange={onChange}
         modules={modules}
         formats={formats}
         theme="snow"
-        className="h-[100%]"
+        className="h-[100%] "
       />
     </span>
   );

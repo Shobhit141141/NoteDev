@@ -5,6 +5,7 @@ export default interface IQuestion extends Document {
   description: string;
   difficulty: "easy" | "medium" | "hard";
   topicId: mongoose.Types.ObjectId;
+  topic:string;
   tag: string[];
   links: {
     leetcode?: string;

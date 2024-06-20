@@ -22,6 +22,7 @@ export const createQuestion = async (
       description,
       difficulty,
       topicId,
+      topic,
       tag,
       links,
       images,
@@ -42,6 +43,7 @@ export const createQuestion = async (
       description,
       difficulty,
       topicId,
+      topic,
       tag,
       links,
       images,
@@ -192,6 +194,7 @@ export const updateQuestion = async (req: Request, res: Response) => {
       description,
       difficulty,
       topicId,
+      topic,
       tag,
       links,
       images,
@@ -205,6 +208,7 @@ export const updateQuestion = async (req: Request, res: Response) => {
     if (description) questionToUpdate.description = description;
     if (difficulty) questionToUpdate.difficulty = difficulty;
     if (topicId) questionToUpdate.topicId = topicId;
+    if (topic) questionToUpdate.topic = topic;
     if (tag) questionToUpdate.tag = tag;
     if (links) questionToUpdate.links = links;
     if (images) questionToUpdate.images = images;
