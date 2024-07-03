@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import DSATopic from "../models/DSATopic";
 import Question from "../models/Question";
 import mongoose from "mongoose";
+import cloudinaryConfig from "../config/cloudinaryConfig";
 
 const getUserUID = (req: Request): string | null => {
  
@@ -38,6 +39,17 @@ export const createQuestion = async (
       return;
     }
 
+    const uploadedImages = await Promise.all(
+      images.map(async (image: any) => {
+        const uploadedImage = await cloudinaryConfig.uploader.upload(image, {
+          upload_preset: "ix3lcf4n",
+          tags: ['questions',`${topic}`,`${title}`],
+        });
+        console.log(['questions',`${topic}`])
+        return uploadedImage.secure_url;
+      })
+    );
+
     const newQuestion = new Question({
       title,
       description,
@@ -46,7 +58,7 @@ export const createQuestion = async (
       topic,
       tag,
       links,
-      images,
+      images: uploadedImages,
       code,
       text,
       solutionLink,
@@ -204,6 +216,31 @@ export const updateQuestion = async (req: Request, res: Response) => {
       youtubeLink,
     } = req.body;
 
+    const currentImages = questionToUpdate.images;
+    if (!currentImages) {
+      throw new Error("No images found");
+    }
+    const imagesToAdd = images.filter((image: string) => !currentImages.includes(image));
+    const imagesToDelete = currentImages.filter((image: string) => !images.includes(image));
+
+    const uploadedImages = await Promise.all(
+      imagesToAdd.map(async (image: any) => {
+        const uploadedImage = await cloudinaryConfig.uploader.upload(image, {
+          upload_preset: "ix3lcf4n",
+          tags: ['questions', `${topic}`,`${title}`],
+        });
+        console.log(['questions', `${topic}`],)
+        return uploadedImage.secure_url;
+      })
+    );
+
+    await Promise.all(
+      imagesToDelete.map(async (image: string) => {
+        const publicId = image.split('/').slice(-2)[0];
+        await cloudinaryConfig.uploader.destroy(getPublicId(image));
+      })
+    );
+
     if (title) questionToUpdate.title = title;
     if (description) questionToUpdate.description = description;
     if (difficulty) questionToUpdate.difficulty = difficulty;
@@ -211,11 +248,15 @@ export const updateQuestion = async (req: Request, res: Response) => {
     if (topic) questionToUpdate.topic = topic;
     if (tag) questionToUpdate.tag = tag;
     if (links) questionToUpdate.links = links;
-    if (images) questionToUpdate.images = images;
     if (code) questionToUpdate.code = code;
     if (text) questionToUpdate.text = text;
     if (solutionLink) questionToUpdate.solutionLink = solutionLink;
     if (youtubeLink) questionToUpdate.youtubeLink = youtubeLink;
+
+
+    if (images) {
+      questionToUpdate.images = currentImages.filter((image: string) => !imagesToDelete.includes(image)).concat(uploadedImages);
+    }
 
     if (difficulty && difficulty !== questionToUpdate.difficulty) {
       const topic = await DSATopic.findById(questionToUpdate.topicId);
@@ -228,9 +269,7 @@ export const updateQuestion = async (req: Request, res: Response) => {
           topic.easy = topic.easy.filter((id) => id.toString() !== questionId);
           break;
         case "medium":
-          topic.medium = topic.medium.filter(
-            (id) => id.toString() !== questionId
-          );
+          topic.medium = topic.medium.filter((id) => id.toString() !== questionId);
           break;
         case "hard":
           topic.hard = topic.hard.filter((id) => id.toString() !== questionId);
@@ -266,6 +305,7 @@ export const updateQuestion = async (req: Request, res: Response) => {
   }
 };
 
+
 export const filterQuestionsByDifficulty = async (
   req: Request,
   res: Response
@@ -297,4 +337,13 @@ export const getQuestionById = async (req: Request, res: Response) => {
     console.error("Error fetching question by ID:", error);
     res.status(500).json({ message: "Server error" });
   }
+};
+
+
+const getPublicId = (imageUrl: string) => {
+  const segments = imageUrl.split('/');
+  const fileName = segments[segments.length - 1];
+  const publicId = fileName.substring(0, fileName.lastIndexOf('.')); 
+
+  return publicId;
 };

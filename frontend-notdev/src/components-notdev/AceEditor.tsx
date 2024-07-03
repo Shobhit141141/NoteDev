@@ -49,7 +49,7 @@ const TabNav = ({
           Notes
         </button>
       </div>
-      <div className="w-[100%] h-[600px] bg-appbg">
+      <div className="w-[100%] h-[400px] sm:h-[600px] bg-appbg overflow-hidden">
         {activeTab === 1 && (
           <div className="h-[600px]">
             <MonacoEditor
@@ -60,13 +60,13 @@ const TabNav = ({
           </div>
         )}
         {activeTab === 2 && (
-          <div className="h-[600px] flex items-center">
+          <div className="h-[400px] sm:h-[600px] flex items-center">
             {/* <ImagePreview /> */}
             <Catalogue images={images} />
           </div>
         )}
         {activeTab === 3 && (
-          <div className="h-[] flex items-center justify-center">
+          <div className="flex items-center justify-center">
             <QuillEditor value={text} onChange={() => console.log()} />
           </div>
         )}

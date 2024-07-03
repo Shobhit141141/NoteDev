@@ -5,6 +5,8 @@ import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import lc from "/leetcode.svg";
 import gfg from "/gfg.svg";
 import yt from "/youtube.svg";
+import sl from "/idea.svg";
+
 import TabNav from "@/components-notdev/AceEditor";
 import {
   AlertDialog,
@@ -66,7 +68,31 @@ const SingleQuestion: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { token ,uid} = useAuth();
+  const { token, uid } = useAuth();
+
+
+  // Function to format date to IST
+  function convertUTCtoIST(createdAt: Date) {
+    // Create new date object using UTC values
+    const istDate = new Date(createdAt.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
+  
+    // Define month names for formatting
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+  
+    // Extract components
+    const day = istDate.getDate().toString().padStart(2, '0');
+    const month = monthNames[istDate.getMonth()];
+    const year = istDate.getFullYear();
+    const hours = istDate.getHours().toString().padStart(2, '0');
+    const minutes = istDate.getMinutes().toString().padStart(2, '0');
+    const seconds = istDate.getSeconds().toString().padStart(2, '0');
+  
+    // Return formatted date and time string
+    return `${day} ${month} ${year} ${hours}:${minutes}:${seconds}`;
+  }
 
   useEffect(() => {
     const fetchQuestion = async () => {
@@ -74,10 +100,10 @@ const SingleQuestion: React.FC = () => {
         if (!id || !token) {
           return;
         }
-        if(!uid){
+        if (!uid) {
           return;
         }
-        const response = await fetchSingleQuesData(id, token,uid);
+        const response = await fetchSingleQuesData(id, token, uid);
         const data: QuestionResponse = response.data;
 
         if (isQuestion(data)) {
@@ -125,10 +151,10 @@ const SingleQuestion: React.FC = () => {
       if (!id || !token) {
         return;
       }
-      if(!uid){
+      if (!uid) {
         return;
       }
-      await deleteDSAQues(id, token,uid);
+      await deleteDSAQues(id, token, uid);
       navigate("/");
       toast.success("Question deleted successfully");
     } catch (error) {
@@ -140,11 +166,7 @@ const SingleQuestion: React.FC = () => {
   return (
     <div>
       {loading ? (
-        <SkeletonTheme
-          baseColor="#ffffff20"
-          highlightColor="#fff40"
-         
-        >
+        <SkeletonTheme baseColor="#ffffff20" highlightColor="#fff40">
           <div className="w-[95%] md:w-[90%] bg-[#00000090] p-4 shadow-md px-8 rounded-2xl mx-auto">
             <div className="flex flex-col justify-between">
               <div className="flex justify-between items-center">
@@ -233,7 +255,7 @@ const SingleQuestion: React.FC = () => {
                 <img
                   src={lc}
                   alt="LeetCode"
-                  className="w-[50px] h-[50px] bg-[#111010] p-2 rounded-[15px] hover:bg-[#000000] transition-all cursor-pointer"
+                  className="w-[50px] h-[50px] bg-[#111010] p-2 rounded-[15px] hover:bg-[#4b4b4b] transition-all cursor-pointer"
                 />
               </a>
             )}
@@ -246,7 +268,7 @@ const SingleQuestion: React.FC = () => {
                 <img
                   src={gfg}
                   alt="GeeksforGeeks"
-                  className="w-[50px] h-[50px] bg-[#111010] p-2 rounded-[15px] hover:bg-[#000000] transition-all cursor-pointer"
+                  className="w-[50px] h-[50px] bg-[#111010] p-2 rounded-[15px] hover:bg-[#4b4b4b] transition-all cursor-pointer"
                 />
               </a>
             )}
@@ -259,8 +281,19 @@ const SingleQuestion: React.FC = () => {
                 <img
                   src={yt}
                   alt="YouTube"
-                  className="w-[50px] h-[50px] bg-[#111010] p-2 rounded-[15px] hover:bg-[#000000] transition-all cursor-pointer"
+                  className="w-[50px] h-[50px] bg-[#111010] p-2 rounded-[15px] hover:bg-[#4b4b4b] transition-all cursor-pointer"
                 />
+              </a>
+            )}
+            {question.solutionLink && (
+              <a
+                href={question.solutionLink}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div className="w-[50px] h-[50px] bg-[#111010] p-2 rounded-[15px] hover:bg-[#4b4b4b] transition-all cursor-pointer">
+                  <img src={sl} alt="LeetCode" className="scale-[1.3]" />
+                </div>
               </a>
             )}
           </div>
@@ -313,6 +346,9 @@ const SingleQuestion: React.FC = () => {
               className="text-blue-500 transition-all text-[40px] border-2 border-blue-500 rounded p-2 hover:text-black hover:border-transparent hover:bg-blue-500 cursor-pointer"
               onClick={() => navigate(`/update-question/${id}`)}
             />
+
+            {/* @ts-ignore */}
+            {question.createdAt ? convertUTCtoIST(question.createdAt) : ""}
           </span>
         </div>
       ) : (

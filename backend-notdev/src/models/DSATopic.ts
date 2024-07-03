@@ -9,6 +9,8 @@ const DSATopicSchema: Schema = new Schema({
   medium: [{ type: mongoose.Schema.Types.ObjectId, ref: "Question" }],
   hard: [{ type: mongoose.Schema.Types.ObjectId, ref: "Question" }],
   createdBy: { type: String, ref: "User" },
+}, {
+  timestamps: true,
 });
 
 const DSATopic = mongoose.model<IDSATopic>("DSATopic", DSATopicSchema);

@@ -40,9 +40,9 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({ value, onChange }) => {
           ))}
         </select>
       </div>
-      <div className='h-[100%] p-2'>
+      <div className='h-[600px] p-2'>
         <Editor
-          height="600px"
+          height="100%"
           defaultLanguage="cpp"
           value={code}
           theme="vs-dark"

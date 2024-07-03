@@ -1,38 +1,44 @@
 import { Request, Response } from "express";
 import DSATopic from "../models/DSATopic";
 import Question from "../models/Question";
+import cloudinaryConfig from "../config/cloudinaryConfig";
 
 const getUserUID = (req: Request): string | null => {
-  // Check if uid is present in query parameters
   const uidFromQuery = req.query.uid;
   if (uidFromQuery) {
-    return uidFromQuery.toString(); // Ensure to convert to string if necessary
+    return uidFromQuery.toString();
   } else {
     return req.user?.uid || null;
   }
 };
 
-
 export const createDSATopic = async (req: Request, res: Response) => {
+  const { title, image } = req.body;
+  const createdBy = getUserUID(req);
+
+  if (!createdBy) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  if (!title) {
+    return res
+      .status(400)
+      .json({ message: "Title is required for the DSA topic" });
+  }
+
   try {
-    const { title, image } = req.body;
+   
+    const uploadedImage = await cloudinaryConfig.uploader.upload(image, {
+      upload_preset: "ix3lcf4n", 
+      tags: ['dsa_topic'],
+    });
+
     
-    const createdBy = getUserUID(req);
-
-
-    if (!createdBy) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    if (!title) {
-      return res
-        .status(400)
-        .json({ message: "Title is required for the DSA topic" });
-    }
+    const imageURL = uploadedImage.secure_url;
 
     const newTopic = new DSATopic({
       title,
-      image,
+      image: imageURL,
       createdBy,
     });
 
@@ -42,11 +48,10 @@ export const createDSATopic = async (req: Request, res: Response) => {
       .status(201)
       .json({ message: "DSA topic created successfully", topic: newTopic });
   } catch (error) {
-    console.error(error);
+    console.error("Error creating DSA topic:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
-
 export const deleteDSATopic = async (req: Request, res: Response) => {
   const topicId = req.params.id;
   const userUID = getUserUID(req);
@@ -152,15 +157,36 @@ export const patchDSATopic = async (req: Request, res: Response) => {
         .json({ message: "Forbidden: You cannot update this topic" });
     }
 
-    const updateObject = { title, image };
-    // Update only the properties that exist in the request body
-    topicToUpdate.set(updateObject);
+    if (topicToUpdate.image) {
+      await cloudinaryConfig.uploader.destroy(getPublicId(topicToUpdate.image));
+    }
+
+    
+    const uploadedImage = await cloudinaryConfig.uploader.upload(image, {
+      upload_preset: "ix3lcf4n", 
+      tags: ['dsa_topic'], 
+    });
+
+    topicToUpdate.title = title;
+    topicToUpdate.image = uploadedImage.secure_url;
 
     await topicToUpdate.save();
 
-    res.status(200).json({ message: "DSA topic updated successfully", topic: topicToUpdate });
+    res.status(200).json({
+      message: "DSA topic updated successfully",
+      topic: topicToUpdate,
+    });
   } catch (error) {
     console.error("Error updating DSA topic:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
+
+const getPublicId = (imageUrl: string) => {
+  const segments = imageUrl.split('/');
+  const fileName = segments[segments.length - 1];
+  const publicId = fileName.substring(0, fileName.lastIndexOf('.')); 
+  return publicId;
+};
+
+
