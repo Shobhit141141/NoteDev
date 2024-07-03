@@ -47,6 +47,7 @@
     "quill": "^2.0.2",
     "react": "^18.2.0",
     "react-ace": "^11.0.1",
+    "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^18.2.0",
     "react-draft-wysiwyg": "^1.15.0",
     "react-firebase-hooks": "^5.1.1",

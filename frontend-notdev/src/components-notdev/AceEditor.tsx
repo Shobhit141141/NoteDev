@@ -49,7 +49,7 @@ const TabNav = ({
           Notes
         </button>
       </div>
-      <div className="w-[100%] h-[400px] sm:h-[600px] bg-appbg overflow-hidden">
+      <div className="w-[100%] h-[400px] sm:h-[600px] bg-appbg">
         {activeTab === 1 && (
           <div className="h-[600px]">
             <MonacoEditor
