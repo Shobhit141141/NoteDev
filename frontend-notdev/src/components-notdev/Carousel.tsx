@@ -8,7 +8,7 @@ function CarouselTree() {
         textAlign: 'center',
         background: '#364d79',
       };
-      const onChange = (currentSlide: number) => {
+      const onChange = (_currentSlide: number) => {
         // console.log(currentSlide);
       };
     return ( 
