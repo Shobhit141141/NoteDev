@@ -9,7 +9,7 @@ function CarouselTree() {
         background: '#364d79',
       };
       const onChange = (currentSlide: number) => {
-        console.log(currentSlide);
+        // console.log(currentSlide);
       };
     return ( 
         <Carousel afterChange={onChange} className='w-[250px]'>

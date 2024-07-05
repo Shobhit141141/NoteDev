@@ -47,7 +47,7 @@ const DsaForm = () => {
     try {
       const response = await createDSATopic(title, image, token,uid);
       toast.success("Form submitted successfully");
-      console.log(response.data);
+      // console.log(response.data);
       navigate("/"); 
       setsubmitting(false);
     } catch (error) {

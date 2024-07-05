@@ -70,26 +70,37 @@ const SingleQuestion: React.FC = () => {
   const navigate = useNavigate();
   const { token, uid } = useAuth();
 
-
   // Function to format date to IST
   function convertUTCtoIST(createdAt: Date) {
     // Create new date object using UTC values
-    const istDate = new Date(createdAt.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
-  
+    const istDate = new Date(
+      createdAt.toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
+    );
+
     // Define month names for formatting
     const monthNames = [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
     ];
-  
+
     // Extract components
-    const day = istDate.getDate().toString().padStart(2, '0');
+    const day = istDate.getDate().toString().padStart(2, "0");
     const month = monthNames[istDate.getMonth()];
     const year = istDate.getFullYear();
-    const hours = istDate.getHours().toString().padStart(2, '0');
-    const minutes = istDate.getMinutes().toString().padStart(2, '0');
-    const seconds = istDate.getSeconds().toString().padStart(2, '0');
-  
+    const hours = istDate.getHours().toString().padStart(2, "0");
+    const minutes = istDate.getMinutes().toString().padStart(2, "0");
+    const seconds = istDate.getSeconds().toString().padStart(2, "0");
+
     // Return formatted date and time string
     return `${day} ${month} ${year} ${hours}:${minutes}:${seconds}`;
   }
@@ -104,6 +115,13 @@ const SingleQuestion: React.FC = () => {
           return;
         }
         const response = await fetchSingleQuesData(id, token, uid);
+        // console.log(response.status);
+        if (response.status === 403) {
+          // Handle forbidden access
+          console.error("Access Denied. Status code:", response.status);
+          toast.error("Access Denied, Don't try to be fishy");
+          return;
+        }
         const data: QuestionResponse = response.data;
 
         if (isQuestion(data)) {
@@ -120,6 +138,14 @@ const SingleQuestion: React.FC = () => {
 
     fetchQuestion();
   }, [id, token]);
+  // @ts-ignore
+  // if(userLoading && uid !== question?.createdBy) {
+  //   return (
+  //     <div className="flex justify-center items-center h-[80%]">
+  //       <h1 className="text-3xl font-bold text-red-500 bg-[#00000080] p-4 rounded-[16px]">Access Denied , Dont Try to be fishy</h1>
+  //     </div>
+  //   );
+  // }
 
   const getDifficultyClass = (difficulty: "easy" | "medium" | "hard") => {
     switch (difficulty) {
@@ -352,7 +378,11 @@ const SingleQuestion: React.FC = () => {
           </span>
         </div>
       ) : (
-        <div>No question found</div>
+        <div className="flex justify-center items-center h-[80vh]">
+          <h1 className="text-3xl font-bold text-red-500 bg-[#00000080] p-4 rounded-[16px]">
+            Fobidden :(
+          </h1>
+        </div>
       )}
     </div>
   );

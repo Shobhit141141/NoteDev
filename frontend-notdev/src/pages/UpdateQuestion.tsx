@@ -85,22 +85,24 @@ function QuestionForm() {
     youtubeLink: "",
     images: [],
   });
-  const { token,uid } = useAuth();
+  const { token, uid } = useAuth();
   // const navigate = useNavigate();
+  let createdBy="";
   useEffect(() => {
- 
     const fetchData = async () => {
       setfetching(true);
       try {
         if (!id || !token) {
           return;
         }
-        if(!uid){
+        if (!uid) {
           return;
         }
-        const response = await fetchSingleQuesData(id, token,uid);
+        const response = await fetchSingleQuesData(id, token, uid);
 
         setFormData(response.data);
+        // @ts-ignore
+        createdBy=response.data.createdBy;
         setfetching(false);
       } catch (error) {
         setfetching(false);
@@ -121,6 +123,16 @@ function QuestionForm() {
       [name]: value,
     }));
   };
+  //@ts-ignore
+  if (uid !== createdBy) {
+    return (
+      <div className="flex justify-center items-center h-[80%]">
+        <h1 className="text-3xl font-bold text-red-500 bg-[#00000080] p-4 rounded-[16px]">
+          Access Denied , Dont Try to be fishy
+        </h1>
+      </div>
+    );
+  }
 
   // const language = "cpp";
 
@@ -142,10 +154,10 @@ function QuestionForm() {
       if (!id || !token) {
         return;
       }
-      if(!uid){
+      if (!uid) {
         return;
       }
-      updateDSAQues(formData, token, id,uid);
+      updateDSAQues(formData, token, id, uid);
       toast.success("Form updated successfully");
       setupdating(false);
 
@@ -182,7 +194,7 @@ function QuestionForm() {
       .then((base64Files) => {
         setFormData((prevData) => ({
           ...prevData,
-          images: [...prevData.images, ...base64Files], 
+          images: [...prevData.images, ...base64Files],
         }));
       })
       .catch((error) =>

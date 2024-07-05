@@ -15,6 +15,7 @@ export const createUser = async (userData: UserProfile, token: string) => {
     {
       headers: {
         Authorization: `Bearer ${token}`,
+        'uid': userData.uid,
       },
     }
   );

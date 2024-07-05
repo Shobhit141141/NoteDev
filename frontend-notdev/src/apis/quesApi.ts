@@ -25,6 +25,7 @@ export const fetchQuesData = async (topicId: string, token: string, uid: string)
     {
       headers: {
         Authorization: `Bearer ${token}`,
+        'uid': uid
       },
       params: {
         uid: uid,
@@ -42,6 +43,7 @@ export const createDSAQues = async (formData: QuestionResponse, token: string, u
     {
       headers: {
         Authorization: `Bearer ${token}`,
+        'uid': uid
       },
       params: {
         uid: uid,
@@ -56,6 +58,7 @@ export const deleteDSAQues = async (id: string, token: string, uid: string) => {
   await axios.delete(`${serverurl}/api/questions/delete-question/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
+      'uid': uid
     },
     params: {
       uid: uid,
@@ -70,6 +73,7 @@ export const fetchSingleQuesData = async (id: string, token: string, uid: string
     {
       headers: {
         Authorization: `Bearer ${token}`,
+        'uid': uid
       },
       params: {
         uid: uid,
@@ -87,6 +91,7 @@ export const updateDSAQues = async (formData: QuestionResponse, token: string, i
     {
       headers: {
         Authorization: `Bearer ${token}`,
+        'uid': uid
       },
       params: {
         uid: uid,

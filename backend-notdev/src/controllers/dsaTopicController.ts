@@ -27,13 +27,11 @@ export const createDSATopic = async (req: Request, res: Response) => {
   }
 
   try {
-   
     const uploadedImage = await cloudinaryConfig.uploader.upload(image, {
-      upload_preset: "ix3lcf4n", 
-      tags: ['dsa_topic'],
+      upload_preset: "ix3lcf4n",
+      tags: ["dsa_topic"],
     });
 
-    
     const imageURL = uploadedImage.secure_url;
 
     const newTopic = new DSATopic({
@@ -103,6 +101,11 @@ export const getSingleTopic = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const topic = await DSATopic.findById(id);
+    if (topic?.createdBy !== getUserUID(req)) {
+      return res
+        .status(420)
+        .json({ error: "not authorized" });
+    }
     if (!topic) {
       return res.status(404).json({ message: "DSA topic not found" });
     }
@@ -161,10 +164,9 @@ export const patchDSATopic = async (req: Request, res: Response) => {
       await cloudinaryConfig.uploader.destroy(getPublicId(topicToUpdate.image));
     }
 
-    
     const uploadedImage = await cloudinaryConfig.uploader.upload(image, {
-      upload_preset: "ix3lcf4n", 
-      tags: ['dsa_topic'], 
+      upload_preset: "ix3lcf4n",
+      tags: ["dsa_topic"],
     });
 
     topicToUpdate.title = title;
@@ -183,10 +185,8 @@ export const patchDSATopic = async (req: Request, res: Response) => {
 };
 
 const getPublicId = (imageUrl: string) => {
-  const segments = imageUrl.split('/');
+  const segments = imageUrl.split("/");
   const fileName = segments[segments.length - 1];
-  const publicId = fileName.substring(0, fileName.lastIndexOf('.')); 
+  const publicId = fileName.substring(0, fileName.lastIndexOf("."));
   return publicId;
 };
-
-

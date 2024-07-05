@@ -6,6 +6,7 @@ export const fetchTopicsData = async (token: string, uid: string) => {
   const response = await axios.get(`${serverurl}/api/topics/all-topics`, {
     headers: {
       Authorization: `Bearer ${token}`,
+      'uid': uid
     },
     params: {
       uid: uid,
@@ -19,6 +20,7 @@ export const fetchSingleTopicData = async (id: string, token: string, uid: strin
   const response = await axios.get(`${serverurl}/api/topics/topic/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
+      'uid': uid
     },
     params: {
       uid: uid,
@@ -40,6 +42,7 @@ export const createDSATopic = async (
     {
       headers: {
         Authorization: `Bearer ${token}`,
+        'uid': uid
       },
       params: {
         uid: uid,
@@ -54,6 +57,7 @@ export const deleteDSATopic = async (deleteTopicId: string, token: string, uid: 
   await axios.delete(`${serverurl}/api/topics/delete-topic/${deleteTopicId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
+      'uid': uid
     },
     params: {
       uid: uid,
@@ -74,6 +78,7 @@ export const updateDSATopic = async (
     {
       headers: {
         Authorization: `Bearer ${token}`,
+        'uid': uid
       },
       params: {
         uid: uid,

@@ -148,7 +148,11 @@ function QuestionList() {
     );
   }
 
-  if (error) return <div className="text-center mt-8">{error}</div>;
+  if (error) return <div className="flex justify-center items-center h-[80vh]">
+  <h1 className="text-3xl font-bold text-red-500 bg-[#00000080] p-4 rounded-[16px]">
+    Fobidden :(
+  </h1>
+</div>;
 
   return (
     <div className="w-full h-max px-4 sm:px-8">

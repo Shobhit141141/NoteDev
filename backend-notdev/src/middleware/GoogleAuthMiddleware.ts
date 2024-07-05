@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 
 const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers['authorization'];
+  const frontendUid = req.headers['uid']; // Assuming the frontend sends the uid in headers
+
   if (!authHeader) {
     return res.status(401).json({ error: 'Authorization header is missing' });
   }
@@ -17,6 +19,14 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
 
     if (!response.ok) {
       return res.status(401).json({ error: 'Invalid access token' });
+    }
+    // @ts-ignore
+    const tokenInfo = await response.json();
+    // @ts-ignore
+    const tokenUid = tokenInfo.sub;
+
+    if (tokenUid !== frontendUid) {
+      return res.status(401).json({ error: 'Unauthorized: UID mismatch' });
     }
 
     next();

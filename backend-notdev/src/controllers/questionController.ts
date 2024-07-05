@@ -329,6 +329,9 @@ export const getQuestionById = async (req: Request, res: Response) => {
       "topicId",
       "title"
     );
+    if(question?.createdBy !== getUserUID(req)) {
+      return res.status(403).json({ message: "Forbidden: You cannot view this question" });
+    }
     if (!question) {
       return res.status(404).json({ message: "Question not found" });
     }
