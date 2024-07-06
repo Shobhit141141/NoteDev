@@ -81,15 +81,29 @@ function QuestionList() {
   const getDifficultyClass = (difficulty: string) => {
     switch (difficulty.toLowerCase()) {
       case "easy":
-        return "bg-green-400";
+        return {
+          bgClass: "bg-green-400",
+          textClass: "text-green-400",
+        };
       case "medium":
-        return "bg-orange-300";
+        return {
+          bgClass: "bg-orange-300",
+          textClass: "text-orange-300",
+        };
       case "hard":
-        return "bg-red-600";
+        return {
+          bgClass: "bg-red-600",
+          textClass: "text-red-600",
+        };
       default:
-        return "";
+        return {
+          bgClass: "",
+          textClass: "",
+        };
     }
   };
+
+  const isActiveTabAll = difficultyFilter === "";
 
   if (loading) {
     return (
@@ -201,9 +215,7 @@ function QuestionList() {
         <button
           onClick={() => setDifficultyFilter("")}
           className={`px-2 py-1 rounded ${
-            difficultyFilter === ""
-              ? "bg-blue-700 text-white"
-              : "bg-gray-200 text-black"
+            isActiveTabAll ? "bg-blue-700 text-white" : "bg-gray-200 text-black"
           }`}
         >
           All
@@ -242,21 +254,15 @@ function QuestionList() {
       <div className="w-full sm:w-[60%] h-[55vh] flex flex-col justify-start px-4 sm:px-8 overflow-y-scroll mb-[20px]">
         {filteredQuestions.map((question, index) => (
           <NavLink key={question._id} to={`/question/${question._id}`}>
-            <div className="question-item h-[50px] bg-[#212020] my-1 mx-auto rounded-[4px] transition duration-300 ease-in-out hover:bg-[#302f2f]">
+            <div className={`question-item h-[50px] bg-[#212020] my-1 mx-auto rounded-[4px] transition duration-300 ease-in-out hover:bg-[#302f2f] `}>
               <div className="flex h-[50px] justify-between items-center px-4 font-light">
                 <div className="flex">
-                  <p>{index + 1}</p>
-                  <h2 className="ml-[20px] text-[14px] sm:text-[16px]">
-                    {question.title}
-                  </h2>
+                  <p className={`font-bold ${isActiveTabAll ? 'text-blue-500' : getDifficultyClass(question.difficulty).textClass}`}>{index + 1} )</p>
+                  <h2 className="ml-[20px] text-[14px] sm:text-[16px]">{question.title}</h2>
                 </div>
-                <h3
-                  className={`${getDifficultyClass(
-                    question.difficulty
-                  )} w-[15px] h-[15px] rounded-[50%]`}
-                >
-                  {/* {question.difficulty} */}
-                </h3>
+                {question.difficulty && (
+                  <h3 className={`${getDifficultyClass(question.difficulty).bgClass} w-[15px] h-[15px] rounded-[50%]`}></h3>
+                )}
               </div>
             </div>
           </NavLink>
