@@ -140,9 +140,8 @@ function QuestionForm() {
       if(!uid){
         return;
       }
-      const response = await createDSAQues(formData,token,uid)
+      await createDSAQues(formData,token,uid)
       toast.success("Form submitted successfully");
-      console.log(response.data);
       setsubmitting(false)
       navigate("/");
     } catch (error) {

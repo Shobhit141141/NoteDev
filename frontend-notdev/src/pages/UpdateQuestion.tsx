@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import toast from "react-hot-toast";
@@ -86,7 +86,7 @@ function QuestionForm() {
     images: [],
   });
   const { token, uid } = useAuth();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
       setfetching(true);
@@ -98,14 +98,19 @@ function QuestionForm() {
           return;
         }
         const response = await fetchSingleQuesData(id, token, uid);
-
         setFormData(response.data);
-        // @ts-ignore
+      
         setfetching(false);
-      } catch (error) {
+      } catch (error:any) {
+      
+        if(error.response.data.message==="Forbidden: You cannot view this question"){
+          toast.error("Frobidden , Dont try to be fishy !");
+          navigate("/")
+        }
         setfetching(false);
 
         console.error("Error fetching data:", error);
+        
       }
     };
 

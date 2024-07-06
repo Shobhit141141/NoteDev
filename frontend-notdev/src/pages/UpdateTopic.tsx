@@ -36,7 +36,27 @@ const UpdateTopic = () => {
           image: response.data.topic.image,
         });
         setSubmitting(false)
-      } catch (error) {
+      } catch (error:any) {
+        if(error.message==="Request failed with status code 420"){
+          toast.custom((_t) => (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                background: '#f9fc1e',
+                color: 'red',
+                padding: '16px',
+                borderRadius: '8px',
+                boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+                border: '1px solid #FFD700',
+              }}
+            >
+              <span style={{ marginRight: '12px' }}>⚠️</span>
+              <div>Dont try to be fishy!</div>
+            </div>
+          ));
+          navigate("/")
+        }
         setSubmitting(false)
         toast.error("Failed to fetch topic data");
         console.error(error);
