@@ -12,7 +12,6 @@ interface TopicData {
 const UpdateTopic = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>() ?? { id: "" };
-  const [createdBy, setcreatedBy] = useState();
   const [topicData, setTopicData] = useState<TopicData>({
     title: "",
     image: "",
@@ -36,7 +35,6 @@ const UpdateTopic = () => {
           title: response.data.topic.title,
           image: response.data.topic.image,
         });
-        setcreatedBy(response.data.topic.createdBy);
         setSubmitting(false)
       } catch (error) {
         setSubmitting(false)
@@ -62,13 +60,13 @@ const UpdateTopic = () => {
   };
   // console.log(createdBy)
   //@ts-ignore
-  if(uid !== createdBy) {
-    return (
-      <div className="flex justify-center items-center h-[80%]">
-        <h1 className="text-3xl font-bold text-red-500 bg-[#00000080] p-4 rounded-[16px]">Access Denied , Dont Try to be fishy</h1>
-      </div>
-    );
-  }
+  // if(uid !== createdBy) {
+  //   return (
+  //     <div className="flex justify-center items-center h-[80%]">
+  //       <h1 className="text-3xl font-bold text-red-500 bg-[#00000080] p-4 rounded-[16px]">Access Denied , Dont Try to be fishy</h1>
+  //     </div>
+  //   );
+  // }
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

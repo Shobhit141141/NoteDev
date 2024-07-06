@@ -87,7 +87,6 @@ function QuestionForm() {
   });
   const { token, uid } = useAuth();
   // const navigate = useNavigate();
-  let createdBy="";
   useEffect(() => {
     const fetchData = async () => {
       setfetching(true);
@@ -102,7 +101,6 @@ function QuestionForm() {
 
         setFormData(response.data);
         // @ts-ignore
-        createdBy=response.data.createdBy;
         setfetching(false);
       } catch (error) {
         setfetching(false);
@@ -123,16 +121,16 @@ function QuestionForm() {
       [name]: value,
     }));
   };
-  //@ts-ignore
-  if (uid !== createdBy) {
-    return (
-      <div className="flex justify-center items-center h-[80%]">
-        <h1 className="text-3xl font-bold text-red-500 bg-[#00000080] p-4 rounded-[16px]">
-          Access Denied , Dont Try to be fishy
-        </h1>
-      </div>
-    );
-  }
+  // //@ts-ignore
+  // if (uid !== createdBy) {
+  //   return (
+  //     <div className="flex justify-center items-center h-[80%]">
+  //       <h1 className="text-3xl font-bold text-red-500 bg-[#00000080] p-4 rounded-[16px]">
+  //         Access Denied , Dont Try to be fishy
+  //       </h1>
+  //     </div>
+  //   );
+  // }
 
   // const language = "cpp";
 
