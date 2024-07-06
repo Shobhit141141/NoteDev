@@ -56,6 +56,7 @@ const UpdateTopic = () => {
             </div>
           ));
           navigate("/")
+          return;
         }
         setSubmitting(false)
         toast.error("Failed to fetch topic data");
