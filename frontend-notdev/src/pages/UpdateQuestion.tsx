@@ -150,7 +150,7 @@ function QuestionForm() {
   //   );
   // }
 
-  // const language = "cpp";
+  const language = "javascript";
 
   const handleLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -623,7 +623,7 @@ function QuestionForm() {
               Code:
               <div className="w-[350px] md:w-[464px]  h-[300px] m-auto">
                 <CodeEditor
-                  language={""}
+                  language={language}
                   value={formData.code}
                   onChange={handleCodeChange}
                 />
