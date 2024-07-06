@@ -239,7 +239,7 @@ function QuestionList() {
           Hard
         </button>
       </div>
-      <div className="w-full sm:w-[60%] h-max flex flex-col justify-center px-4 sm:px-8">
+      <div className="w-full sm:w-[60%] h-[55vh] flex flex-col justify-start px-4 sm:px-8 overflow-y-scroll mb-[20px]">
         {filteredQuestions.map((question, index) => (
           <NavLink key={question._id} to={`/question/${question._id}`}>
             <div className="question-item h-[50px] bg-[#212020] my-1 mx-auto rounded-[4px] transition duration-300 ease-in-out hover:bg-[#302f2f]">
