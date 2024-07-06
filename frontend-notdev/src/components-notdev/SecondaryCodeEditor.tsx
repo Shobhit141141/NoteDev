@@ -8,11 +8,17 @@ type MonacoEditorProps = {
   onChange: (newCode: string) => void;
 };
 
-const CodeEditor: React.FC<MonacoEditorProps> = ({ value, onChange }) => {
-  const [code, setCode] = useState<string>(value);
+const CodeEditor: React.FC<MonacoEditorProps> = ({ language , value = '', onChange }) => {
+  const defaultCode = `// OPTIMIZED | BETTER | BRUTE
+// TC : O(n)
+// SC : O(1)
+  `;
+  
+    const [code, setCode] = useState<string>(value || defaultCode);
+  
 
   useEffect(() => {
-    setCode(value);
+    setCode(value || defaultCode);
   }, [value]);
 
   const handleEditorChange: OnChange = (value) => {
@@ -20,33 +26,12 @@ const CodeEditor: React.FC<MonacoEditorProps> = ({ value, onChange }) => {
     onChange(value ?? '');
   };
 
-//   const handleFontSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-//     setFontSize(parseInt(event.target.value));
-//   };
-
-//   const handleEditorClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-//     event.stopPropagation(); // Prevent click event from bubbling up
-//   };
-
   return (
     <div className="flex-grow rounded-xl h-[350px]">
-      {/* <div className="flex justify-end mb-2">
-        <select
-          className="px-2 py-1 mx-1 bg-btnbg rounded"
-          value={fontSize}
-          onChange={handleFontSizeChange}
-        >
-          {[10, 12, 14, 16, 18].map((size) => (
-            <option key={size} value={size}>
-              {size}
-            </option>
-          ))}
-        </select>
-      </div> */}
       <div className='h-[100%]'>
         <Editor
           height="100%"
-          defaultLanguage="cpp"
+          language={language}
           value={code}
           theme="vs-dark"
           options={{

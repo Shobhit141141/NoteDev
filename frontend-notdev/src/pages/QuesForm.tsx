@@ -113,7 +113,7 @@ function QuestionForm() {
     }));
   };
 
-  const language = "cpp";
+  const language = "javascript";
 
   const handleLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
