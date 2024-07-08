@@ -7,7 +7,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { fetchQuesData } from "@/apis/quesApi";
 import { useAuth } from "@/context/GoogleAuthContext";
 import "daisyui/dist/full.css"; // Add this line to include DaisyUI styles
-
+import "./AllQuestions.css"
 type Question = {
   _id: string;
   title: string;
@@ -251,7 +251,7 @@ function QuestionList() {
           Hard
         </button>
       </div>
-      <div className="w-full sm:w-[60%] h-[55vh] flex flex-col justify-start px-4 sm:px-8 overflow-y-scroll mb-[20px]">
+      <div className="w-full sm:w-[60%] h-[55vh] flex flex-col justify-start px-4 sm:px-8 overflow-y-scroll mb-[20px] custom-scrollbar">
         {filteredQuestions.map((question, index) => (
           <NavLink key={question._id} to={`/question/${question._id}`}>
             <div className={`question-item h-[50px] bg-[#212020] my-1 mx-auto rounded-[4px] transition duration-300 ease-in-out hover:bg-[#302f2f] `}>

@@ -1,0 +1,21 @@
+::-webkit-scrollbar {
+  display: block;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #07000080;
+  border-radius: 10px;
+  transition: linear 0.4s;
+  cursor: pointer;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: blueviolet;
+}
