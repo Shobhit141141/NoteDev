@@ -1,13 +1,30 @@
 import { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { MdEditDocument, MdOutlineCreateNewFolder } from "react-icons/md";
+import {
+  MdDelete,
+  MdEditDocument,
+  MdOutlineCreateNewFolder,
+} from "react-icons/md";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { fetchQuesData } from "@/apis/quesApi";
 import { useAuth } from "@/context/GoogleAuthContext";
 import "daisyui/dist/full.css"; // Add this line to include DaisyUI styles
-import "./AllQuestions.css"
+import "./AllQuestions.css";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { deleteDSATopic } from "@/apis/dsaApi";
+import toast from "react-hot-toast";
 type Question = {
   _id: string;
   title: string;
@@ -39,27 +56,28 @@ function QuestionList() {
   const queryParams = new URLSearchParams(location.search);
   const topic = queryParams.get("title");
   const topicId = queryParams.get("topicId");
-  const { token ,uid } = useAuth();
+  const navigate = useNavigate();
+  const [deleteTopicId, setDeleteTopicId] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchQuestions = async () => {
-      try {
-        if (!token || !topicId) {
-          return;
-        }
-        if(!uid){
-          return;
-        }
-        const response = await fetchQuesData(topicId, token,uid);
-        setQuestions(response.data);
-        setFilteredQuestions(response.data);
-      } catch (error) {
-        setError("Failed to fetch questions");
-      } finally {
-        setLoading(false);
+  const { token, uid } = useAuth();
+  const fetchQuestions = async () => {
+    try {
+      if (!token || !topicId) {
+        return;
       }
-    };
-
+      if (!uid) {
+        return;
+      }
+      const response = await fetchQuesData(topicId, token, uid);
+      setQuestions(response.data);
+      setFilteredQuestions(response.data);
+    } catch (error) {
+      setError("Failed to fetch questions");
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
     fetchQuestions();
   }, [topicId, token]);
 
@@ -77,6 +95,30 @@ function QuestionList() {
     });
     setFilteredQuestions(filtered);
   }, [searchQuery, difficultyFilter, searchByTag, questions]);
+
+  const handleDelete = async () => {
+    try {
+      if (!token || !deleteTopicId) {
+        return;
+      }
+      if (!uid) {
+        return;
+      }
+      const confirmDelete = window.confirm(
+        "Are you sure you want to delete this topic?"
+      );
+      if (confirmDelete) {
+        await deleteDSATopic(deleteTopicId, token, uid);
+        navigate("/");
+        toast.success("Topic deleted successfully");
+      } else {
+        return;
+      }
+    } catch (error) {
+      console.error("Error deleting topic:", error);
+      toast.error("Failed to delete topic");
+    }
+  };
 
   const getDifficultyClass = (difficulty: string) => {
     switch (difficulty.toLowerCase()) {
@@ -162,29 +204,71 @@ function QuestionList() {
     );
   }
 
-  if (error) return <div className="flex justify-center items-center h-[80vh]">
-  <h1 className="text-3xl font-bold text-red-500 bg-[#00000080] p-4 rounded-[16px]">
-    Fobidden :(
-  </h1>
-</div>;
+  if (error)
+    return (
+      <div className="flex justify-center items-center h-[80vh]">
+        <h1 className="text-3xl font-bold text-red-500 bg-[#00000080] p-4 rounded-[16px]">
+          Forbidden :(
+        </h1>
+      </div>
+    );
 
   return (
     <div className="w-full h-max px-4 sm:px-8">
       <div className="flex justify-end">
-        <div className="flex gap-2">
+        <div className="flex justify-between items-center w-full sm:w-fit sm:gap-2">
           <Link to={`/question-form/${topicId}/?topic=${topic}`}>
-            <span className="flex justify-center items-center bg-btnbg w-[120px] sm:w-[150px] text-[16px] sm:text-[20px] rounded-[5px] cursor-pointer py-2 hover:bg-[#302f2f] transition-all active:scale-[0.95] m-2 mr-4 sm:mr-6">
-              <MdOutlineCreateNewFolder className="text-[20px] sm:text-[25px] mr-2 text-green-400" />
-              <span>Create</span>
+            <span className="flex justify-center items-center bg-btnbg w-[120px] sm:w-[150px] text-[16px] sm:text-[20px] rounded-[5px] py-2 hover:bg-[#2cd269] transition-all active:scale-[0.95] text-green-600 hover:text-white cursor-pointer ">
+              <MdOutlineCreateNewFolder className="text-[20px] sm:text-[25px] mr-2" />
+              <span className="text-white">Create</span>
             </span>
           </Link>
 
           <Link to={`/update-topic/${topicId}/?topic=${topic}`}>
-            <span className="flex justify-center items-center bg-btnbg w-[120px] sm:w-[150px] text-[16px] sm:text-[20px] rounded-[5px] cursor-pointer py-2 hover:bg-[#302f2f] transition-all active:scale-[0.95] m-2 mr-4 sm:mr-6">
-              <MdEditDocument className="text-[20px] sm:text-[25px] mr-2 text-blue-600" />
-              <span>Update</span>
+            <span className="flex justify-center items-center bg-btnbg w-[120px] sm:w-[150px] text-[16px] sm:text-[20px] rounded-[5px] py-2 hover:bg-[#007ffe] transition-all active:scale-[0.95] text-blue-600 hover:text-white cursor-pointer ">
+              <MdEditDocument className="text-[20px] sm:text-[25px] mr-2" />
+              <span className="text-white">Update</span>
             </span>
           </Link>
+
+          {/* <span className="flex justify-center items-center bg-btnbg w-[120px] sm:w-[150px] text-[16px] sm:text-[20px] rounded-[5px] cursor-pointer py-2 hover:bg-[#de0303] transition-all active:scale-[0.95] text-red-600 hover:text-white">
+            <MdDelete className="text-[20px] sm:text-[25px] mr-2 " />
+            <span className="text-white">Delete</span>
+          </span> */}
+        
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <span
+                  className="flex justify-center items-center bg-btnbg w-[120px] sm:w-[150px] text-[16px] sm:text-[20px] rounded-[5px] cursor-pointer py-2 hover:bg-[#de0303] transition-all active:scale-[0.95] text-red-600 hover:text-white"
+                  onClick={() => setDeleteTopicId(topicId)}
+                >
+                  <MdDelete className="text-[20px] sm:text-[25px] mr-2 " />
+                  <span className="text-white">Delete</span>
+                </span>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="bg-appbg">
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently remove
+                    your DSA Topic and related questions from our servers
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    className="text-red-500"
+                    onClick={() => {
+                      handleDelete();
+                      setDeleteTopicId(null);
+                    }}
+                  >
+                    Continue
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+        
         </div>
       </div>
       <div className="flex flex-col sm:flex-row justify-between px-4 sm:px-8 items-center">
@@ -254,14 +338,30 @@ function QuestionList() {
       <div className="w-full sm:w-[60%] h-[55vh] flex flex-col justify-start px-4 sm:px-8 overflow-y-scroll mb-[20px] custom-scrollbar">
         {filteredQuestions.map((question, index) => (
           <NavLink key={question._id} to={`/question/${question._id}`}>
-            <div className={`question-item h-[50px] bg-[#212020] my-1 mx-auto rounded-[4px] transition duration-300 ease-in-out hover:bg-[#302f2f] `}>
+            <div
+              className={`question-item h-[50px] bg-[#212020] my-1 mx-auto rounded-[4px] transition duration-300 ease-in-out hover:bg-[#302f2f] `}
+            >
               <div className="flex h-[50px] justify-between items-center px-4 font-light">
                 <div className="flex">
-                  <p className={`font-bold ${isActiveTabAll ? 'text-blue-500' : getDifficultyClass(question.difficulty).textClass}`}>{index + 1} )</p>
-                  <h2 className="ml-[20px] text-[14px] sm:text-[16px]">{question.title}</h2>
+                  <p
+                    className={`font-bold ${
+                      isActiveTabAll
+                        ? "text-blue-500"
+                        : getDifficultyClass(question.difficulty).textClass
+                    }`}
+                  >
+                    {index + 1} )
+                  </p>
+                  <h2 className="ml-[20px] text-[14px] sm:text-[16px]">
+                    {question.title}
+                  </h2>
                 </div>
                 {question.difficulty && (
-                  <h3 className={`${getDifficultyClass(question.difficulty).bgClass} w-[15px] h-[15px] rounded-[50%]`}></h3>
+                  <h3
+                    className={`${
+                      getDifficultyClass(question.difficulty).bgClass
+                    } w-[15px] h-[15px] rounded-[50%]`}
+                  ></h3>
                 )}
               </div>
             </div>

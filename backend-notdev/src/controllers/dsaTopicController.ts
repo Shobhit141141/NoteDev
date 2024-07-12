@@ -21,35 +21,35 @@ export const createDSATopic = async (req: Request, res: Response) => {
   }
 
   if (!title) {
-    return res
-      .status(400)
-      .json({ message: "Title is required for the DSA topic" });
+    return res.status(400).json({ message: "Title is required for the DSA topic" });
   }
 
   try {
-    const uploadedImage = await cloudinaryConfig.uploader.upload(image, {
-      upload_preset: "ix3lcf4n",
-      tags: ["dsa_topic"],
-    });
+    let imageURL = "";
 
-    const imageURL = uploadedImage.secure_url;
+    if (image) {
+      const uploadedImage = await cloudinaryConfig.uploader.upload(image, {
+        upload_preset: "ix3lcf4n",
+        tags: ["dsa_topic"],
+      });
+      imageURL = uploadedImage.secure_url;
+    }
 
     const newTopic = new DSATopic({
       title,
-      image: imageURL,
+      image: imageURL, 
       createdBy,
     });
 
     await newTopic.save();
 
-    res
-      .status(201)
-      .json({ message: "DSA topic created successfully", topic: newTopic });
+    res.status(201).json({ message: "DSA topic created successfully", topic: newTopic });
   } catch (error) {
     console.error("Error creating DSA topic:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 export const deleteDSATopic = async (req: Request, res: Response) => {
   const topicId = req.params.id;
   const userUID = getUserUID(req);
@@ -155,22 +155,29 @@ export const patchDSATopic = async (req: Request, res: Response) => {
     }
 
     if (topicToUpdate.createdBy !== userUID) {
-      return res
-        .status(403)
-        .json({ message: "Forbidden: You cannot update this topic" });
+      return res.status(403).json({ message: "Forbidden: You cannot update this topic" });
     }
 
-    if (topicToUpdate.image) {
-      await cloudinaryConfig.uploader.destroy(getPublicId(topicToUpdate.image));
+    // Check if the image URL is different from the current one
+    if (image && image !== topicToUpdate.image) {
+
+      // If a new image URL is provided and it's different, delete the old image
+      if (topicToUpdate.image) {
+        await cloudinaryConfig.uploader.destroy(getPublicId(topicToUpdate.image));
+      }
+
+      // Upload the new image
+      const uploadedImage = await cloudinaryConfig.uploader.upload(image, {
+        upload_preset: "ix3lcf4n",
+        tags: ["dsa_topic"],
+      });
+
+      // Update the topic with the new image URL
+      topicToUpdate.image = uploadedImage.secure_url;
     }
-
-    const uploadedImage = await cloudinaryConfig.uploader.upload(image, {
-      upload_preset: "ix3lcf4n",
-      tags: ["dsa_topic"],
-    });
-
-    topicToUpdate.title = title;
-    topicToUpdate.image = uploadedImage.secure_url;
+    if (title) {
+      topicToUpdate.title = title;
+    }
 
     await topicToUpdate.save();
 

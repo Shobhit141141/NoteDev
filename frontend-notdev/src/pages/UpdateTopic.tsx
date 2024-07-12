@@ -16,55 +16,58 @@ const UpdateTopic = () => {
     title: "",
     image: "",
   });
-
+  const [initialTopicData, setInitialTopicData] = useState<TopicData>({
+    title: "",
+    image: "",
+  });
   const [submitting, setSubmitting] = useState(false);
 
-  const { user, token ,uid} = useAuth();
+  const { user, token, uid } = useAuth();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (!id || !token) {
+        if (!id || !token || !uid) {
           return;
         }
-        if(!uid){
-          return;
-        }
-        setSubmitting(true)
-        const response = await fetchSingleTopicData(id, token,uid);
-        setTopicData({
+        setSubmitting(true);
+        const response = await fetchSingleTopicData(id, token, uid);
+        const fetchedData = {
           title: response.data.topic.title,
           image: response.data.topic.image,
-        });
-        setSubmitting(false)
-      } catch (error:any) {
-        if(error.message==="Request failed with status code 420"){
+        };
+        setTopicData(fetchedData);
+        setInitialTopicData(fetchedData); // Set the initial data
+        setSubmitting(false);
+      } catch (error: any) {
+        if (error.message === "Request failed with status code 420") {
           toast.custom((_t) => (
             <div
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                background: '#f9fc1e',
-                color: 'red',
-                padding: '16px',
-                borderRadius: '8px',
-                boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-                border: '1px solid #FFD700',
+                display: "flex",
+                alignItems: "center",
+                background: "#f9fc1e",
+                color: "red",
+                padding: "16px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
+                border: "1px solid #FFD700",
               }}
             >
-              <span style={{ marginRight: '12px' }}>⚠️</span>
-              <div>Dont try to be fishy!</div>
+              <span style={{ marginRight: "12px" }}>⚠️</span>
+              <div>Don't try to be fishy!</div>
             </div>
           ));
-          navigate("/")
+          navigate("/");
           return;
         }
-        setSubmitting(false)
+        setSubmitting(false);
         toast.error("Failed to fetch topic data");
         console.error(error);
       }
     };
     fetchData();
-  }, [id, token]);
+  }, [id, token, uid, navigate]);
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -79,30 +82,17 @@ const UpdateTopic = () => {
       reader.readAsDataURL(file);
     }
   };
-  // console.log(createdBy)
-  //@ts-ignore
-  // if(uid !== createdBy) {
-  //   return (
-  //     <div className="flex justify-center items-center h-[80%]">
-  //       <h1 className="text-3xl font-bold text-red-500 bg-[#00000080] p-4 rounded-[16px]">Access Denied , Dont Try to be fishy</h1>
-  //     </div>
-  //   );
-  // }
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!user || !token) {
-      toast.error("You must be logged in to submit the form");
+    if (!user || !token || !id || !uid) {
+      toast.error("You must be logged in and provide a valid ID");
       return;
     }
 
-    if (!id) {
-      toast.error("Provide a valid ID");
-      return;
-    }
-
-    if(!uid){
+    if (JSON.stringify(topicData) === JSON.stringify(initialTopicData)) {
+      toast("🔎 No changes detected");
       return;
     }
 
@@ -113,11 +103,11 @@ const UpdateTopic = () => {
         image: topicData.image,
       };
 
-      await updateDSATopic(id, updatedData, token,uid);
-      toast.success("Form submitted successfully");
+      await updateDSATopic(id, updatedData, token, uid);
+      toast.success("Topic updated successfully");
       navigate("/");
     } catch (error) {
-      toast.error("Failed to submit form");
+      toast.error("Failed to update topic");
       console.error(error);
     } finally {
       setSubmitting(false);

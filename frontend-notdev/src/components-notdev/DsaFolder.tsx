@@ -1,22 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { MdDelete, MdOutlineCreateNewFolder } from "react-icons/md";
+import { MdOutlineCreateNewFolder } from "react-icons/md";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 import "./DsaFolder.css";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { deleteDSATopic, fetchTopicsData } from "@/apis/dsaApi";
+
+import { fetchTopicsData } from "@/apis/dsaApi";
 import { useAuth } from "@/context/GoogleAuthContext";
 import { TbPhotoCode } from "react-icons/tb";
 import { LiaFileCode } from "react-icons/lia";
@@ -32,7 +22,6 @@ function DsaFolder() {
   const [loading, setLoading] = useState<boolean>(true);
   const [topics, setTopics] = useState<Topic[]>([]);
   const [filteredTopics, setFilteredTopics] = useState<Topic[]>([]);
-  const [deleteTopicId, setDeleteTopicId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const { user, token,uid, userLoading } = useAuth();
 
@@ -68,30 +57,30 @@ function DsaFolder() {
     setFilteredTopics(filtered);
   }, [searchQuery, topics]);
 
-  const handleDelete = async () => {
-    try {
+  // const handleDelete = async () => {
+  //   try {
 
 
 
-      if (!token || !deleteTopicId ) {
-        return;
-      }
-      if(!uid){
-        return;
-      }
+  //     if (!token || !deleteTopicId ) {
+  //       return;
+  //     }
+  //     if(!uid){
+  //       return;
+  //     }
 
-      await deleteDSATopic(deleteTopicId, token ,uid);
+  //     await deleteDSATopic(deleteTopicId, token ,uid);
 
-      const response = await fetchTopicsData(token,uid);
-      setTopics(response.data.topics);
-      setFilteredTopics(response.data.topics);
+  //     const response = await fetchTopicsData(token,uid);
+  //     setTopics(response.data.topics);
+  //     setFilteredTopics(response.data.topics);
 
-      toast.success("Topic deleted successfully");
-    } catch (error) {
-      console.error("Error deleting topic:", error);
-      toast.error("Failed to delete topic");
-    }
-  };
+  //     toast.success("Topic deleted successfully");
+  //   } catch (error) {
+  //     console.error("Error deleting topic:", error);
+  //     toast.error("Failed to delete topic");
+  //   }
+  // };
   if (userLoading) {
     return (
       <div className="w-[100vw] h-[100vh] fixed top-0 left-0 flex justify-center items-center bg-[#00000080] bg-opacity-50 z-50">
@@ -249,8 +238,8 @@ function DsaFolder() {
                     <p>{topic.title}</p>
                   </div>
 
-                  <div className="flex justify-between w-[60px] items-center">
-                    <div className="no-of-ques text-[15px] w-[30px] h-[30px] flex justify-center items-center">
+                  <div className="flex justify-between w-[60px] items-center ">
+                 
                       {/* <div
                         className="radial-progress bg-green-700"
                         style={
@@ -266,9 +255,9 @@ function DsaFolder() {
                       </div> */}
                       <div className="bg-green-400 w-[50px] text-black h-[30px] flex justify-center items-center rounded-[6px]">
                         {topic.totalQuestions}
-                      </div>
+                
                     </div>
-                    <div className="text-[25px] hover:text-red-600 hover:rotate-6 transition-all cursor-pointer  h-[30px] ">
+                    {/* <div className="text-[25px] hover:text-red-600 hover:rotate-6 transition-all cursor-pointer  h-[30px] ">
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <button
@@ -303,7 +292,7 @@ function DsaFolder() {
                           </AlertDialogFooter>
                         </AlertDialogContent>
                       </AlertDialog>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
