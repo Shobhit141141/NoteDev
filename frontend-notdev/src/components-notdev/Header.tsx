@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuRadioGroup,
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Header.css"; // Assuming your styles are in this CSS file
 import { useAuth } from "@/context/GoogleAuthContext"; // Make sure the path is correct
 import { RiLogoutCircleRLine } from "react-icons/ri";
@@ -21,11 +21,62 @@ const navItems = [
 function Header() {
   const [position, setPosition] = useState("Navbar");
   const { user, logout,userLoading } = useAuth();
+  const [countdown, setCountdown] = useState(0);
+  const [color, setColor] = useState("text-[#ffffff]"); // Default color
   const navigate = useNavigate();
   const handleLogout = () => {
     logout();
     navigate("/signin");
   };
+
+
+  useEffect(() => {
+
+    const expiryCookie = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('expiry='));
+
+    if (expiryCookie) {
+      const expiryTime = decodeURIComponent(expiryCookie.split('=')[1]);
+      const matchResult = expiryTime.match(/"([^"]+)"/);
+      const expiryDateString = matchResult ? matchResult[1] : ""; 
+      const expiryDate = new Date(expiryDateString).getTime();
+      const now = Date.now();
+
+      const remainingTime = expiryDate - now;
+      setCountdown(remainingTime > 0 ? remainingTime : 0);
+
+      const timer = setInterval(() => {
+        setCountdown(prevCountdown => {
+          if (prevCountdown <= 1000) {
+            clearInterval(timer);
+            window.location.reload(); // Reload the page when countdown reaches 0
+            return 0; // Stop the countdown at 0
+          }
+
+          if (prevCountdown <= 2000) {
+            setColor("text-red-500"); // Change color to red when 1 second is left
+          }
+
+          return prevCountdown - 1000; // Decrease countdown by 1 second
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [location.search]);
+
+  const formatTime = (milliseconds:any) => {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return { minutes, seconds };
+  };
+
+  const { minutes, seconds } = formatTime(countdown);
+
+
+
   return (
     <div className="flex justify-between w-full items-center header-container px-4 sm:px-8">
       <div className="logo flex flex-row justify-center items-center h-[100px]">
@@ -37,6 +88,21 @@ function Header() {
             NOTEDEV
           </h1>
         </Link>
+
+        <div className={`flex gap-5 ${color} ml-6 text-md sm:text-lg`}>
+        <div>
+          <span className="countdown font-mono ">
+            <span style={{ "--value": minutes } as React.CSSProperties}></span>
+          </span>
+          min
+        </div>
+        <div>
+          <span className="countdown font-mono ">
+            <span style={{ "--value": seconds } as React.CSSProperties}></span>
+          </span>
+          sec
+        </div>
+      </div>
       </div>
 
       { userLoading || user ? (

@@ -62,6 +62,7 @@ app.get('/auth/google/callback', async (req, res) => {
 
     const data = await response.json();
     const accessToken = data.access_token;
+    const expires_in = data.expires_in * 1000;
 
 
     const userResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
@@ -81,7 +82,12 @@ app.get('/auth/google/callback', async (req, res) => {
       });
       await newUser.save();
     }
-
+    const expiryDate = new Date(Date.now() + expires_in);
+    res.cookie('expiry', expiryDate, {
+      httpOnly: false, // Change to true if you want to restrict access to the cookie
+      secure: true, // Use secure cookies in production
+      sameSite: 'none', // Adjust based on your needs
+    });
     res.redirect(`${process.env.FRONTEND_URL}/?token=${accessToken}&uid=${userData.id}`)
   } catch (err) {
     console.error('Error fetching access token:', err);
