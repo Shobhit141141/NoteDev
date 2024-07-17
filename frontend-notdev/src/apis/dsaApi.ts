@@ -1,9 +1,7 @@
-import axios from "axios";
-
-const serverurl = import.meta.env.VITE_SERVER_URL;
+import api from '../config/api';
 
 export const fetchTopicsData = async (uid: string) => {
-  const response = await axios.get(`${serverurl}/api/topics/all-topics`, {
+  const response = await api.get(`/api/topics/all-topics`, {
     withCredentials: true,
     headers: {
       uid: uid,
@@ -16,7 +14,7 @@ export const fetchTopicsData = async (uid: string) => {
 };
 
 export const fetchSingleTopicData = async (id: string, uid: string) => {
-  const response = await axios.get(`${serverurl}/api/topics/topic/${id}`, {
+  const response = await api.get(`/api/topics/topic/${id}`, {
     withCredentials: true,
     headers: {
       uid: uid,
@@ -33,8 +31,8 @@ export const createDSATopic = async (
   image: string,
   uid: string
 ) => {
-  const response = await axios.post(
-    `${serverurl}/api/topics/create-topic`,
+  const response = await api.post(
+    `/api/topics/create-topic`,
     { title, image },
     {
       withCredentials: true,
@@ -50,7 +48,7 @@ export const createDSATopic = async (
 };
 
 export const deleteDSATopic = async (deleteTopicId: string, uid: string) => {
-  await axios.delete(`${serverurl}/api/topics/delete-topic/${deleteTopicId}`, {
+  await api.delete(`/api/topics/delete-topic/${deleteTopicId}`, {
     withCredentials: true,
     headers: {
       uid: uid,
@@ -67,8 +65,8 @@ export const updateDSATopic = async (
 
   uid: string
 ) => {
-  const response = await axios.patch(
-    `${serverurl}/api/topics/update/${topicId}`,
+  const response = await api.patch(
+    `/api/topics/update/${topicId}`,
     { ...updateData },
     {
       withCredentials: true,
