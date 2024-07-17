@@ -222,6 +222,11 @@ app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
+app.use((err, _req, res, _next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
