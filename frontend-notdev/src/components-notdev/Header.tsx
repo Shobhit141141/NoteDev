@@ -38,6 +38,7 @@ function Header() {
 
     if (expiryCookie) {
       const expiryTime = decodeURIComponent(expiryCookie.split('=')[1]);
+      console.log(expiryTime);
       const matchResult = expiryTime.match(/"([^"]+)"/);
       const expiryDateString = matchResult ? matchResult[1] : ""; 
       const expiryDate = new Date(expiryDateString).getTime();
@@ -45,7 +46,7 @@ function Header() {
 
       const remainingTime = expiryDate - now;
       setCountdown(remainingTime > 0 ? remainingTime : 0);
-
+      console.log(remainingTime);
       const timer = setInterval(() => {
         setCountdown(prevCountdown => {
           if (prevCountdown <= 1000) {
