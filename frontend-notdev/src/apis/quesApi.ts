@@ -1,4 +1,6 @@
-import api from '../config/api';
+import axios from "axios";
+
+const serverurl = import.meta.env.VITE_SERVER_URL;
 
 type QuestionResponse = {
   title: string;
@@ -18,8 +20,8 @@ type QuestionResponse = {
   images: string[];
 };
 export const fetchQuesData = async (topicId: string, uid: string) => {
-  const response = await api.get(
-    `/api/topics/topics/${topicId}/questions`,
+  const response = await axios.get(
+    `${serverurl}/api/topics/topics/${topicId}/questions`,
     {
       withCredentials: true,
       params: {
@@ -35,8 +37,8 @@ export const createDSAQues = async (
 
   uid: string
 ) => {
-  const response = await api.post(
-    `/api/questions/upload-question`,
+  const response = await axios.post(
+    `${serverurl}/api/questions/upload-question`,
     formData,
     {
       withCredentials: true,
@@ -49,7 +51,7 @@ export const createDSAQues = async (
 };
 
 export const deleteDSAQues = async (id: string, uid: string) => {
-  await api.delete(`/api/questions/delete-question/${id}`, {
+  await axios.delete(`${serverurl}/api/questions/delete-question/${id}`, {
     withCredentials: true,
     params: {
       uid: uid,
@@ -62,8 +64,8 @@ export const fetchSingleQuesData = async (
 
   uid: string
 ) => {
-  const response = await api.get<QuestionResponse>(
-    `/api/questions/question/${id}`,
+  const response = await axios.get<QuestionResponse>(
+    `${serverurl}/api/questions/question/${id}`,
     {
       withCredentials: true,
       params: {
@@ -80,8 +82,8 @@ export const updateDSAQues = async (
   id: string,
   uid: string
 ) => {
-  await api.patch(
-    `/api/questions/update-question/${id}`,
+  await axios.patch(
+    `${serverurl}/api/questions/update-question/${id}`,
     formData,
     {
       withCredentials: true,

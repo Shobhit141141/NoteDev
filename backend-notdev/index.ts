@@ -222,7 +222,6 @@ app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-// @ts-ignore
 app.use((err, _req, res, _next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
