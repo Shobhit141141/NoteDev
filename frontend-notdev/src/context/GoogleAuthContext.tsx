@@ -37,14 +37,17 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             throw error;
         }
     };
-
     const logout = () => {
         // Clear user and token on logout
         setUser(null);
         setToken(null);
         localStorage.removeItem("token");
-    };
+      
+        // Remove the expiry cookie
+        document.cookie = "expiry=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
+      };
+      
     useEffect(() => {
         setUserLoading(true)
         const storedToken = localStorage.getItem("token");
