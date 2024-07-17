@@ -20,7 +20,7 @@ connectDB();
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL, // Replace with your frontend URL
+    origin: 'https://notedev-ts.vercel.app', // Replace with your frontend URL
     credentials: true, // Allow credentials (cookies)
   })
 );
