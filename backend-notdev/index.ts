@@ -91,12 +91,12 @@ app.get("/auth/google/callback", async (req, res) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "none",
+      sameSite: "strict",
     });
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "none",
+      sameSite: "strict",
       maxAge: 3500 * 1000,
     });
 
@@ -136,7 +136,7 @@ app.post("/auth/refresh-token", async (req, res) => {
     res.cookie("accessToken", newAccessToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "none",
+      sameSite: "strict",
       maxAge: 3500 * 1000,
     });
     return res.status(200).json({ accessToken: newAccessToken });
@@ -150,12 +150,12 @@ app.post("/auth/logout", (req, res) => {
   res.clearCookie("accessToken", {
     httpOnly: true,
     secure: true,
-    sameSite: "none",
+    sameSite: "strict",
   });
   res.clearCookie("refreshToken", {
     httpOnly: true,
     secure: true,
-    sameSite: "none",
+    sameSite: "strict",
   });
   return res.status(200).json({ message: "Successfully logged out" });
 });
