@@ -23,21 +23,17 @@ function DsaFolder() {
   const [topics, setTopics] = useState<Topic[]>([]);
   const [filteredTopics, setFilteredTopics] = useState<Topic[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const { user, token,uid, userLoading } = useAuth();
+  const { user,uid, userLoading } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
-    
-      if (!token ) {
-        return;
-      }
-
+      console.log(user ,uid,userLoading)
       if (!uid ) {
-        return;
+        return "error";
       }
 
       try {
-        const response = await fetchTopicsData(token,uid);
+        const response = await fetchTopicsData(uid);
         setTopics(response.data.topics);
         setFilteredTopics(response.data.topics);
         setLoading(false);
@@ -48,7 +44,7 @@ function DsaFolder() {
     };
 
     fetchData();
-  }, [token]);
+  }, [uid]);
 
   useEffect(() => {
     const filtered = topics.filter((topic) =>
@@ -115,7 +111,7 @@ function DsaFolder() {
               className="mx-1 bg-gradient-to-r from-purple-600 via-pink-500 to-pink-300 bg-clip-text text-transparent border-b-[1px]"
             >
               sign in
-            </Link>{" "}
+            </Link>
             to start your DSA journey.
           </p>
         </div>

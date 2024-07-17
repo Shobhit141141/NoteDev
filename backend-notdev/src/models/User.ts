@@ -11,6 +11,7 @@ const userSchema: Schema = new Schema(
       default:
         "https://i.pinimg.com/originals/68/28/4c/68284c53b5f4d7d94cd40fa19c9fd21d.jpg",
     },
+    refreshToken: { type: String}
   },
   {
     timestamps: true,

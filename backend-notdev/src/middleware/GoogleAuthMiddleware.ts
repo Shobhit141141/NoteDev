@@ -1,14 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 
 const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
-  const authHeader = req.headers['authorization'];
-  const frontendUid = req.headers['uid']; // Assuming the frontend sends the uid in headers
-
-  if (!authHeader) {
+  // const authHeader = req.headers['authorization'];
+  const frontendUid = req.query.uid;
+  const accessToken = req.cookies.accessToken;
+  if (!accessToken) {
     return res.status(401).json({ error: 'Authorization header is missing' });
   }
-
-  const accessToken = authHeader.split(' ')[1];
   try {
     // Verify access token with Google OAuth server
     const response = await fetch('https://www.googleapis.com/oauth2/v3/tokeninfo', {

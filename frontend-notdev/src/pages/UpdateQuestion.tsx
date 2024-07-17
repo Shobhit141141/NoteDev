@@ -85,19 +85,19 @@ function QuestionForm() {
     youtubeLink: "",
     images: [],
   });
-  const { token, uid } = useAuth();
+  const { uid } = useAuth();
   const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
       setfetching(true);
       try {
-        if (!id || !token) {
+        if (!id) {
           return;
         }
         if (!uid) {
           return;
         }
-        const response = await fetchSingleQuesData(id, token, uid);
+        const response = await fetchSingleQuesData(id, uid);
         setFormData(response.data);
 
         setfetching(false);
@@ -128,7 +128,7 @@ function QuestionForm() {
     };
 
     fetchData(); // Call the fetchData function
-  }, [id, token]);
+  }, [id]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -167,13 +167,13 @@ function QuestionForm() {
     e.preventDefault();
     setupdating(true);
     try {
-      if (!id || !token) {
+      if (!id) {
         return;
       }
       if (!uid) {
         return;
       }
-      updateDSAQues(formData, token, id, uid);
+      updateDSAQues(formData, id, uid);
       toast.success("Form updated successfully");
       setupdating(false);
 

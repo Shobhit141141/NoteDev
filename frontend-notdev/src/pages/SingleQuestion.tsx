@@ -68,7 +68,7 @@ const SingleQuestion: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { token, uid } = useAuth();
+  const {  uid } = useAuth();
 
   // Function to format date to IST
   function convertUTCtoIST(createdAt: Date) {
@@ -108,13 +108,13 @@ const SingleQuestion: React.FC = () => {
   useEffect(() => {
     const fetchQuestion = async () => {
       try {
-        if (!id || !token) {
+        if (!id ) {
           return;
         }
         if (!uid) {
           return;
         }
-        const response = await fetchSingleQuesData(id, token, uid);
+        const response = await fetchSingleQuesData(id, uid);
         // console.log(response.status);
         if (response.status === 403) {
           // Handle forbidden access
@@ -137,7 +137,7 @@ const SingleQuestion: React.FC = () => {
     };
 
     fetchQuestion();
-  }, [id, token]);
+  }, [id]);
   // @ts-ignore
   // if(userLoading && uid !== question?.createdBy) {
   //   return (
@@ -174,13 +174,13 @@ const SingleQuestion: React.FC = () => {
 
   const handleDelete = async () => {
     try {
-      if (!id || !token) {
+      if (!id) {
         return;
       }
       if (!uid) {
         return;
       }
-      await deleteDSAQues(id, token, uid);
+      await deleteDSAQues(id, uid);
       navigate("/");
       toast.success("Question deleted successfully");
     } catch (error) {

@@ -19,14 +19,11 @@ type QuestionResponse = {
   youtubeLink: string;
   images: string[];
 };
-export const fetchQuesData = async (topicId: string, token: string, uid: string) => {
+export const fetchQuesData = async (topicId: string, uid: string) => {
   const response = await axios.get(
     `${serverurl}/api/topics/topics/${topicId}/questions`,
     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'uid': uid
-      },
+      withCredentials: true,
       params: {
         uid: uid,
       },
@@ -35,16 +32,16 @@ export const fetchQuesData = async (topicId: string, token: string, uid: string)
   return response;
 };
 
+export const createDSAQues = async (
+  formData: QuestionResponse,
 
-export const createDSAQues = async (formData: QuestionResponse, token: string, uid: string) => {
+  uid: string
+) => {
   const response = await axios.post(
     `${serverurl}/api/questions/upload-question`,
     formData,
     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'uid': uid
-      },
+      withCredentials: true,
       params: {
         uid: uid,
       },
@@ -53,28 +50,24 @@ export const createDSAQues = async (formData: QuestionResponse, token: string, u
   return response;
 };
 
-
-export const deleteDSAQues = async (id: string, token: string, uid: string) => {
+export const deleteDSAQues = async (id: string, uid: string) => {
   await axios.delete(`${serverurl}/api/questions/delete-question/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'uid': uid
-    },
+    withCredentials: true,
     params: {
       uid: uid,
     },
   });
 };
 
+export const fetchSingleQuesData = async (
+  id: string,
 
-export const fetchSingleQuesData = async (id: string, token: string, uid: string) => {
+  uid: string
+) => {
   const response = await axios.get<QuestionResponse>(
     `${serverurl}/api/questions/question/${id}`,
     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'uid': uid
-      },
+      withCredentials: true,
       params: {
         uid: uid,
       },
@@ -83,20 +76,20 @@ export const fetchSingleQuesData = async (id: string, token: string, uid: string
   return response;
 };
 
+export const updateDSAQues = async (
+  formData: QuestionResponse,
 
-export const updateDSAQues = async (formData: QuestionResponse, token: string, id: string, uid: string) => {
+  id: string,
+  uid: string
+) => {
   await axios.patch(
     `${serverurl}/api/questions/update-question/${id}`,
     formData,
     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'uid': uid
-      },
+      withCredentials: true,
       params: {
         uid: uid,
       },
     }
   );
 };
-

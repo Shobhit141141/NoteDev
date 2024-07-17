@@ -5,12 +5,12 @@ import { createDSATopic } from "@/apis/dsaApi";
 import { useAuth } from "@/context/GoogleAuthContext";
 
 const DsaForm = () => {
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
   const [title, setTitle] = useState<string>("");
   const [image, setImage] = useState<string>("");
   const [submitting, setsubmitting] = useState(false);
   const [errors, setErrors] = useState<{ title?: string; image?: string }>({});
-  const { user, token,uid } = useAuth();
+  const { user, uid } = useAuth();
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -36,18 +36,18 @@ const DsaForm = () => {
     if (Object.keys(validationErrors).length > 0) {
       return;
     }
-    if (!user || !token) {
+    if (!user) {
       toast.error("You must be logged in to submit the form");
       return;
     }
-    if(!uid){
+    if (!uid) {
       return;
     }
     setsubmitting(true);
     try {
-      await createDSATopic(title, image, token,uid);
+      await createDSATopic(title, image, uid);
       toast.success("Form submitted successfully");
-      navigate("/"); 
+      navigate("/");
       setsubmitting(false);
     } catch (error) {
       setsubmitting(false);

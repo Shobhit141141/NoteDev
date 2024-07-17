@@ -22,16 +22,16 @@ const UpdateTopic = () => {
   });
   const [submitting, setSubmitting] = useState(false);
 
-  const { user, token, uid } = useAuth();
+  const { user, uid } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (!id || !token || !uid) {
+        if (!id || !uid) {
           return;
         }
         setSubmitting(true);
-        const response = await fetchSingleTopicData(id, token, uid);
+        const response = await fetchSingleTopicData(id, uid);
         const fetchedData = {
           title: response.data.topic.title,
           image: response.data.topic.image,
@@ -67,7 +67,7 @@ const UpdateTopic = () => {
       }
     };
     fetchData();
-  }, [id, token, uid, navigate]);
+  }, [id, uid, navigate]);
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -86,7 +86,7 @@ const UpdateTopic = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!user || !token || !id || !uid) {
+    if (!user ||!id || !uid) {
       toast.error("You must be logged in and provide a valid ID");
       return;
     }
@@ -103,7 +103,7 @@ const UpdateTopic = () => {
         image: topicData.image,
       };
 
-      await updateDSATopic(id, updatedData, token, uid);
+      await updateDSATopic(id, updatedData, uid);
       toast.success("Topic updated successfully");
       navigate("/");
     } catch (error) {
