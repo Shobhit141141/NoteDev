@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-
 interface UserProfile {
     uid: string;
     name: string;
@@ -11,6 +10,7 @@ interface AuthContextType {
     user: UserProfile | null;
     token: string | null;
     uid: string | null;
+
     login: () => void;
     logout: () => void;
     userLoading: boolean;
@@ -19,16 +19,18 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+    children,
+}) => {
     const [user, setUser] = useState<UserProfile | null>(null);
-    const [uid, setUid] = useState<string | null>(null);
+    const [uid, setuserId] = useState("");
     const [userLoading, setUserLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [token, setToken] = useState<string | null>(null);
-    const serverurl = import.meta.env.VITE_SERVER_URL;
-
+    const serverurl=import.meta.env.VITE_SERVER_URL;
     const login = async () => {
         try {
+            // Redirect to Google OAuth URL
             window.location.href = `${serverurl}/auth/google`;
         } catch (error) {
             console.error("Error during sign-in:", error);
@@ -36,84 +38,67 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         }
     };
 
-    const logout = async () => {
-        try {
-            await fetch(`${serverurl}/auth/logout`, { method: "POST", credentials: "include" });
-            setUser(null);
-            setToken(null);
-            setUid(null);
-            localStorage.removeItem("uid");
-        } catch (error) {
-            console.error("Error during logout:", error);
-            setError("Failed to logout");
-        }
-    };
-
-    const fetchUserProfile = async () => {
-        try {
-            if (!localStorage.getItem("uid") || user) {
-                return;
-            }
-
-            setUserLoading(true);
-            const response = await fetch(`${serverurl}/auth/user/profile`, {
-                credentials: "include",
-            });
-
-            if (response.ok) {
-                const userData = await response.json();
-                setUser(userData.user);
-                setUid(userData.user.id);
-                localStorage.setItem("uid", userData.user.id);
-            } else {
-                throw new Error("Failed to fetch user profile");
-            }
-        } catch (error) {
-            console.error("Error fetching user profile:", error);
-            logout();
-            setError("Failed to fetch user profile");
-        } finally {
-            setUserLoading(false);
-        }
-    };
-
-    const refreshToken = async () => {
-        if (!localStorage.getItem("uid") || user) {
-            return;
-        }
-        try {
-            const response = await fetch(`${serverurl}/auth/refresh-token`, {
-                method: "POST",
-                credentials: "include",
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setToken(data.accessToken);
-            } else {
-                throw new Error("Failed to refresh access token");
-            }
-        } catch (error) {
-            console.error("Error refreshing access token:", error);
-            setError("Failed to refresh access token");
-        }
+    const logout = () => {
+        // Clear user and token on logout
+        setUser(null);
+        setToken(null);
+        localStorage.removeItem("token");
     };
 
     useEffect(() => {
-        const initAuth = async () => {
-            await refreshToken();
-            await fetchUserProfile();
-        };
+        setUserLoading(true)
+        const storedToken = localStorage.getItem("token");
+        const storeduid = localStorage.getItem("uid");
 
-        initAuth();
 
-        const intervalId = setInterval(refreshToken, 3400 * 1000);
-
-        return () => clearInterval(intervalId); 
+        if (storedToken && storeduid) {
+            setToken(storedToken);
+            setuserId(storeduid);
+        }
+        setUserLoading(false);
     }, []);
 
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            try {
+                setUserLoading(true)
+                const token = localStorage.getItem("token");
+                if (token) {
+                    const response = await fetch(
+                        `${serverurl}/auth/user/profile`,
+                        {
+                            headers: { Authorization: `Bearer ${token}` },
+                        }
+                    );
+
+                    if (response.ok) {
+                      const userData = await response.json();
+        
+                      setUser(userData.user);  
+                      setUserLoading(false)
+                  
+                  } else {
+                    setUserLoading(false)
+                      throw new Error("Failed to fetch user profile");
+                   
+                  }
+                }
+            } catch (error) {
+                setUserLoading(false)
+                console.error("Error fetching user profile:", error);
+                setError("Failed to fetch user profile");
+            } finally {
+                setUserLoading(false);
+            }
+        };
+
+        fetchUserProfile();
+    }, [token]);
+
     return (
-        <AuthContext.Provider value={{ user, token, uid, login, logout, userLoading, error }}>
+        <AuthContext.Provider
+            value={{ user, token,uid, login, logout, userLoading, error }}
+        >
             {children}
         </AuthContext.Provider>
     );

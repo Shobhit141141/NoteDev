@@ -13,10 +13,8 @@ import SignIn from "./pages/SignIn";
 import UserProfile from "./pages/UserProfile";
 import ProtectedRoute from "./components-notdev/ProtectedRoute";
 import PublicRoute from "./components-notdev/PublicRoute";
-import bg from "/assets/notedev_bg.png";
+import bg from "/assets/notedev_bg.png"
 import UpdateTopic from "./pages/UpdateTopic";
-// import { useEffect } from "react";
-
 function App() {
   return (
     <div className="main-app" style={{ backgroundImage: `url(${bg})` }}>
@@ -43,6 +41,7 @@ function App() {
               <Route path="/question/:id" element={<SingleQuestion />} />
               <Route path="/update-question/:id" element={<UpdateQuestion />} />
               <Route path="/update-topic/:id" element={<UpdateTopic />} />
+
             </Route>
           </Routes>
         </BrowserRouter>

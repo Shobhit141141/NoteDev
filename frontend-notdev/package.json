@@ -42,7 +42,6 @@
     "firebase": "^10.12.2",
     "highlight.js": "^11.9.0",
     "immutable": "^4.3.6",
-    "js-cookie": "^3.0.5",
     "lucide-react": "^0.379.0",
     "monaco-editor": "^0.49.0",
     "quill": "^2.0.2",
@@ -65,7 +64,6 @@
   },
   "devDependencies": {
     "@types/crypto-js": "^4.2.2",
-    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20.12.12",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",

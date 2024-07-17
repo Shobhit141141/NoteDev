@@ -2,11 +2,11 @@ import axios from "axios";
 
 const serverurl = import.meta.env.VITE_SERVER_URL;
 
-export const fetchTopicsData = async (uid: string) => {
+export const fetchTopicsData = async (token: string, uid: string) => {
   const response = await axios.get(`${serverurl}/api/topics/all-topics`, {
-    withCredentials: true,
     headers: {
-      uid: uid,
+      Authorization: `Bearer ${token}`,
+      'uid': uid
     },
     params: {
       uid: uid,
@@ -15,11 +15,12 @@ export const fetchTopicsData = async (uid: string) => {
   return response;
 };
 
-export const fetchSingleTopicData = async (id: string, uid: string) => {
+
+export const fetchSingleTopicData = async (id: string, token: string, uid: string) => {
   const response = await axios.get(`${serverurl}/api/topics/topic/${id}`, {
-    withCredentials: true,
     headers: {
-      uid: uid,
+      Authorization: `Bearer ${token}`,
+      'uid': uid
     },
     params: {
       uid: uid,
@@ -27,19 +28,21 @@ export const fetchSingleTopicData = async (id: string, uid: string) => {
   });
   return response;
 };
+
 
 export const createDSATopic = async (
   title: string,
   image: string,
+  token: string,
   uid: string
 ) => {
   const response = await axios.post(
     `${serverurl}/api/topics/create-topic`,
     { title, image },
     {
-      withCredentials: true,
       headers: {
-        uid: uid,
+        Authorization: `Bearer ${token}`,
+        'uid': uid
       },
       params: {
         uid: uid,
@@ -49,11 +52,12 @@ export const createDSATopic = async (
   return response;
 };
 
-export const deleteDSATopic = async (deleteTopicId: string, uid: string) => {
+
+export const deleteDSATopic = async (deleteTopicId: string, token: string, uid: string) => {
   await axios.delete(`${serverurl}/api/topics/delete-topic/${deleteTopicId}`, {
-    withCredentials: true,
     headers: {
-      uid: uid,
+      Authorization: `Bearer ${token}`,
+      'uid': uid
     },
     params: {
       uid: uid,
@@ -61,19 +65,20 @@ export const deleteDSATopic = async (deleteTopicId: string, uid: string) => {
   });
 };
 
+
 export const updateDSATopic = async (
   topicId: string,
   updateData: { title?: string; image?: string },
-
+  token: string,
   uid: string
 ) => {
   const response = await axios.patch(
     `${serverurl}/api/topics/update/${topicId}`,
     { ...updateData },
     {
-      withCredentials: true,
       headers: {
-        uid: uid,
+        Authorization: `Bearer ${token}`,
+        'uid': uid
       },
       params: {
         uid: uid,
@@ -82,3 +87,4 @@ export const updateDSATopic = async (
   );
   return response;
 };
+

@@ -59,16 +59,16 @@ function QuestionList() {
   const navigate = useNavigate();
   const [deleteTopicId, setDeleteTopicId] = useState<string | null>(null);
 
-  const { uid } = useAuth();
+  const { token, uid } = useAuth();
   const fetchQuestions = async () => {
     try {
-      if (!topicId) {
+      if (!token || !topicId) {
         return;
       }
       if (!uid) {
         return;
       }
-      const response = await fetchQuesData(topicId, uid);
+      const response = await fetchQuesData(topicId, token, uid);
       setQuestions(response.data);
       setFilteredQuestions(response.data);
     } catch (error) {
@@ -79,7 +79,7 @@ function QuestionList() {
   };
   useEffect(() => {
     fetchQuestions();
-  }, [topicId]);
+  }, [topicId, token]);
 
   useEffect(() => {
     const filtered = questions.filter((question) => {
@@ -98,7 +98,7 @@ function QuestionList() {
 
   const handleDelete = async () => {
     try {
-      if (!deleteTopicId) {
+      if (!token || !deleteTopicId) {
         return;
       }
       if (!uid) {
@@ -108,7 +108,7 @@ function QuestionList() {
         "Are you sure you want to delete this topic?"
       );
       if (confirmDelete) {
-        await deleteDSATopic(deleteTopicId,  uid);
+        await deleteDSATopic(deleteTopicId, token, uid);
         navigate("/");
         toast.success("Topic deleted successfully");
       } else {

@@ -20,7 +20,7 @@ const navItems = [
 
 function Header() {
   const [position, setPosition] = useState("Navbar");
-  const { user, logout, userLoading } = useAuth();
+  const { user, logout,userLoading } = useAuth();
   const navigate = useNavigate();
   const handleLogout = () => {
     logout();
@@ -39,7 +39,7 @@ function Header() {
         </Link>
       </div>
 
-      {userLoading || user ? (
+      { userLoading || user ? (
         <div className="dropdown-menu-container m-2 sm:m-6">
           <DropdownMenu>
             <div className="flex justify-between items-center gap-6">

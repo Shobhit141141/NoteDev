@@ -16,7 +16,7 @@ const ProtectedRoute: React.FC = () => {
     );
   }
 
-  else if (!user) {
+  if (!user) {
     navigate("/signin", { state: { from: location } });
     return null;
   }

@@ -1,17 +1,25 @@
 import DsaFolder from "@/components-notdev/DsaFolder";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+
 function HomePage() {
   const location = useLocation();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
+    const token = params.get('token');
+    const uid = params.get('uid');
 
-    const uid = params.get("uid");
-
-    if (uid) {
-      localStorage.setItem("uid", uid);
+    if (token) {
+  
+      localStorage.setItem('token', token);
     }
+    if (uid) {
+  
+      localStorage.setItem('uid', uid);
+    }
+
+   
   }, [location.search]);
   return (
     <div>
@@ -19,6 +27,7 @@ function HomePage() {
         Take DSA notes like never before
       </h1>
 
+      
       <DsaFolder />
     </div>
   );
