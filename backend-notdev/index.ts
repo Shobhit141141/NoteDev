@@ -9,24 +9,21 @@ import connectDB  from './src/config/db';
 import questionRoutes from './src/routes/questionRoutes';
 import dsaTopicRoutes from './src/routes/dsaTopicRoutes';
 import userRoutes from './src/routes/userRoutes';
-import cookieParser from 'cookie-parser';
+
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({
-  origin: process.env.FRONTEND_URL, // Allow only your frontend URL
-  credentials: true, // Allow credentials (cookies, authorization headers, etc.)
-}));
 connectDB(); 
 
 
+app.use(cors());
 
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.json());
-app.use(cookieParser());
+
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -86,10 +83,10 @@ app.get('/auth/google/callback', async (req, res) => {
       await newUser.save();
     }
     const expiryDate = new Date(Date.now() + expires_in);
-    res.cookie('token', accessToken, {
-      httpOnly: true,
-      secure: true, 
-      expires: expiryDate,
+    res.cookie('expiry', expiryDate, {
+      httpOnly: false, // Change to true if you want to restrict access to the cookie
+      secure: true, // Use secure cookies in production
+      sameSite: 'none', // Adjust based on your needs
     });
     res.redirect(`${process.env.FRONTEND_URL}/?token=${accessToken}&uid=${userData.id}`)
   } catch (err) {
@@ -101,8 +98,13 @@ app.get('/auth/google/callback', async (req, res) => {
 
 app.get('/auth/user/profile', async (req, res) => {
 
-   const token = req.cookies.token;
+  const authHeader = req.headers['authorization'];
 
+  if (!authHeader) {
+    return res.status(401).json({ error: 'Authorization header is missing' });
+  }
+
+  const token = authHeader.split(' ')[1];
 
   try {
     const userResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {

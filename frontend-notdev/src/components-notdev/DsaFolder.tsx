@@ -23,19 +23,21 @@ function DsaFolder() {
   const [topics, setTopics] = useState<Topic[]>([]);
   const [filteredTopics, setFilteredTopics] = useState<Topic[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const { user,uid, userLoading } = useAuth();
+  const { user, token,uid, userLoading } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
     
- 
+      if (!token ) {
+        return;
+      }
 
       if (!uid ) {
         return;
       }
 
       try {
-        const response = await fetchTopicsData(uid);
+        const response = await fetchTopicsData(token,uid);
         setTopics(response.data.topics);
         setFilteredTopics(response.data.topics);
         setLoading(false);
@@ -46,7 +48,7 @@ function DsaFolder() {
     };
 
     fetchData();
-  }, [uid]);
+  }, [token]);
 
   useEffect(() => {
     const filtered = topics.filter((topic) =>

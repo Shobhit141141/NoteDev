@@ -2,11 +2,10 @@ import axios from "axios";
 
 const serverurl = import.meta.env.VITE_SERVER_URL;
 
-export const fetchTopicsData = async (uid: string) => {
+export const fetchTopicsData = async (token: string, uid: string) => {
   const response = await axios.get(`${serverurl}/api/topics/all-topics`, {
-    withCredentials: true,
     headers: {
-     
+      Authorization: `Bearer ${token}`,
       'uid': uid
     },
     params: {
