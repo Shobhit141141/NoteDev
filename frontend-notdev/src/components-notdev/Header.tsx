@@ -35,7 +35,7 @@ function Header() {
     const expiryCookie = document.cookie
       .split('; ')
       .find(row => row.startsWith('expiry='));
-    console.log(expiryCookie)
+
     if (expiryCookie) {
       const expiryTime = decodeURIComponent(expiryCookie.split('=')[1]);
       const matchResult = expiryTime.match(/"([^"]+)"/);
