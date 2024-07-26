@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuRadioGroup,
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Header.css"; // Assuming your styles are in this CSS file
 import { useAuth } from "@/context/GoogleAuthContext"; // Make sure the path is correct
 import { RiLogoutCircleRLine } from "react-icons/ri";
@@ -21,60 +21,59 @@ const navItems = [
 function Header() {
   const [position, setPosition] = useState("Navbar");
   const { user, logout,userLoading } = useAuth();
+  const [countdown, setCountdown] = useState(0);
+  const [color, setColor] = useState("text-[#ffffff]"); // Default color
   const navigate = useNavigate();
   const handleLogout = () => {
     logout();
     navigate("/signin");
   };
-  
-  
-  // const [countdown, setCountdown] = useState(0);
-  // const [color, setColor] = useState("text-[#ffffff]"); // Default color
-  // useEffect(() => {
 
-  //   const expiryCookie = document.cookie
-  //     .split('; ')
-  //     .find(row => row.startsWith('expiry='));
 
-  //   if (expiryCookie) {
-  //     const expiryTime = decodeURIComponent(expiryCookie.split('=')[1]);
-  //     console.log(expiryTime);
-  //     const matchResult = expiryTime.match(/"([^"]+)"/);
-  //     const expiryDateString = matchResult ? matchResult[1] : ""; 
-  //     const expiryDate = new Date(expiryDateString).getTime();
-  //     const now = Date.now();
+  useEffect(() => {
 
-  //     const remainingTime = expiryDate - now;
-  //     setCountdown(remainingTime > 0 ? remainingTime : 0);
-  //     console.log(remainingTime);
-  //     const timer = setInterval(() => {
-  //       setCountdown(prevCountdown => {
-  //         if (prevCountdown <= 1000) {
-  //           clearInterval(timer);
-  //           window.location.reload(); // Reload the page when countdown reaches 0
-  //           return 0; // Stop the countdown at 0
-  //         }
+    const expiryCookie = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('expiry='));
 
-  //         if (prevCountdown <= 2000) {
-  //           setColor("text-red-500"); // Change color to red when 1 second is left
-  //         }
+    if (expiryCookie) {
+      const expiryTime = decodeURIComponent(expiryCookie.split('=')[1]);
+      const matchResult = expiryTime.match(/"([^"]+)"/);
+      const expiryDateString = matchResult ? matchResult[1] : ""; 
+      const expiryDate = new Date(expiryDateString).getTime();
+      const now = Date.now();
 
-  //         return prevCountdown - 1000; // Decrease countdown by 1 second
-  //       });
-  //     }, 1000);
+      const remainingTime = expiryDate - now;
+      setCountdown(remainingTime > 0 ? remainingTime : 0);
 
-  //     return () => clearInterval(timer);
-  //   }
-  // }, [location.search]);
+      const timer = setInterval(() => {
+        setCountdown(prevCountdown => {
+          if (prevCountdown <= 1000) {
+            clearInterval(timer);
+            window.location.reload(); // Reload the page when countdown reaches 0
+            return 0; // Stop the countdown at 0
+          }
 
-  // const formatTime = (milliseconds:any) => {
-  //   const totalSeconds = Math.floor(milliseconds / 1000);
-  //   const minutes = Math.floor(totalSeconds / 60);
-  //   const seconds = totalSeconds % 60;
-  //   return { minutes, seconds };
-  // };
+          if (prevCountdown <= 2000) {
+            setColor("text-red-500"); // Change color to red when 1 second is left
+          }
 
-  // const { minutes, seconds } = formatTime(countdown);
+          return prevCountdown - 1000; // Decrease countdown by 1 second
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [location.search]);
+
+  const formatTime = (milliseconds:any) => {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return { minutes, seconds };
+  };
+
+  const { minutes, seconds } = formatTime(countdown);
 
 
 
@@ -90,7 +89,7 @@ function Header() {
           </h1>
         </Link>
 
-        {/* <div className={`flex gap-5 ${color} ml-6 text-md sm:text-lg`}>
+        <div className={`flex gap-5 ${color} ml-6 text-md sm:text-lg`}>
         <div>
           <span className="countdown font-mono ">
             <span style={{ "--value": minutes } as React.CSSProperties}></span>
@@ -103,7 +102,7 @@ function Header() {
           </span>
           sec
         </div>
-      </div> */}
+      </div>
       </div>
 
       { userLoading || user ? (

@@ -84,9 +84,9 @@ app.get('/auth/google/callback', async (req, res) => {
     }
     const expiryDate = new Date(Date.now() + expires_in);
     res.cookie('expiry', expiryDate, {
-      httpOnly: false, // Change to true if you want to restrict access to the cookie
-      secure: true, // Use secure cookies in production
-      sameSite: 'none', // Adjust based on your needs
+      httpOnly: false, 
+      secure: true, 
+      sameSite: 'none', 
     });
     res.redirect(`${process.env.FRONTEND_URL}/?token=${accessToken}&uid=${userData.id}`)
   } catch (err) {
