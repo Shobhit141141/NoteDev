@@ -9,12 +9,17 @@ function HomePage() {
     const params = new URLSearchParams(location.search);
     const token = params.get("token");
     const uid = params.get("uid");
+    const expiry = params.get("expiry");
+
 
     if (token) {
       localStorage.setItem("token", token);
     }
     if (uid) {
       localStorage.setItem("uid", uid);
+    }
+    if(expiry) {
+      localStorage.setItem("expiry", expiry);
     }
   }, [location.search]);
 
@@ -23,7 +28,6 @@ function HomePage() {
       <h1 className="text-[40px] p-4 font-bold">
         Take DSA notes like never before
       </h1>
-
       <DsaFolder />
     </div>
   );

@@ -82,13 +82,16 @@ app.get('/auth/google/callback', async (req, res) => {
       });
       await newUser.save();
     }
-    const expiryDate = new Date(Date.now() + expires_in);
+    const expiryDate = new Date(Date.now() + expires_in).toUTCString();
+    console.log("expiresin", expiryDate);
+
     res.cookie('expiry', expiryDate, {
       httpOnly: false, // Change to true if you want to restrict access to the cookie
       secure: true, // Use secure cookies in production
       sameSite: 'none', // Adjust based on your needs
     });
-    res.redirect(`${process.env.FRONTEND_URL}/?token=${accessToken}&uid=${userData.id}`)
+    
+    res.redirect(`${process.env.FRONTEND_URL}/?token=${accessToken}&uid=${userData.id}&expiry=${expiryDate}`)
   } catch (err) {
     console.error('Error fetching access token:', err);
     res.status(500).json({ error: 'Failed to fetch access token' });
