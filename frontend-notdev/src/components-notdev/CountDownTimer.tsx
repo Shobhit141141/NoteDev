@@ -26,6 +26,9 @@ const CountdownTimer: React.FC = () => {
           setTimeLeft(hours * 3600 + minutes * 60 + seconds);
         } else {
           setTimeLeft(0);
+          localStorage.removeItem("token");
+          localStorage.removeItem("uid");
+          localStorage.removeItem("expiry");
           window.location.reload();
         }
       }
