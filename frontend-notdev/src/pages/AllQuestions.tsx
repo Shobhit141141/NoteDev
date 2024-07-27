@@ -214,7 +214,7 @@ function QuestionList() {
     );
 
   return (
-    <div className="w-full h-max px-4 sm:px-8">
+    <div className="w-full h-max px-4 sm:px-8 ">
       <div className="flex justify-end">
         <div className="flex justify-between items-center w-full sm:w-fit sm:gap-2">
           <Link to={`/question-form/${topicId}/?topic=${topic}`}>
@@ -335,7 +335,8 @@ function QuestionList() {
           Hard
         </button>
       </div>
-      <div className="w-full sm:w-[60%] h-[55vh] flex flex-col justify-start px-4 sm:px-8 overflow-y-scroll mb-[20px] custom-scrollbar">
+      <div className="w-full sm:w-[60%] h-[55vh] flex flex-col justify-start px-4 sm:px-8 overflow-y-auto mb-[20px] custom-scrollbar">
+
         {filteredQuestions.map((question, index) => (
           <NavLink key={question._id} to={`/question/${question._id}`}>
             <div
