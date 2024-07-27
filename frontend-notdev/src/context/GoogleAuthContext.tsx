@@ -42,10 +42,8 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setUser(null);
         setToken(null);
         localStorage.removeItem("token");
-      
-        // Remove the expiry cookie
-        document.cookie = "expiry=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
+        localStorage.removeItem("uid");
+        localStorage.removeItem("expiry");
       };
       
     useEffect(() => {
