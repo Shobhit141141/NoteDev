@@ -40,14 +40,15 @@ function Header() {
             NOTEDEV
           </h1>
         </Link>
-        <div className="mx-8">
+      </div>
+        <div className=" mx-3 sm:mx-8">
           <CountdownTimer />
         </div>
-      </div>
       {userLoading || user ? (
         <div className="dropdown-menu-container m-2 sm:m-6">
           <DropdownMenu>
-            <div className="flex justify-between items-center gap-6">
+            <div className="flex justify-between items-center gap-2 sm:gap-6">
+            {/* <CountdownTimer /> */}
               <span>
                 <h2 className="hidden sm:block">{user?.name}</h2>
               </span>

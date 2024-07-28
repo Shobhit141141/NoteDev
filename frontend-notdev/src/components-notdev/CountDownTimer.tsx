@@ -42,13 +42,13 @@ const CountdownTimer: React.FC = () => {
 
   const isCritical = timeLeft < 300;
 
-  //   const hours = Math.floor(timeLeft / 3600);
+  // const hours = Math.floor(timeLeft / 3600);
   const minutes = Math.floor((timeLeft % 3600) / 60);
   const seconds = timeLeft % 60;
 
   return user ? (
     <div className={`countdown-timer ${isCritical ? "text-red-500" : ""}`}>
-      <span className="countdown font-mono text-lg sm:text-2xl">
+      <span className="countdown font-mono text-md sm:text-2xl">
         <span
           className="countdown-item"
           style={{ "--value": minutes } as React.CSSProperties}
